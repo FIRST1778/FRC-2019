@@ -178,20 +178,23 @@ public class ChillySwerve {
 			ws3 /= max;
 			ws4 /= max;
 		}
-
-	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/FL_pwr", ws4);		
-	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/FR_pwr", ws2);		
-	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/BL_pwr", ws1);		
-	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/BR_pwr", ws3);		
-	    
-	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/FL_angle", wa4);		
-	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/FR_angle", wa2);		
-	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/BL_angle", wa1);		
-	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/BR_angle", wa3);		
 		
-		setDrivePower(ws4, ws2, ws1, ws3);
-		setLocation(angleToLoc(wa4), angleToLoc(wa2),
-				angleToLoc(wa1), angleToLoc(wa3));
+		//ws1..ws4 and wa1..wa4 are the wheel speeds and wheel angles for wheels 1 through 4
+		// which are front_right, front_left, rear_left, and rear_right, respectively.
+		
+	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/FL_pwr", ws2);		
+	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/FR_pwr", ws1);		
+	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/BL_pwr", ws3);		
+	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/BR_pwr", ws4);		
+	    
+	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/FL_angle", wa2);		
+	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/FR_angle", wa1);		
+	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/BL_angle", wa3);		
+	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/BR_angle", wa4);		
+		
+		setDrivePower(ws2, ws1, ws3, ws4);
+		setLocation(angleToLoc(wa2), angleToLoc(wa1),
+				angleToLoc(wa3), angleToLoc(wa4));
 	}
 
 	public static void humanDrive(double fwd, double str, double rot) {
