@@ -8,13 +8,13 @@ package frc.team4077.robot.components;
  * @author FRC 4077 MASH, Hillel Coates
  */
 public abstract class Subsystem {
-    /**
-     * Print telemetry associated with this subsystem to the SmartDashboard.
-     */
-    public abstract void sendTelemetry();
+	/**
+	 * Print telemetry associated with this subsystem to the SmartDashboard.
+	 */
+	public abstract void sendTelemetry();
 
-    /**
-     * Reset and zero all sensors associated with the subsystem.
-     */
-    public abstract void zeroAndReset();
+	/**
+	 * Reset and zero all sensors associated with the subsystem.
+	 */
+	public abstract void zeroAndReset();
 }
