@@ -1,6 +1,7 @@
 package frc.team4077.robot.components;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import frc.team4077.robot.common.RobotMap;
@@ -16,31 +17,43 @@ import frc.team4077.robot.common.RobotMap;
  * @see Subsystem.java
  */
 public class Drive extends Subsystem {
-  private static Drive mInstance = new Drive();
+	private static Drive mInstance = new Drive();
 
-  private final TalonSRX mLeftMaster, mRightMaster, mLeftSlave, mRightSlave;
+	private final TalonSRX mLeftMaster, mRightMaster, mLeftSlave, mRightSlave;
 
-  /**
-   * Returns a static instance of Drive, to be used instead of instantiating
-   * new objects of Drive.
-   */
-  public static Drive getInstance() {
-    return mInstance;
-  }
+	/**
+	 * Returns a static instance of Drive, to be used instead of instantiating
+	 * new objects of Drive.
+	 */
+	public static Drive getInstance() {
+		return mInstance;
+	}
 
-  private Drive() {
-    mLeftMaster = new TalonSRX(RobotMap.LEFT_SLAVE_TALON_ID);
-    mRightMaster = new TalonSRX(RobotMap.RIGHT_MASTER_TALON_ID);
-    mLeftSlave = new TalonSRX(RobotMap.LEFT_SLAVE_TALON_ID);
-    mRightSlave = new TalonSRX(RobotMap.RIGHT_SLAVE_TALON_ID);
+	private Drive() {
+		mLeftMaster = new TalonSRX(RobotMap.LEFT_SLAVE_TALON_ID);
+		mRightMaster = new TalonSRX(RobotMap.RIGHT_MASTER_TALON_ID);
+		mLeftSlave = new TalonSRX(RobotMap.LEFT_SLAVE_TALON_ID);
+		mRightSlave = new TalonSRX(RobotMap.RIGHT_SLAVE_TALON_ID);
 
-    mLeftSlave.set(ControlMode.Follower, RobotMap.LEFT_MASTER_TALON_ID);
-    mRightSlave.set(ControlMode.Follower, RobotMap.RIGHT_MASTER_TALON_ID);
-  }
+		mLeftMaster.setInverted(false);
+		mRightMaster.setInverted(true);
+		mLeftSlave.setInverted(false);
+		mRightSlave.setInverted(true);
 
-  @Override
-  public void sendTelemetry() {}
+		mLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+		mLeftMaster.setSensorPhase(false);
+		mRightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+		mRightMaster.setSensorPhase(false);
 
-  @Override
-  public void zeroAndReset() {}
+		mLeftSlave.set(ControlMode.Follower, RobotMap.LEFT_MASTER_TALON_ID);
+		mRightSlave.set(ControlMode.Follower, RobotMap.RIGHT_MASTER_TALON_ID);
+	}
+
+	@Override
+	public void sendTelemetry() {
+	}
+
+	@Override
+	public void zeroAndReset() {
+	}
 }
