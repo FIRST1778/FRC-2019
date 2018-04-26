@@ -12,7 +12,7 @@ def ROBOT_CLASS = "frc.team4077.robot.Robot"
 // This is added by GradleRIO's backing project EmbeddedTools.
 deploy {
     targets {
-        target("roborio", jdci.openrio.gradle.frc.RoboRIO) {
+        target("roborio", jaci.openrio.gradle.frc.RoboRIO) {
             team = TEAM
         }
     }
