@@ -1,10 +1,10 @@
 package frc.team4077.robot.common;
 
-import edu.wpi.first.wpilibj.SPI;
-
 import com.kauailabs.navx.AHRSProtocol.AHRSUpdateBase;
 import com.kauailabs.navx.frc.AHRS;
 import com.kauailabs.navx.frc.ITimestampedDataSubscriber;
+
+import edu.wpi.first.wpilibj.SPI;
 
 /**
  * Driver for a NavX board. Basically a wrapper for the {@link AHRS} class
