@@ -117,6 +117,11 @@ public class Robot extends IterativeRobot {
 
     	ChillySwerve.disabledInit();
     }
+    
+    public void disabledPeriodic() {
+
+    	ChillySwerve.disabledPeriodic();
+    }
 
 	/**
 	 * This function is called periodically during test mode
