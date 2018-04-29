@@ -72,7 +72,7 @@ public class ChillySwerve {
 	
 	public static void teleopPeriodic() {
 		double joyVal;
-		
+
 		// get joystick inputs
 		joyVal = driveGamepad.getRawAxis(HardwareIDs.LEFT_Y_AXIS);
 		fwd = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
@@ -86,6 +86,11 @@ public class ChillySwerve {
 		fieldCentricDrive(fwd, str, rot);	
 		
 		// debug only
+	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/FL_absAngle", frontLeft.getAbsAngle());		
+	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/FR_absAngle", frontRight.getAbsAngle());		
+	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/BL_absAngle", backLeft.getAbsAngle());		
+	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/BR_absAngle", backRight.getAbsAngle());		 
+
 		/*
 		joyVal = driveGamepad.getRawAxis(HardwareIDs.LEFT_Y_AXIS);
 		double left = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
@@ -98,51 +103,13 @@ public class ChillySwerve {
 	}
 	
 	public static void disabledInit() {
-		reset();	
-	}
-
-	public static void setOffsets() {
-		if (!offsetSet) {
-			
-			double flOff = 0, frOff = 0, blOff = 0, brOff = 0;
-			frontLeft.setTurnPower(0);
-			frontRight.setTurnPower(0);
-			backLeft.setTurnPower(0);
-			backRight.setTurnPower(0);
-
-			flOff = frontLeft.getAbsPos();
-			frOff = frontRight.getAbsPos();
-			blOff = backLeft.getAbsPos();
-			brOff = backRight.getAbsPos();
-
-			System.out.println("FLoff: " + flOff);
-			System.out.println("FRoff: " + frOff);
-			System.out.println("BLoff: " + blOff);
-			System.out.println("BRoff: " + brOff);
-
-			resetAllEnc();
-			
-			frontLeft.setEncPos((int) (locSub(flOff, FL_ABS_ZERO) * 4095d));
-			frontRight.setEncPos((int) (locSub(frOff, FR_ABS_ZERO) * 4095d));
-			backLeft.setEncPos((int) (locSub(blOff,BL_ABS_ZERO) * 4095d));
-			backRight.setEncPos((int) (locSub(brOff, BR_ABS_ZERO) * 4095d));
-			
-			offsetSet = true;
-		}
+		reset();
 	}
 	
-	public static void resetOffSet() {
-		offsetSet = false;
+	public static void disabledPeriodic() {
 	}
-	
-	private static double locSub(double v, double c) {
-		if (v - c > 0) {
-			return v - c;
-		} else {
-			return (1 - c) + v;
-		}
-	}
-	
+
+		
 	private static double angleToLoc(double angle) {
 		if (angle < 0) {
 			return .5d + ((180d - Math.abs(angle)) / 360d);
@@ -192,9 +159,9 @@ public class ChillySwerve {
 	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/BL_angle", wa3);		
 	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/BR_angle", wa4);		
 		
-		setDrivePower(ws2, ws1, ws3, ws4);
-		setLocation(angleToLoc(wa2), angleToLoc(wa1),
-				angleToLoc(wa3), angleToLoc(wa4));
+		//setDrivePower(ws2, ws1, ws3, ws4);
+		//setLocation(angleToLoc(wa2), angleToLoc(wa1),
+		//		angleToLoc(wa3), angleToLoc(wa4));
 	}
 
 	public static void humanDrive(double fwd, double str, double rot) {
@@ -202,37 +169,13 @@ public class ChillySwerve {
 			rot = 0;
 
 		if (Math.abs(fwd) < .15 && Math.abs(str) < .15 && Math.abs(rot) < 0.01) {
-			// setOffSets();
 			setDriveBrakeMode(true);
 			stopDrive();
 		} else {
 			setDriveBrakeMode(false);
 			swerveDrive(fwd, str, rot);
-			// resetOffSet();
 		}
 	}
-
-	// not currently used
-	/*
-	public static void pidDrive(double fwd, double str, double angle) {
-		double temp = (fwd * Math.cos(getHyroAngleInRad()))
-				+ (str * Math.sin(getHyroAngleInRad()));
-		str = (-fwd * Math.sin(getHyroAngleInRad()))
-				+ (str * Math.cos(getHyroAngleInRad()));
-		fwd = temp;
-		if (!pidControllerRot.isEnabled())
-			pidControllerRot.enable();
-		if (Math.abs(fwd) < .15 && Math.abs(str) < .15) {
-			pidFWD = 0;
-			pidSTR = 0;
-		} else {
-			setDriveBreakMode(false);
-			pidFWD = fwd;
-			pidSTR = str;
-		}
-		pidControllerRot.setSetpoint(angle);
-	}
-	*/
 
 	public static void fieldCentricDrive(double fwd, double str, double rot) {
 		
@@ -287,10 +230,10 @@ public class ChillySwerve {
 	}
 
 	public static void setLocation(double fl, double fr, double bl, double br) {
-		frontLeft.setTurnLocation(fl);
-		frontRight.setTurnLocation(fr);
-		backLeft.setTurnLocation(bl);
-		backRight.setTurnLocation(br);
+		frontLeft.setTargetAngle(fl);
+		frontRight.setTargetAngle(fr);
+		backLeft.setTargetAngle(bl);
+		backRight.setTargetAngle(br);
 	}
 	
 	public static void setAllTurnPower(double power) {
