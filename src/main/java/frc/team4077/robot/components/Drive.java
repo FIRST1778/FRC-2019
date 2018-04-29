@@ -21,6 +21,13 @@ public class Drive extends Subsystem {
 
 	private final TalonSRX mLeftMaster, mRightMaster, mLeftSlave, mRightSlave;
 
+	public enum SystemState {
+		UNINITIALIZED, // Default state
+		ZEROING, // Zeroing any sensors or encoders
+		RUNNING_OPEN_LOOP, // Running motors directly in PWM control mode
+		RUNNING_VELOCITY_CLOSED_LOOP // Running motors in closed loop velocity control
+	}
+
 	/**
 	 * Returns a static instance of Drive, to be used instead of instantiating
 	 * new objects of Drive.

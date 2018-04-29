@@ -35,7 +35,7 @@ To deploy to the RoboRIO, GradleRIO makes this very easy. For this, it is recomm
 - `./gradlew riolog` will display the RoboRIO's console output
     - use `-Pfakeds` if there is not a driverstation connected
 
-- use `java--offline` when at a competition
+- use `--offline` with all commands when at a competition or when tethered
 
 For more information, read the [GradleRIO README](https://github.com/Open-RIO/GradleRIO/blob/master/README.md).
 
