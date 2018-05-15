@@ -39,6 +39,15 @@ To deploy to the RoboRIO, GradleRIO makes this very easy. For this, it is recomm
 
 For more information, read the [GradleRIO README](https://github.com/Open-RIO/GradleRIO/blob/master/README.md).
 
+## Writing code
+
+Make sure that all code you write follows the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html). This makes everything much easier to read.
+
+In addition, use Google's Java formatter, which is in this directory. To do this run the following, changing the file path:
+```sh
+java -jar google-java-format-1.5-all-deps.jar -i src\main\java\frc\team4077\robot\folder\file.java
+```
+
 ## Key features
 
 Feature and in-depth description. Make sure that each line of code displayed is documented with inline comments.
