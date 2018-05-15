@@ -48,6 +48,31 @@ In addition, use Google's Java formatter, which is in this directory. To do this
 java -jar google-java-format-1.5-all-deps.jar -i src\main\java\frc\team4077\robot\folder\file.java
 ```
 
+### Javadoc
+
+Javadocs are declared using all of the rules of block comments, but begins with `/**`, having a second asterisk.
+
+Any public class and every public or protected method is required to have a Javadoc. This is already required by the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html#s7-javadoc).
+
+### Commit and push to GitHub
+
+Commit often, you should be able to see the progress of your code by looking at commits. Only commit if the code is runnable and has been compiled. To do this, first run the following:
+```sh
+git add -A # Stages all changed files
+git status # Shows exactly what will be staged, make sure it is what you changed
+
+# If everything looks fine, skip this, if not run:
+git reset
+
+git commit -m "Commit message" # Commits staged changes and documents it with the commit message
+```
+
+At the end of every work day, or when a milestone has been reached, push all commits.
+```sh
+git push origin master # Pushes commits from the origin to the master branch
+```
+
+
 ## Key features
 
 Feature and in-depth description. Make sure that each line of code displayed is documented with inline comments.
