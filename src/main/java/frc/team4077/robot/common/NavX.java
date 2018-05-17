@@ -14,63 +14,63 @@ public class NavX {
       synchronized (NavX.this) {
         // This handles the fact that the sensor is inverted from our coordinate
         // conventions.
-        if (mLastSensorTimestampMs != kInvalidTimestamp
-            && mLastSensorTimestampMs < sensor_timestamp) {
-          mYawRateDegreesPerSecond =
+        if (lastSensorTimestampMs != INVALID_TIMESTAMP
+            && lastSensorTimestampMs < sensor_timestamp) {
+          yawRateDegreesPerSecond =
               1000.0
-                  * (-mYawDegrees - update.yaw)
-                  / (double) (sensor_timestamp - mLastSensorTimestampMs);
+                  * (-yawDegrees - update.yaw)
+                  / (double) (sensor_timestamp - lastSensorTimestampMs);
         }
-        mLastSensorTimestampMs = sensor_timestamp;
-        mYawDegrees = -update.yaw;
+        lastSensorTimestampMs = sensor_timestamp;
+        yawDegrees = -update.yaw;
       }
     }
   }
 
-  protected AHRS mAHRS;
+  protected AHRS AHRS;
 
-  protected double mAngleAdjustment;
-  protected double mYawDegrees;
-  protected double mYawRateDegreesPerSecond;
-  protected final long kInvalidTimestamp = -1;
-  protected long mLastSensorTimestampMs;
+  protected double angleAdjustment;
+  protected double yawDegrees;
+  protected double yawRateDegreesPerSecond;
+  protected final long INVALID_TIMESTAMP = -1;
+  protected long lastSensorTimestampMs;
 
   public NavX(SPI.Port spi_port_id) {
-    mAHRS = new AHRS(spi_port_id, (byte) 200);
+    AHRS = new AHRS(spi_port_id, (byte) 200);
     resetState();
-    mAHRS.registerCallback(new Callback(), null);
+    AHRS.registerCallback(new Callback(), null);
   }
 
   public synchronized void reset() {
-    mAHRS.reset();
+    AHRS.reset();
     resetState();
   }
 
   public synchronized void zeroYaw() {
-    mAHRS.zeroYaw();
+    AHRS.zeroYaw();
     resetState();
   }
 
   private void resetState() {
-    mLastSensorTimestampMs = kInvalidTimestamp;
-    mYawDegrees = 0.0;
-    mYawRateDegreesPerSecond = 0.0;
+    lastSensorTimestampMs = INVALID_TIMESTAMP;
+    yawDegrees = 0.0;
+    yawRateDegreesPerSecond = 0.0;
   }
 
   public synchronized void setAngleAdjustment(double adjustment) {
-    mAngleAdjustment = adjustment;
+    angleAdjustment = adjustment;
   }
 
   protected synchronized double getRawYawDegrees() {
-    return mYawDegrees;
+    return yawDegrees;
   }
 
   public double getYaw() {
-    return mAngleAdjustment + getRawYawDegrees();
+    return angleAdjustment + getRawYawDegrees();
   }
 
   public double getYawRateDegreesPerSec() {
-    return mYawRateDegreesPerSecond;
+    return yawRateDegreesPerSecond;
   }
 
   public double getYawRateRadiansPerSec() {
@@ -78,6 +78,6 @@ public class NavX {
   }
 
   public double getRawAccelX() {
-    return mAHRS.getRawAccelX();
+    return AHRS.getRawAccelX();
   }
 }
