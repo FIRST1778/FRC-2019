@@ -56,7 +56,7 @@ Any public class and every public or protected method is required to have a Java
 
 ### Commit and push to GitHub
 
-Commit often, you should be able to see the progress of your code by looking at commits. Only commit if the code is runnable and has been compiled. To do this, first run the following:
+Commit often, you should be able to see the progress of your code by looking at commits. Try to only commit if the code is runnable and has been built without errors. If it is not runnable, but you have to commit anyways, indicate as such in the commit message. To do this, first run the following:
 ```sh
 git add -A # Stages all changed files
 git status # Shows exactly what will be staged, make sure it is what you changed
