@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 /**
  * This creates and sets most of the convenient settings for TalonSRX. This includes feedback
@@ -12,15 +11,18 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  *
  * <p>This is adapted from {@see <a href=
  * "https://github.com/Team254/FRC-2017-Public/blob/master/src/com/team254/lib/util/drivers/CANTalonFactory.java">254's
- * Code</a>}, but is updated to work with
+ * Code</a>}, but is updated to work with the newer TalonSRX API.
  *
  * @author FRC 4077 MASH, Hillel Coates
  */
 public class TalonSRXFactory {
 
+  /**
+   * Contains the configuration parameters for the TalonSRX.
+   *
+   * @author FRC 4077 MASH, Hillel Coates
+   */
   public static class Configuration {
-    TalonSRX talon = new TalonSRX(0);
-
     public int TIMEOUT_IN_MS = 10;
     public int PROFILE_SLOT_ID = 0;
 
@@ -40,7 +42,7 @@ public class TalonSRXFactory {
     public int PEAK_CURRENT_LIMIT_DURATION = 0;
     public boolean ENABLE_CURRENT_LIMIT = false;
     public double OPEN_LOOP_RAMP_TIME_SECONDS = 0.0;
-    public boolean INVERTED_DIRECTION = false;
+    public boolean INVERT_DIRECTION = false;
     public boolean INVERT_SENSOR_PHASE = false;
     public NeutralMode NEUTRAL_POWER_MODE = NeutralMode.Brake;
 
@@ -54,35 +56,34 @@ public class TalonSRXFactory {
   }
 
   /**
-   * Create a basic TalonSRX, this just sets the ID and allows for reversing the motor direction.
+   * Create a basic SimpleTalonSRX, this just sets the ID and allows for reversing the motor
+   * direction.
    *
    * @param id This is the CAN ID in which the TalonSRX is configured with.
-   * @param isReversed When true, all motor signals will be reversed, e.g. 1 will actually send -1.
    */
-  public static TalonSRX createDefaultTalonSRX(int id) {
-    return new TalonSRX(id);
+  public static SimpleTalonSRX createDefaultTalonSRX(int id) {
+    return new SimpleTalonSRX(id);
   }
 
   /**
-   * Create a slave TalonSRX. This will follow a master that is defined. direction.
+   * Create a slave SimpleTalonSRX. This will follow a master that is defined.
    *
    * @param id This is the CAN ID in which the TalonSRX is configured with.
    * @param masterId This is the CAN ID of the TalonSRX that this TalonSRX is supposed to follow.
    */
-  public static TalonSRX createPermanentSlaveTalonSRX(int id, int masterId) {
-    TalonSRX talon = new TalonSRX(id);
-    // talon.setInverted(isReversed);
+  public static SimpleTalonSRX createPermanentSlaveTalonSRX(int id, int masterId) {
+    SimpleTalonSRX talon = new SimpleTalonSRX(id);
     return talon;
   }
 
   /**
-   * Create a full fledged TalonSRX, this sets everything that will be used.
+   * Create a full fledged SimpleTalonSRX, this sets everything that will be used.
    *
    * @param id This is the CAN ID in which the TalonSRX is configured with.
    * @param config This is the Configuration that stores all of the settings of the Talon.
    */
-  public static TalonSRX createTalon(int id, Configuration config) {
-    TalonSRX talon = new TalonSRX(id);
+  public static SimpleTalonSRX createTalon(int id, Configuration config) {
+    SimpleTalonSRX talon = new SimpleTalonSRX(id);
 
     talon.configSelectedFeedbackSensor(config.FEEDBACK_DEVICE, 0, config.TIMEOUT_IN_MS);
     talon.setSelectedSensorPosition(0, 0, config.TIMEOUT_IN_MS);
@@ -102,7 +103,7 @@ public class TalonSRXFactory {
     talon.configOpenloopRamp(config.OPEN_LOOP_RAMP_TIME_SECONDS, config.TIMEOUT_IN_MS);
     talon.configAllowableClosedloopError(
         config.PROFILE_SLOT_ID, config.ALLOWABLE_CLOSED_LOOP_ERROR, config.TIMEOUT_IN_MS);
-    talon.setInverted(config.INVERTED_DIRECTION);
+    talon.setInverted(config.INVERT_DIRECTION);
     talon.setSensorPhase(config.INVERT_SENSOR_PHASE);
     talon.setNeutralMode(config.NEUTRAL_POWER_MODE);
     talon.selectProfileSlot(config.PROFILE_SLOT_ID, 0);
