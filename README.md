@@ -72,13 +72,12 @@ At the end of every work day, or when a milestone has been reached, push all com
 git push origin master # Pushes commits from the origin to the master branch
 ```
 
-
 ## Key features
 
 Feature and in-depth description. Make sure that each line of code displayed is documented with inline comments.
 ```java
 // The constructor for Thing does not take any arguments
-private mThing = new Thing();
+private thing = new Thing();
 
 mThing.doTheThing(); // This does the thing
 

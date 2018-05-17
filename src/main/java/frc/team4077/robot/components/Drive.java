@@ -3,7 +3,7 @@ package frc.team4077.robot.components;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import frc.team4077.robot.common.RobotMap;
+import frc.team4077.robot.Ports;
 
 /**
  * This is the robot's drivetrain. This class handles the four TalonSRX motor controllers attached
@@ -16,11 +16,11 @@ import frc.team4077.robot.common.RobotMap;
  * @see Subsystem.java
  */
 public class Drive extends Subsystem {
-  private static Drive mInstance = new Drive();
+  private static Drive instance = new Drive();
 
-  private final TalonSRX mLeftMaster, mRightMaster, mLeftSlave, mRightSlave;
+  private final TalonSRX leftMaster, rightMaster, leftSlave, rightSlave;
 
-  public enum SystemState {
+  public enum SysteState {
     UNINITIALIZED, // Default
     ZEROING, // Zeroing sensors
     RUNNING_OPEN_LOOP, // Driving with no feedback
@@ -30,28 +30,28 @@ public class Drive extends Subsystem {
   /**
    * Returns a static instance of Drive, to be used instead of instantiating new objects of Drive.
    */
-  public static Drive getInstance() {
-    return mInstance;
+  public static Drive getinstance() {
+    return instance;
   }
 
   private Drive() {
-    mLeftMaster = new TalonSRX(RobotMap.LEFT_SLAVE_TALON_ID);
-    mRightMaster = new TalonSRX(RobotMap.RIGHT_MASTER_TALON_ID);
-    mLeftSlave = new TalonSRX(RobotMap.LEFT_SLAVE_TALON_ID);
-    mRightSlave = new TalonSRX(RobotMap.RIGHT_SLAVE_TALON_ID);
+    leftMaster = new TalonSRX(Ports.LEFT_SLAVE_TALON_ID);
+    rightMaster = new TalonSRX(Ports.RIGHT_MASTER_TALON_ID);
+    leftSlave = new TalonSRX(Ports.LEFT_SLAVE_TALON_ID);
+    rightSlave = new TalonSRX(Ports.RIGHT_SLAVE_TALON_ID);
 
-    mLeftMaster.setInverted(false);
-    mRightMaster.setInverted(true);
-    mLeftSlave.setInverted(false);
-    mRightSlave.setInverted(true);
+    leftMaster.setInverted(false);
+    rightMaster.setInverted(true);
+    leftSlave.setInverted(false);
+    rightSlave.setInverted(true);
 
-    mLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-    mLeftMaster.setSensorPhase(false);
-    mRightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-    mRightMaster.setSensorPhase(false);
+    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+    leftMaster.setSensorPhase(false);
+    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+    rightMaster.setSensorPhase(false);
 
-    mLeftSlave.set(ControlMode.Follower, RobotMap.LEFT_MASTER_TALON_ID);
-    mRightSlave.set(ControlMode.Follower, RobotMap.RIGHT_MASTER_TALON_ID);
+    leftSlave.set(ControlMode.Follower, Ports.LEFT_MASTER_TALON_ID);
+    rightSlave.set(ControlMode.Follower, Ports.RIGHT_MASTER_TALON_ID);
   }
 
   @Override
