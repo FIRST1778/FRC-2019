@@ -35,6 +35,10 @@ public class TalonSRXFactory {
     public double REVERSE_PEAK_OUTPUT = -1.0;
     public double VOLTAGE_COMPENSATION_SATURATION = 12.0;
     public boolean ENABLE_VOLTAGE_COMPENSATION = false;
+    public int CONTINUOUS_CURRENT_LIMIT = 0;
+    public int PEAK_CURRENT_LIMIT = 0;
+    public int PEAK_CURRENT_LIMIT_DURATION = 0;
+    public boolean ENABLE_CURRENT_LIMIT = false;
     public double OPEN_LOOP_RAMP_TIME_SECONDS = 0.0;
     public boolean INVERTED_DIRECTION = false;
     public boolean INVERT_SENSOR_PHASE = false;
@@ -92,6 +96,9 @@ public class TalonSRXFactory {
     talon.configPeakOutputReverse(config.REVERSE_PEAK_OUTPUT, config.TIMEOUT_IN_MS);
     talon.configVoltageCompSaturation(config.VOLTAGE_COMPENSATION_SATURATION, config.TIMEOUT_IN_MS);
     talon.enableVoltageCompensation(config.ENABLE_VOLTAGE_COMPENSATION);
+    talon.configContinuousCurrentLimit(config.CONTINUOUS_CURRENT_LIMIT, config.TIMEOUT_IN_MS);
+    talon.configPeakCurrentLimit(config.PEAK_CURRENT_LIMIT, config.TIMEOUT_IN_MS);
+    talon.configPeakCurrentDuration(config.PEAK_CURRENT_LIMIT_DURATION, config.TIMEOUT_IN_MS);
     talon.configOpenloopRamp(config.OPEN_LOOP_RAMP_TIME_SECONDS, config.TIMEOUT_IN_MS);
     talon.configAllowableClosedloopError(
         config.PROFILE_SLOT_ID, config.ALLOWABLE_CLOSED_LOOP_ERROR, config.TIMEOUT_IN_MS);
