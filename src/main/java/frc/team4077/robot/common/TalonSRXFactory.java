@@ -9,11 +9,12 @@ import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
  * This creates and sets most of the convenient settings for TalonSRX. This includes feedback
  * devices, voltage limits, control modes, inversion, etc.
  *
- * <p>This is adapted from {@see <a href=
- * "https://github.com/Team254/FRC-2017-Public/blob/master/src/com/team254/lib/util/drivers/CANTalonFactory.java">254's
- * Code</a>}, but is updated to work with the newer TalonSRX API.
+ * <p>This is adapted from 254's code, but is updated to work with the newer TalonSRX API.
  *
  * @author FRC 4077 MASH, Hillel Coates
+ * @see <a
+ *     href="https://github.com/Team254/FRC-2017-Public/blob/master/src/com/team254/lib/util/drivers/LazyCANTalon.java">254's
+ *     Code</a>
  */
 public class TalonSRXFactory {
 
@@ -60,8 +61,10 @@ public class TalonSRXFactory {
    * direction.
    *
    * @param id This is the CAN ID in which the TalonSRX is configured with.
+   * @return A TalonSRX, configured with the default parameters.
    */
   public static SimpleTalonSRX createDefaultTalonSRX(int id) {
+
     return new SimpleTalonSRX(id);
   }
 
@@ -70,6 +73,7 @@ public class TalonSRXFactory {
    *
    * @param id This is the CAN ID in which the TalonSRX is configured with.
    * @param masterId This is the CAN ID of the TalonSRX that this TalonSRX is supposed to follow.
+   * @return A static TalonSRX, configured as a slave follower.
    */
   public static SimpleTalonSRX createPermanentSlaveTalonSRX(int id, int masterId) {
     SimpleTalonSRX talon = new SimpleTalonSRX(id);
@@ -81,6 +85,7 @@ public class TalonSRXFactory {
    *
    * @param id This is the CAN ID in which the TalonSRX is configured with.
    * @param config This is the Configuration that stores all of the settings of the Talon.
+   * @return The configured TalonSRX
    */
   public static SimpleTalonSRX createTalon(int id, Configuration config) {
     SimpleTalonSRX talon = new SimpleTalonSRX(id);
