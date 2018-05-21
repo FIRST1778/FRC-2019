@@ -6,9 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 /**
  * A simple wrapper for the TalonSRX class. It simplifies some basic commands, but that is about it.
  *
- * <p>This is adapted from {@see <a
- * href="https://github.com/Team254/FRC-2017-Public/blob/master/src/com/team254/lib/util/drivers/LazyCANTalon.java"">254's
- * Code</a>}, but is updated to work with the newer TalonSRX API.
+ * <p>This is adapted from 254's code, but is updated to work with the newer TalonSRX API.
  *
  * @author FRC 4077 MASH, Hillel Coates
  */
@@ -45,6 +43,7 @@ public class SimpleTalonSRX extends TalonSRX {
    *           the sensor.
    *       <li>See In Follower mode, the output value is the integer device ID of the talon to
    *           duplicate.
+   *     </ul>
    */
   public void set(double value) {
     if (value != lastSet || getControlMode() != lastControlMode) {

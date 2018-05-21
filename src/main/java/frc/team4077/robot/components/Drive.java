@@ -13,7 +13,6 @@ import frc.team4077.robot.Ports;
  * solenoid, two (2) shifting pistons, and one (1) NavX IMU.
  *
  * @author FRC 4077 MASH, Hillel Coates
- * @see Subsystem.java
  */
 public class Drive extends Subsystem {
   private static Drive instance = new Drive();
@@ -29,6 +28,8 @@ public class Drive extends Subsystem {
 
   /**
    * Returns a static instance of Drive, to be used instead of instantiating new objects of Drive.
+   *
+   * @return An instance of Drive
    */
   public static Drive getinstance() {
     return instance;
