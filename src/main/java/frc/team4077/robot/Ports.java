@@ -1,5 +1,7 @@
 package frc.team4077.robot;
 
+import edu.wpi.first.wpilibj.SPI;
+
 /**
  * Holds hardware variables as to which ports hardware is attached to.
  *
@@ -15,4 +17,5 @@ public class Ports {
   // Solenoids
 
   // Sensors
+  public static final SPI.Port NAVX_SPI = SPI.Port.kMXP;
 }

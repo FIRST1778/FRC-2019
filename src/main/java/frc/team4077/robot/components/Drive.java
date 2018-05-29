@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.team4077.robot.Ports;
+import frc.team4077.robot.common.NavX;
 
 /**
  * This is the robot's drivetrain. This class handles the four TalonSRX motor controllers attached
@@ -18,8 +19,9 @@ public class Drive extends Subsystem {
   private static Drive instance = new Drive();
 
   private final TalonSRX leftMaster, rightMaster, leftSlave, rightSlave;
+  private final NavX navX;
 
-  public enum SysteState {
+  public enum SystemState {
     UNINITIALIZED, // Default
     ZEROING, // Zeroing sensors
     RUNNING_OPEN_LOOP, // Driving with no feedback
@@ -53,11 +55,27 @@ public class Drive extends Subsystem {
 
     leftSlave.set(ControlMode.Follower, Ports.LEFT_MASTER_TALON_ID);
     rightSlave.set(ControlMode.Follower, Ports.RIGHT_MASTER_TALON_ID);
+
+    navX = new NavX(Ports.NAVX_SPI);
+  }
+
+  /**
+   * Returns the drivebase's NavX IMU. Use this instead of reinstantiating the NavX, which will result in no response from the sensor.
+   * 
+   * @return The drivebase's NavX
+   */
+  public NavX getNavX() {
+    return navX;
   }
 
   @Override
   public void sendTelemetry() {}
 
   @Override
-  public void zeroAndReset() {}
+  public void resetEncoders() {}
+
+  @Override
+  public void zeroSensors() {
+    navX.zeroYaw();
+  }
 }

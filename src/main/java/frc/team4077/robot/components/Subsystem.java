@@ -11,6 +11,9 @@ public abstract class Subsystem {
   /** Print telemetry associated with this subsystem to the SmartDashboard. */
   public abstract void sendTelemetry();
 
-  /** Reset and zero all sensors associated with the subsystem. */
-  public abstract void zeroAndReset();
+  /** Reset all encoders associated with the subsystem. */
+  public abstract void resetEncoders();
+
+  /** Zero all sensors associated with the subsystem. */
+  public abstract void zeroSensors();
 }
