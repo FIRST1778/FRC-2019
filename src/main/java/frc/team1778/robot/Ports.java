@@ -1,11 +1,11 @@
-package frc.team4077.robot;
+package frc.team1778.robot;
 
 import edu.wpi.first.wpilibj.SPI;
 
 /**
  * Holds hardware variables as to which ports hardware is attached to.
  *
- * @author FRC 4077 MASH, Hillel Coates
+ * @author FRC 1778 Chill Out, Hillel Coates
  */
 public class Ports {
   // Talons

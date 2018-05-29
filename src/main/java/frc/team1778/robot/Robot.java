@@ -1,4 +1,4 @@
-package frc.team4077.robot;
+package frc.team1778.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * driverstation packets. Periodic methods loop throughverything inside of them and then return to
  * the top. Init methods are run once, and then pass on to their respective periodic method.
  *
- * @author FRC 4077 MASH, Hillel Coates
+ * @author FRC 1778 Chill Out, Hillel Coates
  */
 public class Robot extends IterativeRobot {
   @Override

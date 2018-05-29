@@ -1,4 +1,4 @@
-package frc.team4077.robot.common;
+package frc.team1778.robot.common;
 
 import com.kauailabs.navx.AHRSProtocol.AHRSUpdateBase;
 import com.kauailabs.navx.frc.AHRS;

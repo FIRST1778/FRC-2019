@@ -1,11 +1,11 @@
-package frc.team4077.robot.components;
+package frc.team1778.robot.components;
 
 /**
  * This is the base class which all subsystems/components inherit. This requires that each subsystem
  * can print telemetry data to the SmartDashboard as well as reset any sensors associated with the
  * subsystem.
  *
- * @author FRC 4077 MASH, Hillel Coates
+ * @author FRC 1778 Chill Out, Hillel Coates
  */
 public abstract class Subsystem {
   /** Print telemetry associated with this subsystem to the SmartDashboard. */
