@@ -2,9 +2,12 @@ package frc.team4077.robot.components;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.team4077.robot.Ports;
 import frc.team4077.robot.common.NavX;
+import frc.team4077.robot.common.TalonSRXFactory;
 
 /**
  * This is the robot's drivetrain. This class handles the four TalonSRX motor controllers attached
@@ -26,6 +29,27 @@ public class Drive extends Subsystem {
     ZEROING, // Zeroing sensors
     RUNNING_OPEN_LOOP, // Driving with no feedback
     RUNNING_VELOCITY_CLOSED_LOOP // Driving controlling the velocity with PID
+  }
+
+  private static TalonSRXFactory.Configuration masterConfiguration =
+      new TalonSRXFactory.Configuration();
+
+  static {
+    masterConfiguration.FEEDBACK_DEVICE = FeedbackDevice.CTRE_MagEncoder_Relative;
+    masterConfiguration.STATUS_FRAME_PERIOD = 10;
+    masterConfiguration.STATUS_FRAME = StatusFrameEnhanced.Status_13_Base_PIDF0;
+    masterConfiguration.PID_KP = 15;
+    masterConfiguration.PID_KI = 0.01;
+    masterConfiguration.PID_KD = 0.1;
+    masterConfiguration.PID_KF = 0.2;
+    masterConfiguration.MOTION_CRUISE_VELOCITY = 640;
+    masterConfiguration.MOTION_ACCELERATION = 200;
+
+    masterConfiguration.NEUTRAL_POWER_MODE = NeutralMode.Brake;
+    masterConfiguration.CONTINUOUS_CURRENT_LIMIT = 25;
+    masterConfiguration.PEAK_CURRENT_LIMIT = 25;
+    masterConfiguration.PEAK_CURRENT_LIMIT_DURATION = 100;
+    masterConfiguration.ENABLE_CURRENT_LIMIT = true;
   }
 
   /**
@@ -60,8 +84,9 @@ public class Drive extends Subsystem {
   }
 
   /**
-   * Returns the drivebase's NavX IMU. Use this instead of reinstantiating the NavX, which will result in no response from the sensor.
-   * 
+   * Returns the drivebase's NavX IMU. Use this instead of reinstantiating the NavX, which will
+   * result in no response from the sensor.
+   *
    * @return The drivebase's NavX
    */
   public NavX getNavX() {
