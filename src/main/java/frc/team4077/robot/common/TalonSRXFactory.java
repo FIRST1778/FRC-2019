@@ -64,7 +64,6 @@ public class TalonSRXFactory {
    * @return A TalonSRX, configured with the default parameters.
    */
   public static SimpleTalonSRX createDefaultTalonSRX(int id) {
-
     return new SimpleTalonSRX(id);
   }
 
