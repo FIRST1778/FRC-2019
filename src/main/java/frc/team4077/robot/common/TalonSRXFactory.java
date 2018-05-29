@@ -2,7 +2,7 @@ package frc.team4077.robot.common;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 
 /**
@@ -28,7 +28,7 @@ public class TalonSRXFactory {
     public int PROFILE_SLOT_ID = 0;
 
     public FeedbackDevice FEEDBACK_DEVICE = FeedbackDevice.None;
-    public StatusFrame STATUS_FRAME = StatusFrame.Status_1_General;
+    public StatusFrameEnhanced STATUS_FRAME = StatusFrameEnhanced.Status_1_General;
     public int STATUS_FRAME_PERIOD = 10;
     public VelocityMeasPeriod VELOCITY_MEASUREMENT_PERIOD = VelocityMeasPeriod.Period_10Ms;
     public int VELOCITY_MEASUREMENT_WINDOW = 32;
