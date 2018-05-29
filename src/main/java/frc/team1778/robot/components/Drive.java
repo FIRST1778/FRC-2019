@@ -88,6 +88,11 @@ public class Drive extends Subsystem {
     rightRearRotate = TalonSRXFactory.createTalon(6, rotationConfiguration);
     rightFrontRotate = TalonSRXFactory.createTalon(8, rotationConfiguration);
 
+    leftFrontDrive.set(ControlMode.PercentOutput, 0);
+    leftRearDrive.set(ControlMode.PercentOutput, 0);
+    rightRearDrive.set(ControlMode.PercentOutput, 0);
+    rightFrontDrive.set(ControlMode.PercentOutput, 0);
+
     leftFrontRotate.set(ControlMode.Position, 0);
     leftRearRotate.set(ControlMode.Position, 0);
     rightRearRotate.set(ControlMode.Position, 0);
