@@ -57,26 +57,13 @@ public class TalonSRXFactory {
   }
 
   /**
-   * Create a basic SimpleTalonSRX, this just sets the ID and allows for reversing the motor
-   * direction.
+   * Create a basic SimpleTalonSRX.
    *
    * @param id This is the CAN ID in which the TalonSRX is configured with.
    * @return A TalonSRX, configured with the default parameters.
    */
   public static SimpleTalonSRX createDefaultTalonSRX(int id) {
     return new SimpleTalonSRX(id);
-  }
-
-  /**
-   * Create a slave SimpleTalonSRX. This will follow a master that is defined.
-   *
-   * @param id This is the CAN ID in which the TalonSRX is configured with.
-   * @param masterId This is the CAN ID of the TalonSRX that this TalonSRX is supposed to follow.
-   * @return A static TalonSRX, configured as a slave follower.
-   */
-  public static SimpleTalonSRX createPermanentSlaveTalonSRX(int id, int masterId) {
-    SimpleTalonSRX talon = new SimpleTalonSRX(id);
-    return talon;
   }
 
   /**

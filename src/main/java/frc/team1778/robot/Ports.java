@@ -9,10 +9,14 @@ import edu.wpi.first.wpilibj.SPI;
  */
 public class Ports {
   // Talons
-  public static final int LEFT_MASTER_TALON_ID = 1;
-  public static final int RIGHT_MASTER_TALON_ID = 3;
-  public static final int LEFT_SLAVE_TALON_ID = 2;
-  public static final int RIGHT_SLAVE_TALON_ID = 4;
+  public static final int LEFT_FRONT_DRIVE_TALON_ID = 1;
+  public static final int LEFT_FRONT_ROTATION_TALON_ID = 2;
+  public static final int LEFT_REAR_DRIVE_TALON_ID = 3;
+  public static final int LEFT_REAR_ROTATION_TALON_ID = 4;
+  public static final int RIGHT_REAR_DRIVE_TALON_ID = 5;
+  public static final int RIGHT_REAR_ROTATION_TALON_ID = 6;
+  public static final int RIGHT_FRONT_DRIVE_TALON_ID = 7;
+  public static final int RIGHT_FRONT_ROTATION_TALON_ID = 8;
 
   // Solenoids
 
