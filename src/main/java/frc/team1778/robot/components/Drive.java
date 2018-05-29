@@ -1,13 +1,13 @@
-package frc.team4077.robot.components;
+package frc.team1778.robot.components;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import frc.team4077.robot.Ports;
-import frc.team4077.robot.common.NavX;
-import frc.team4077.robot.common.TalonSRXFactory;
+import frc.team1778.robot.Ports;
+import frc.team1778.robot.common.NavX;
+import frc.team1778.robot.common.TalonSRXFactory;
 
 /**
  * This is the robot's drivetrain. This class handles the four TalonSRX motor controllers attached
@@ -16,7 +16,7 @@ import frc.team4077.robot.common.TalonSRXFactory;
  * <p>The drivetrain consists of four (4) TalonSRX motor controllers, four (4) CIM motors, one (1)
  * solenoid, two (2) shifting pistons, and one (1) NavX IMU.
  *
- * @author FRC 4077 MASH, Hillel Coates
+ * @author FRC 1778 Chill Out, Hillel Coates
  */
 public class Drive extends Subsystem {
   private static Drive instance = new Drive();

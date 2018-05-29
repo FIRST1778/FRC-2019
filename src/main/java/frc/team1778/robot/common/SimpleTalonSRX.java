@@ -1,4 +1,4 @@
-package frc.team4077.robot.common;
+package frc.team1778.robot.common;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -8,7 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  *
  * <p>This is adapted from 254's code, but is updated to work with the newer TalonSRX API.
  *
- * @author FRC 4077 MASH, Hillel Coates
+ * @author FRC 1778 Chill Out, Hillel Coates
  */
 public class SimpleTalonSRX extends TalonSRX {
   protected double lastSet = Double.NaN;
