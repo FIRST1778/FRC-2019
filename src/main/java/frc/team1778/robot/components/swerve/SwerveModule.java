@@ -5,7 +5,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import frc.team1778.robot.Constants;
 import frc.team1778.robot.common.TalonSRXFactory;
 import frc.team1778.robot.components.Subsystem;
@@ -40,8 +39,8 @@ public class SwerveModule extends Subsystem {
     driveConfiguration.PID_KI = 0.01;
     driveConfiguration.PID_KD = 0.1;
     driveConfiguration.PID_KF = 0.2;
-    driveConfiguration.MOTION_CRUISE_VELOCITY = (int)(Constants.SWERVE_DRIVE_MAX_SPEED*0.9);
-    driveConfiguration.MOTION_ACCELERATION = (int)(Constants.SWERVE_DRIVE_MAX_SPEED);
+    driveConfiguration.MOTION_CRUISE_VELOCITY = (int) (Constants.SWERVE_DRIVE_MAX_SPEED * 0.9);
+    driveConfiguration.MOTION_ACCELERATION = (int) (Constants.SWERVE_DRIVE_MAX_SPEED);
     driveConfiguration.NEUTRAL_POWER_MODE = NeutralMode.Brake;
     driveConfiguration.CONTINUOUS_CURRENT_LIMIT = 25;
     driveConfiguration.PEAK_CURRENT_LIMIT = 25;
