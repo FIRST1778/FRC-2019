@@ -10,8 +10,6 @@ public class DriveControl {
   private double throttleDeadband = 0.04;
   private double wheelDeadband = 0.02;
 
-  private double leftOutput, rightOutput;
-
   public DriveControl() {}
 
   public void calculateDrive(double throttle, double wheel, boolean isQuickTurn) {
@@ -118,8 +116,7 @@ public class DriveControl {
       rightPower = -1.0;
     }
 
-    leftOutput = leftPower;
-    rightOutput = rightPower;
+    // Send outputs
 
     InputOutputComm.putDouble(InputOutputComm.LogTable.kDriveLog, "Teleop/leftPower", leftPower);
     InputOutputComm.putDouble(InputOutputComm.LogTable.kDriveLog, "Teleop/rightPower", rightPower);

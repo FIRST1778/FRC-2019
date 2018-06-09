@@ -11,10 +11,6 @@ public class RPIComm {
   private static NetworkTable table;
   private static NetworkTableInstance tableInstance;
 
-  // camera image parameters
-  private static int frameWidth = 320;
-  private static int frameHeight = 240;
-
   public static void initialize() {
 
     if (initialized) return;
