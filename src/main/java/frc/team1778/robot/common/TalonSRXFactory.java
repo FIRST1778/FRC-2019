@@ -11,7 +11,7 @@ import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
  *
  * <p>This is adapted from 254's code, but is updated to work with the newer TalonSRX API.
  *
- * @author FRC 1778 Chill Out, Hillel Coates
+ * @author FRC 1778 Chill Out
  * @see <a
  *     href="https://github.com/Team254/FRC-2017-Public/blob/master/src/com/team254/lib/util/drivers/LazyCANTalon.java">254's
  *     Code</a>
@@ -21,7 +21,7 @@ public class TalonSRXFactory {
   /**
    * Contains the configuration parameters for the TalonSRX.
    *
-   * @author FRC 1778 Chill Out, Hillel Coates
+   * @author FRC 1778 Chill Out
    */
   public static class Configuration {
     public int TIMEOUT_IN_MS = 10;

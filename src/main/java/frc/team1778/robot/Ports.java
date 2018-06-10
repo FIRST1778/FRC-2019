@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.SPI;
 /**
  * Holds hardware variables as to which ports hardware is attached to.
  *
- * @author FRC 1778 Chill Out, Hillel Coates
+ * @author FRC 1778 Chill Out
  */
 public class Ports {
   // Talons

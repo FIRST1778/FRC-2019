@@ -5,7 +5,7 @@ package frc.team1778.robot.components;
  * can print telemetry data to the SmartDashboard as well as reset any sensors associated with the
  * subsystem.
  *
- * @author FRC 1778 Chill Out, Hillel Coates
+ * @author FRC 1778 Chill Out
  */
 public abstract class Subsystem {
   /** Print telemetry associated with this subsystem to the SmartDashboard. */

@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * driverstation packets. Periodic methods loop throughverything inside of them and then return to
  * the top. Init methods are run once, and then pass on to their respective periodic method.
  *
- * @author FRC 1778 Chill Out, Hillel Coates
+ * @author FRC 1778 Chill Out
  */
 public class Robot extends IterativeRobot {
   @Override
