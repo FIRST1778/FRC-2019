@@ -1,7 +1,5 @@
 package frc.team1778.lib.util;
 
-import frc.team1778.lib.util.network.InputOutputComm;
-
 public class DriveControl {
 
   double oldWheel, quickStopAccumulator;
@@ -21,9 +19,6 @@ public class DriveControl {
     // throttle = throttle / 0.6;
 
     if (throttle < 0) wheel = -wheel;
-
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kDriveLog, "Teleop/Throttle", throttle);
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kDriveLog, "Teleop/Wheel", wheel);
 
     double negInertia = wheel - oldWheel;
     oldWheel = wheel;
@@ -115,10 +110,5 @@ public class DriveControl {
       leftPower += overPower * (-1.0 - rightPower);
       rightPower = -1.0;
     }
-
-    // Send outputs
-
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kDriveLog, "Teleop/leftPower", leftPower);
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kDriveLog, "Teleop/rightPower", rightPower);
   }
 }

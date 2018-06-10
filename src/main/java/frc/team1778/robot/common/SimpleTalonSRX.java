@@ -8,7 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  *
  * <p>This is adapted from 254's code, but is updated to work with the newer TalonSRX API.
  *
- * @author FRC 1778 Chill Out, Hillel Coates
+ * @author FRC 1778 Chill Out
  */
 public class SimpleTalonSRX extends TalonSRX {
   protected double lastSet = Double.NaN;

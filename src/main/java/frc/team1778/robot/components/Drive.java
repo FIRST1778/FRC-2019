@@ -17,7 +17,7 @@ import frc.team1778.robot.common.TalonSRXFactory;
  * BAG motors, and one (1) NavX IMU. The CIM motors are used to drive each swerve module, and the
  * BAG motors are used for rotation.
  *
- * @author FRC 1778 Chill Out, Hillel Coates
+ * @author FRC 1778 Chill Out
  */
 public class Drive extends Subsystem {
   private static Drive instance = new Drive();

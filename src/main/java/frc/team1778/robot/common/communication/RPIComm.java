@@ -1,4 +1,4 @@
-package frc.team1778.lib.util.network;
+package frc.team1778.robot.common.communication;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
