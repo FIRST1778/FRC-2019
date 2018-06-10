@@ -1,24 +1,51 @@
 package frc.team1778.lib.util.gamepads;
 
+/**
+ * Output mapping constants for the Xbox One Elite gamepad
+ *
+ * @author FRC 1778 Chill Out
+ */
 public class XboxOneElite {
-  public static final int DPAD = 0; // GetPOV () direction for directional gamepad
-  public static final int A = 1; // Bottom Button
-  public static final int B = 2; // Right Button
-  public static final int X = 3; // Left button
-  public static final int Y = 4; // Top Button
-  public static final int LB = 5;
-  public static final int RB = 6;
+  /** The dpad 'axis', used with GetPOV() */
+  public static final int DPAD = 0;
+  /** The lower button of four, labelled "A" */
+  public static final int A = 1;
+  /** The right button of four, labelled "B" */
+  public static final int B = 2;
+  /** The left button of four, labelled "X" */
+  public static final int X = 3;
+  /** The upper button of four, labelled "Y" */
+  public static final int Y = 4;
+  /** The left bumper button */
+  public static final int LEFT_BUMPER = 5;
+  /** The right bumper button */
+  public static final int RIGHT_BUMPER = 6;
+  /** The back button */
   public static final int BACK = 7;
+  /** The start button */
   public static final int START = 8;
-  public static final int LEFT_PRESS = 9;
-  public static final int RIGHT_PRESS = 10;
+  /** The left joystick button */
+  public static final int LEFT_JOYSTICK_BUTTON = 9;
+  /** The right joystick button */
+  public static final int RIGHT_JOYSTICK_BUTTON = 10;
 
+  /**
+   * Axis mappings for the joysticks
+   *
+   * @author FRC 1778 Chill Out
+   */
   public class Axis {
+    /** The left joystick x-axis */
     public static final int LEFT_X = 0;
+    /** The left joystick y-axis */
     public static final int LEFT_Y = 1;
-    public static final int LT = 2;
-    public static final int RT = 3;
+    /** The left trigger axis */
+    public static final int LEFT_TRIGGER = 2;
+    /** The right trigger axis */
+    public static final int RIGHT_TRIGGER = 3;
+    /** The right joystick x-axis */
     public static final int RIGHT_X = 4;
+    /** The right joystick y-axis */
     public static final int RIGHT_Y = 5;
   }
 }
