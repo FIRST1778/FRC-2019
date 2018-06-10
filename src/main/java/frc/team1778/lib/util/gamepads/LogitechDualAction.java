@@ -6,7 +6,7 @@ package frc.team1778.lib.util.gamepads;
  * @author FRC 1778 Chill Out
  */
 public class LogitechDualAction {
-  /** The dpad 'axis', used with GetPOV() */
+  /** The dPad 'axis', used with GetPOV() */
   public static final int DPAD = 0;
   /** The left button of four, labelled "1" */
   public static final int B1 = 1;

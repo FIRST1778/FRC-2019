@@ -6,7 +6,7 @@ package frc.team1778.lib.util.gamepads;
  * @author FRC 1778 Chill Out
  */
 public class LogitechF310 {
-  /** The dpad 'axis', used with GetPOV() */
+  /** The dPad 'axis', used with GetPOV() */
   public static final int DPAD = 0;
   /** The lower button of four, labelled "A" */
   public static final int A = 1;
