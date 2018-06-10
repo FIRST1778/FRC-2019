@@ -46,7 +46,7 @@ public class Controls {
 
   public static boolean Driver_isQuickTurn() {
     // New (2018) Interlink
-    return Driver.getRawButton(InterLinkElite.RIGHT_SWITCH);
+    return Driver.getRawButton(InterLinkElite.RIGHT_TOP_SWITCH);
 
     // Legacy (2017) Interlink
     // return !Driver.getRawButton(InterLinkElite.RIGHT_SWITCH);
