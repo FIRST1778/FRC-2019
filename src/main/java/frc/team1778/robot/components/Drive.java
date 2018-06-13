@@ -3,6 +3,7 @@ package frc.team1778.robot.components;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import edu.wpi.first.wpilibj.Solenoid;
 import frc.team1778.lib.util.driver.NavX;
 import frc.team1778.lib.util.driver.SimpleTalonSRX;
 import frc.team1778.lib.util.driver.TalonSRXFactory;
@@ -12,7 +13,7 @@ import frc.team1778.robot.Ports;
  * This is the robot's drivetrain. This class handles the four TalonSRX motor controllers attached
  * to the ganged left and right motors, as well as the solenoids to shift between gears.
  *
- * <p>The drivetrain consists of four (8) TalonSRX motor controllers and four (4) CIM motors.
+ * <p>The drivetrain consists of four (4) TalonSRX motor controllers four (4) CIM motors, and one (1) solenoid to trigger the two (2) pistons.
  *
  * @author FRC 1778 Chill Out
  */
@@ -21,14 +22,9 @@ public class Drive extends Subsystem {
 
   private final SimpleTalonSRX leftMaster, rightMaster, leftSlave, rightSlave;
 
-  private final NavX navX;
+  private final Solenoid shifter;
 
-  public enum SystemState {
-    UNINITIALIZED, // Default
-    ZEROING, // Zeroing sensors
-    RUNNING_OPEN_LOOP, // Driving with no feedback
-    RUNNING_VELOCITY_CLOSED_LOOP // Driving controlling the velocity with PID
-  }
+  private final NavX navX;
 
   private static TalonSRXFactory.Configuration driveConfiguration =
       new TalonSRXFactory.Configuration();
@@ -51,6 +47,8 @@ public class Drive extends Subsystem {
     driveConfiguration.ENABLE_CURRENT_LIMIT = true;
   }
 
+  private boolean isHighGear = false;
+
   /**
    * Returns a static instance of Drive, to be used instead of instantiating new objects of Drive.
    *
@@ -64,8 +62,8 @@ public class Drive extends Subsystem {
     leftMaster = TalonSRXFactory.createTalon(Ports.LEFT_DRIVE_MASTER_ID, driveConfiguration);
     rightMaster = TalonSRXFactory.createTalon(Ports.RIGHT_DRIVE_MASTER_ID, driveConfiguration);
     leftSlave = TalonSRXFactory.createSlaveTalon(Ports.LEFT_DRIVE_SLAVE_ID, leftMaster);
-    rightSlave = TalonSRXFactory.createSlaveTalon(Ports.RIGHT_DRIVE_SLAVE_ID, rightMaster);    
-    
+    rightSlave = TalonSRXFactory.createSlaveTalon(Ports.RIGHT_DRIVE_SLAVE_ID, rightMaster);
+
     leftMaster.setInverted(false);
     rightMaster.setInverted(true);
     leftSlave.setInverted(false);
@@ -93,5 +91,26 @@ public class Drive extends Subsystem {
   @Override
   public void zeroSensors() {
     navX.zeroYaw();
+  }
+
+  /**
+   * Returns the current state of the shifter.
+   * 
+   * @return The state of the shifting solenoid.
+   */
+  public boolean isInHighGear() {
+    return isHighGear;
+  }
+
+  /**
+   * Sets the shifter position.
+   * 
+   * @param setToHighGear The wanted state of the gear shifter.
+   */
+  public void setHighGear(boolean setToHighGear) {
+    if (setToHighGear != isHighGear) {
+      isHighGear = setToHighGear;
+      shifter.set(!setToHighGear);
+  }
   }
 }
