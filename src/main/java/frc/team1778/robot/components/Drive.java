@@ -129,14 +129,32 @@ public class Drive extends Subsystem {
     }
   }
 
+  /**
+   * Sets the drive control mode/state to operate the TalonSRX's with.
+   *
+   * @param newState The state to set the system to use.
+   */
   public void setDriveState(SystemState newState) {
     currentState = newState;
   }
 
+  /**
+   * Sets the values to be sent to the motors, which can change depending on the state of the
+   * system.
+   *
+   * @param signals The signals to send each of the motors.
+   */
   public void setPowers(DriveSignal signals) {
     setPowers(signals.getLeft(), signals.getRight());
   }
 
+  /**
+   * Sets the values to be sent to the motors, which can change depending on the state of the
+   * system.
+   *
+   * @param left The left signal to send to the left motor.
+   * @param right The right signal to send to the right motor.
+   */
   public void setPowers(double left, double right) {
     switch (currentState) {
       case OPEN_LOOP_PERCENTAGE:
