@@ -13,7 +13,8 @@ import frc.team1778.robot.Ports;
  * This is the robot's drivetrain. This class handles the four TalonSRX motor controllers attached
  * to the ganged left and right motors, as well as the solenoids to shift between gears.
  *
- * <p>The drivetrain consists of four (4) TalonSRX motor controllers four (4) CIM motors, and one (1) solenoid to trigger the two (2) pistons.
+ * <p>The drivetrain consists of four (4) TalonSRX motor controllers four (4) CIM motors, and one
+ * (1) solenoid to trigger the two (2) pistons.
  *
  * @author FRC 1778 Chill Out
  */
@@ -64,12 +65,14 @@ public class Drive extends Subsystem {
     leftSlave = TalonSRXFactory.createSlaveTalon(Ports.LEFT_DRIVE_SLAVE_ID, leftMaster);
     rightSlave = TalonSRXFactory.createSlaveTalon(Ports.RIGHT_DRIVE_SLAVE_ID, rightMaster);
 
+    shifter = new Solenoid(Ports.DRIVE_SHIFTER);
+
+    navX = new NavX(Ports.NAVX_SPI);
+
     leftMaster.setInverted(false);
     rightMaster.setInverted(true);
     leftSlave.setInverted(false);
     rightSlave.setInverted(true);
-
-    navX = new NavX(Ports.NAVX_SPI);
   }
 
   /**
@@ -95,7 +98,7 @@ public class Drive extends Subsystem {
 
   /**
    * Returns the current state of the shifter.
-   * 
+   *
    * @return The state of the shifting solenoid.
    */
   public boolean isInHighGear() {
@@ -104,13 +107,13 @@ public class Drive extends Subsystem {
 
   /**
    * Sets the shifter position.
-   * 
+   *
    * @param setToHighGear The wanted state of the gear shifter.
    */
   public void setHighGear(boolean setToHighGear) {
     if (setToHighGear != isHighGear) {
       isHighGear = setToHighGear;
       shifter.set(!setToHighGear);
-  }
+    }
   }
 }
