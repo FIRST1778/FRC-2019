@@ -55,6 +55,7 @@ public class Controls {
 
   /**
    * Returns the driver joystick/controller.
+   *
    * @return The driver joystick/controller.
    */
   public Joystick getDriverController() {
@@ -63,6 +64,7 @@ public class Controls {
 
   /**
    * Returns the oeprator joystick/controller.
+   *
    * @return The operator joystick/controller.
    */
   public Joystick getOperatorController() {
