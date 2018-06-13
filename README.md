@@ -45,7 +45,7 @@ Make sure that all code you write follows the [Google Java Style Guide](https://
 
 In addition, use Google's Java formatter, which is in this directory. To do this run the following, changing the file path:
 ```sh
-java -jar google-java-format-1.6-all-deps.jar -i src\main\java\frc\team1778\path\to\file.java
+java -jar .\google-java-format-1.6-all-deps.jar -i .\src\main\java\frc\team1778\path\to\file.java
 ```
 
 ### Javadoc

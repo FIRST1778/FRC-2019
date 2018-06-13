@@ -1,9 +1,11 @@
 package frc.team1778.robot.components;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import edu.wpi.first.wpilibj.Solenoid;
+import frc.team1778.lib.util.DriveSignal;
 import frc.team1778.lib.util.driver.NavX;
 import frc.team1778.lib.util.driver.SimpleTalonSRX;
 import frc.team1778.lib.util.driver.TalonSRXFactory;
@@ -27,6 +29,12 @@ public class Drive extends Subsystem {
 
   private final NavX navX;
 
+  public enum SystemState {
+    OPEN_LOOP_PERCENTAGE,
+    OPEN_LOOP_CURRENT,
+    CLOSED_LOOP_VELOCITY
+  };
+
   private static TalonSRXFactory.Configuration driveConfiguration =
       new TalonSRXFactory.Configuration();
 
@@ -48,7 +56,8 @@ public class Drive extends Subsystem {
     driveConfiguration.ENABLE_CURRENT_LIMIT = true;
   }
 
-  private boolean isHighGear = false;
+  private SystemState currentState;
+  private boolean isHighGear;
 
   /**
    * Returns a static instance of Drive, to be used instead of instantiating new objects of Drive.
@@ -73,6 +82,9 @@ public class Drive extends Subsystem {
     rightMaster.setInverted(true);
     leftSlave.setInverted(false);
     rightSlave.setInverted(true);
+
+    isHighGear = false;
+    currentState = SystemState.OPEN_LOOP_PERCENTAGE;
   }
 
   /**
@@ -114,6 +126,33 @@ public class Drive extends Subsystem {
     if (setToHighGear != isHighGear) {
       isHighGear = setToHighGear;
       shifter.set(!setToHighGear);
+    }
+  }
+
+  public void setDriveState(SystemState newState) {
+    currentState = newState;
+  }
+
+  public void setPowers(DriveSignal signals) {
+    setPowers(signals.getLeft(), signals.getRight());
+  }
+
+  public void setPowers(double left, double right) {
+    switch (currentState) {
+      case OPEN_LOOP_PERCENTAGE:
+        leftMaster.set(ControlMode.PercentOutput, left);
+        rightMaster.set(ControlMode.PercentOutput, right);
+        break;
+      case OPEN_LOOP_CURRENT:
+        leftMaster.set(ControlMode.Current, left);
+        rightMaster.set(ControlMode.Current, right);
+        break;
+      case CLOSED_LOOP_VELOCITY:
+        leftMaster.set(ControlMode.Velocity, left);
+        rightMaster.set(ControlMode.Velocity, right);
+        break;
+      default:
+        break;
     }
   }
 }
