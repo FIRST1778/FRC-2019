@@ -32,8 +32,6 @@ public class Drive extends Subsystem {
 
   private static TalonSRXFactory.Configuration driveConfiguration =
       new TalonSRXFactory.Configuration();
-  private static TalonSRXFactory.Configuration slaveConfiguration =
-      new TalonSRXFactory.Configuration();
 
   static {
     // Drive Config
@@ -66,7 +64,12 @@ public class Drive extends Subsystem {
     leftMaster = TalonSRXFactory.createTalon(Ports.LEFT_DRIVE_MASTER_ID, driveConfiguration);
     rightMaster = TalonSRXFactory.createTalon(Ports.RIGHT_DRIVE_MASTER_ID, driveConfiguration);
     leftSlave = TalonSRXFactory.createSlaveTalon(Ports.LEFT_DRIVE_SLAVE_ID, leftMaster);
-    rightSlave = TalonSRXFactory.createSlaveTalon(Ports.RIGHT_DRIVE_SLAVE_ID, rightMaster);
+    rightSlave = TalonSRXFactory.createSlaveTalon(Ports.RIGHT_DRIVE_SLAVE_ID, rightMaster);    
+    
+    leftMaster.setInverted(false);
+    rightMaster.setInverted(true);
+    leftSlave.setInverted(false);
+    rightSlave.setInverted(true);
 
     navX = new NavX(Ports.NAVX_SPI);
   }
