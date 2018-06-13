@@ -5,5 +5,4 @@ package frc.team1778.robot;
  *
  * @author FRC 1778 Chill Out
  */
-public class Constants {
-}
+public class Constants {}

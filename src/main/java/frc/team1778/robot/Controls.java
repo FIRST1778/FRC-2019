@@ -1,58 +1,146 @@
 package frc.team1778.robot;
 
-/**
- * Use this class to map the buttons and tumbsticks of the Logitech controllers to named uses. For
- * reference, all the button IDs are listed in the LogitechF310.java file.
- */
-
 import edu.wpi.first.wpilibj.Joystick;
 import frc.team1778.lib.util.gamepads.InterLinkElite;
+import frc.team1778.lib.util.gamepads.LogitechDualAction;
+import frc.team1778.lib.util.gamepads.LogitechF310;
 
+/**
+ * Use this class to map controls between different controllers.
+ *
+ * @author FRC 1778 Chill Out
+ */
 public class Controls {
+  private static Controls instance = new Controls();
 
-  // Types: 0 = Logitech F310, 1 = InterLink Flight Controller, 2 = Logitech Dual Action
-  public static final int DRIVER_CONTROLLER_TYPE = 1;
-  // public static final int COPILOT_CONTROLLER_TYPE = 1;
-  public static final int PORT_DRIVER_CONTROLLER = 0;
-  // public static final int PORT_COPILOT_CONTROLLER = 1;
-  public static Joystick Driver;
-  public static Joystick CoPilot;
+  public enum ControllerType {
+    INTERLINK_ELITE_CONTROLLER {
+      @Override
+      public String toString() {
+        return "Interlink Elite Controller";
+      }
+    },
+    LOGITECH_F310 {
+      @Override
+      public String toString() {
+        return "Logitech F310 Gamepad";
+      }
+    },
+    LOGITECH_DUAL_ACTION {
+      @Override
+      public String toString() {
+        return "Logitech Dual Action Gamepad";
+      }
+    }
+  };
 
-  public static boolean[] controllerType = new boolean[3];
+  private static final ControllerType DRIVER_CONTROLLER_TYPE =
+      ControllerType.INTERLINK_ELITE_CONTROLLER;
+  private static final ControllerType OPERATOR_CONTROLLER_TYPE = ControllerType.LOGITECH_F310;
 
-  public static boolean initialized = false;
+  private static final int PORT_DRIVER_CONTROLLER = 1;
+  private static final int PORT_OPERATOR_CONTROLLER = 2;
 
-  public static void initialize() {
+  private Joystick driverController;
+  private Joystick operatorController;
 
-    if (initialized) return;
-
-    Driver = new Joystick(PORT_DRIVER_CONTROLLER);
-    // CoPilot = new Joystick(PORT_COPILOT_CONTROLLER);
-
-    initialized = true;
+  private Controls() {
+    driverController = new Joystick(PORT_DRIVER_CONTROLLER);
+    operatorController = new Joystick(PORT_OPERATOR_CONTROLLER);
   }
 
-  public static double Driver_Throttle() {
-    // New (2018) Interlink
-    return Driver.getRawAxis(InterLinkElite.Axis.LEFT_Y);
-
-    // Legacy (2017) Interlink
-    // return -1.0*Driver.getRawAxis(InterLinkElite.Axis.LEFT_Y);
+  public static Controls getInstance() {
+    return instance;
   }
 
-  public static double Driver_Steering() {
-    return -1 * Driver.getRawAxis(InterLinkElite.Axis.RIGHT_X);
+  /**
+   * Returns the driver joystick/controller.
+   * @return The driver joystick/controller.
+   */
+  public Joystick getDriverController() {
+    return driverController;
   }
 
-  public static boolean Driver_isQuickTurn() {
-    // New (2018) Interlink
-    return Driver.getRawButton(InterLinkElite.RIGHT_TOP_SWITCH);
-
-    // Legacy (2017) Interlink
-    // return !Driver.getRawButton(InterLinkElite.RIGHT_SWITCH);
+  /**
+   * Returns the oeprator joystick/controller.
+   * @return The operator joystick/controller.
+   */
+  public Joystick getOperatorController() {
+    return operatorController;
   }
 
-  public static boolean Driver_isLowSensitivity() {
-    return Driver.getRawButton(5);
+  // Driver Controls
+  /**
+   * Returns the driver's throttl stick y-axis.
+   *
+   * @return The driver controller's throttle stick y-axis.
+   */
+  public double getThrottle() {
+    switch (DRIVER_CONTROLLER_TYPE) {
+      case INTERLINK_ELITE_CONTROLLER:
+        return driverController.getRawAxis(InterLinkElite.Axis.LEFT_Y);
+      case LOGITECH_F310:
+        return -driverController.getRawAxis(LogitechF310.Axis.LEFT_Y);
+      case LOGITECH_DUAL_ACTION:
+        return -driverController.getRawAxis(LogitechDualAction.Axis.LEFT_Y);
+      default:
+        return 0;
+    }
   }
+
+  /**
+   * Returns the driver's turn stick x-axis.
+   *
+   * @return The driver controller's turning stick x-axis.
+   */
+  public double getWheelX() {
+    switch (DRIVER_CONTROLLER_TYPE) {
+      case INTERLINK_ELITE_CONTROLLER:
+        return driverController.getRawAxis(InterLinkElite.Axis.RIGHT_X);
+      case LOGITECH_F310:
+        return driverController.getRawAxis(LogitechF310.Axis.RIGHT_X);
+      case LOGITECH_DUAL_ACTION:
+        return driverController.getRawAxis(LogitechDualAction.Axis.RIGHT_X);
+      default:
+        return 0;
+    }
+  }
+
+  /**
+   * Returns the driver's turn stick y-axis.
+   *
+   * @return The driver controller's turning stick y-axis.
+   */
+  public double getWheelY() {
+    switch (DRIVER_CONTROLLER_TYPE) {
+      case INTERLINK_ELITE_CONTROLLER:
+        return driverController.getRawAxis(InterLinkElite.Axis.RIGHT_Y);
+      case LOGITECH_F310:
+        return -driverController.getRawAxis(LogitechF310.Axis.RIGHT_Y);
+      case LOGITECH_DUAL_ACTION:
+        return -driverController.getRawAxis(LogitechDualAction.Axis.RIGHT_Y);
+      default:
+        return 0;
+    }
+  }
+
+  /**
+   * Returns the driver's quickturn toggle switch.
+   *
+   * @return The driver controller's quickturn switch state.
+   */
+  public boolean getQuickTurn() {
+    switch (DRIVER_CONTROLLER_TYPE) {
+      case INTERLINK_ELITE_CONTROLLER:
+        return driverController.getRawButton(InterLinkElite.RIGHT_TOP_SWITCH);
+      case LOGITECH_F310:
+        return driverController.getRawButton(LogitechF310.B);
+      case LOGITECH_DUAL_ACTION:
+        return driverController.getRawButton(LogitechDualAction.B2);
+      default:
+        return false;
+    }
+  }
+
+  // Operator Controls
 }
