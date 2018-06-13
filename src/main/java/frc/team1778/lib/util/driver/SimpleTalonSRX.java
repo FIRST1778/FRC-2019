@@ -1,4 +1,4 @@
-package frc.team1778.robot.common;
+package frc.team1778.lib.util.driver;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -11,7 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  * @author FRC 1778 Chill Out
  */
 public class SimpleTalonSRX extends TalonSRX {
-  protected double lastSet = Double.NaN;
+  private double lastSet = Double.NaN;
 
   public SimpleTalonSRX(int deviceNumber) {
     super(deviceNumber);

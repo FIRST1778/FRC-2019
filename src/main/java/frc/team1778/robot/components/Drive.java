@@ -1,29 +1,26 @@
 package frc.team1778.robot.components;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import frc.team1778.lib.util.driver.NavX;
+import frc.team1778.lib.util.driver.SimpleTalonSRX;
+import frc.team1778.lib.util.driver.TalonSRXFactory;
 import frc.team1778.robot.Ports;
-import frc.team1778.robot.common.NavX;
-import frc.team1778.robot.common.TalonSRXFactory;
 
 /**
  * This is the robot's drivetrain. This class handles the four TalonSRX motor controllers attached
- * to the ganged left and right motors.
+ * to the ganged left and right motors, as well as the solenoids to shift between gears.
  *
- * <p>The drivetrain consists of four (8) TalonSRX motor controllers, four (4) CIM motors, two (2)
- * BAG motors, and one (1) NavX IMU. The CIM motors are used to drive each swerve module, and the
- * BAG motors are used for rotation.
+ * <p>The drivetrain consists of four (8) TalonSRX motor controllers and four (4) CIM motors.
  *
  * @author FRC 1778 Chill Out
  */
 public class Drive extends Subsystem {
   private static Drive instance = new Drive();
 
-  private final TalonSRX leftFrontDrive, leftRearDrive, rightRearDrive, rightFrontDrive;
-  private final TalonSRX leftFrontRotate, leftRearRotate, rightRearRotate, rightFrontRotate;
+  private final SimpleTalonSRX leftMaster, rightMaster, leftSlave, rightSlave;
+
   private final NavX navX;
 
   public enum SystemState {
@@ -35,12 +32,12 @@ public class Drive extends Subsystem {
 
   private static TalonSRXFactory.Configuration driveConfiguration =
       new TalonSRXFactory.Configuration();
-  private static TalonSRXFactory.Configuration rotationConfiguration =
+  private static TalonSRXFactory.Configuration slaveConfiguration =
       new TalonSRXFactory.Configuration();
 
   static {
     // Drive Config
-    driveConfiguration.FEEDBACK_DEVICE = FeedbackDevice.CTRE_MagEncoder_Relative;
+    driveConfiguration.FEEDBACK_DEVICE = FeedbackDevice.QuadEncoder;
     driveConfiguration.STATUS_FRAME_PERIOD = 10;
     driveConfiguration.STATUS_FRAME = StatusFrameEnhanced.Status_13_Base_PIDF0;
     driveConfiguration.PID_KP = 15;
@@ -55,17 +52,8 @@ public class Drive extends Subsystem {
     driveConfiguration.PEAK_CURRENT_LIMIT_DURATION = 100;
     driveConfiguration.ENABLE_CURRENT_LIMIT = true;
 
-    // Rotation Config
-    rotationConfiguration.FEEDBACK_DEVICE = FeedbackDevice.Analog;
-    rotationConfiguration.INVERT_SENSOR_PHASE = true;
-    rotationConfiguration.PID_KP = 30;
-    rotationConfiguration.PID_KI = 0.001;
-    rotationConfiguration.PID_KD = 200;
-    rotationConfiguration.NEUTRAL_POWER_MODE = NeutralMode.Brake;
-    rotationConfiguration.CONTINUOUS_CURRENT_LIMIT = 30;
-    rotationConfiguration.PEAK_CURRENT_LIMIT = 30;
-    rotationConfiguration.PEAK_CURRENT_LIMIT_DURATION = 100;
-    rotationConfiguration.ENABLE_CURRENT_LIMIT = true;
+    // Slave Config
+
   }
 
   /**
@@ -78,25 +66,17 @@ public class Drive extends Subsystem {
   }
 
   private Drive() {
-    leftFrontDrive = TalonSRXFactory.createTalon(1, driveConfiguration);
-    leftRearDrive = TalonSRXFactory.createTalon(3, driveConfiguration);
-    rightRearDrive = TalonSRXFactory.createTalon(5, driveConfiguration);
-    rightFrontDrive = TalonSRXFactory.createTalon(7, driveConfiguration);
-
-    leftFrontRotate = TalonSRXFactory.createTalon(2, rotationConfiguration);
-    leftRearRotate = TalonSRXFactory.createTalon(3, rotationConfiguration);
-    rightRearRotate = TalonSRXFactory.createTalon(6, rotationConfiguration);
-    rightFrontRotate = TalonSRXFactory.createTalon(8, rotationConfiguration);
-
-    leftFrontDrive.set(ControlMode.PercentOutput, 0);
-    leftRearDrive.set(ControlMode.PercentOutput, 0);
-    rightRearDrive.set(ControlMode.PercentOutput, 0);
-    rightFrontDrive.set(ControlMode.PercentOutput, 0);
-
-    leftFrontRotate.set(ControlMode.Position, 0);
-    leftRearRotate.set(ControlMode.Position, 0);
-    rightRearRotate.set(ControlMode.Position, 0);
-    rightFrontRotate.set(ControlMode.Position, 0);
+    leftMaster = TalonSRXFactory.createTalon(Ports.LEFT_DRIVE_MASTER_TALON_ID, driveConfiguration);
+    rightMaster =
+        TalonSRXFactory.createTalon(Ports.RIGHT_DRIVE_MASTER_TALON_ID, driveConfiguration);
+    leftSlave =
+        TalonSRXFactory.createSlaveTalon(
+            Ports.LEFT_DRIVE_SLAVE_TALON_ID, Ports.LEFT_DRIVE_MASTER_TALON_ID, driveConfiguration);
+    rightSlave =
+        TalonSRXFactory.createSlaveTalon(
+            Ports.RIGHT_DRIVE_SLAVE_TALON_ID,
+            Ports.RIGHT_DRIVE_MASTER_TALON_ID,
+            driveConfiguration);
 
     navX = new NavX(Ports.NAVX_SPI);
   }

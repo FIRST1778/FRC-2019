@@ -1,5 +1,6 @@
-package frc.team1778.robot.common;
+package frc.team1778.lib.util.driver;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
@@ -64,6 +65,23 @@ public class TalonSRXFactory {
    */
   public static SimpleTalonSRX createDefaultTalonSRX(int id) {
     return new SimpleTalonSRX(id);
+  }
+
+  /**
+   * Create a slave SimpleTalonSRX.
+   *
+   * @param id This is the CAN ID in which the TalonSRX is configured with.
+   * @param masterId This is the CAN ID for the slave to follow.
+   * @param config This is the Configuration that stores all of the settings of the Talon.
+   * @return A TalonSRX, configured to follow the master.
+   */
+  public static SimpleTalonSRX createSlaveTalon(int id, int masterId, Configuration config) {
+    SimpleTalonSRX talon = createTalon(id, config);
+
+    talon.configSelectedFeedbackSensor(FeedbackDevice.None, 0, config.TIMEOUT_IN_MS);
+    talon.set(ControlMode.Follower, masterId);
+
+    return talon;
   }
 
   /**
