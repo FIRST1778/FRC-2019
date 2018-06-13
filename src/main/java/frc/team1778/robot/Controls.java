@@ -127,7 +127,7 @@ public class Controls {
   }
 
   /**
-   * Returns the driver's quickturn toggle switch.
+   * Returns the driver's quickturn switch.
    *
    * @return The driver controller's quickturn switch state.
    */
@@ -136,9 +136,27 @@ public class Controls {
       case INTERLINK_ELITE_CONTROLLER:
         return driverController.getRawButton(InterLinkElite.RIGHT_TOP_SWITCH);
       case LOGITECH_F310:
-        return driverController.getRawButton(LogitechF310.B);
+        return driverController.getRawButton(LogitechF310.RIGHT_BUMPER);
       case LOGITECH_DUAL_ACTION:
-        return driverController.getRawButton(LogitechDualAction.B2);
+        return driverController.getRawButton(LogitechDualAction.RIGHT_BUMPER);
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * Returns the driver's gear shifting switch.
+   *
+   * @return The driver controller's gear shifting switch state.
+   */
+  public boolean getLowGearShift() {
+    switch (DRIVER_CONTROLLER_TYPE) {
+      case INTERLINK_ELITE_CONTROLLER:
+        return driverController.getRawButton(InterLinkElite.LEFT_TOP_BACK);
+      case LOGITECH_F310:
+        return driverController.getRawButton(LogitechF310.LEFT_BUMPER);
+      case LOGITECH_DUAL_ACTION:
+        return driverController.getRawButton(LogitechDualAction.LEFT_BUMPER);
       default:
         return false;
     }
