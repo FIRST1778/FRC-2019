@@ -51,9 +51,6 @@ public class Drive extends Subsystem {
     driveConfiguration.PEAK_CURRENT_LIMIT = 25;
     driveConfiguration.PEAK_CURRENT_LIMIT_DURATION = 100;
     driveConfiguration.ENABLE_CURRENT_LIMIT = true;
-
-    // Slave Config
-
   }
 
   /**
@@ -66,17 +63,10 @@ public class Drive extends Subsystem {
   }
 
   private Drive() {
-    leftMaster = TalonSRXFactory.createTalon(Ports.LEFT_DRIVE_MASTER_TALON_ID, driveConfiguration);
-    rightMaster =
-        TalonSRXFactory.createTalon(Ports.RIGHT_DRIVE_MASTER_TALON_ID, driveConfiguration);
-    leftSlave =
-        TalonSRXFactory.createSlaveTalon(
-            Ports.LEFT_DRIVE_SLAVE_TALON_ID, Ports.LEFT_DRIVE_MASTER_TALON_ID, driveConfiguration);
-    rightSlave =
-        TalonSRXFactory.createSlaveTalon(
-            Ports.RIGHT_DRIVE_SLAVE_TALON_ID,
-            Ports.RIGHT_DRIVE_MASTER_TALON_ID,
-            driveConfiguration);
+    leftMaster = TalonSRXFactory.createTalon(Ports.LEFT_DRIVE_MASTER_ID, driveConfiguration);
+    rightMaster = TalonSRXFactory.createTalon(Ports.RIGHT_DRIVE_MASTER_ID, driveConfiguration);
+    leftSlave = TalonSRXFactory.createSlaveTalon(Ports.LEFT_DRIVE_SLAVE_ID, leftMaster);
+    rightSlave = TalonSRXFactory.createSlaveTalon(Ports.RIGHT_DRIVE_SLAVE_ID, rightMaster);
 
     navX = new NavX(Ports.NAVX_SPI);
   }

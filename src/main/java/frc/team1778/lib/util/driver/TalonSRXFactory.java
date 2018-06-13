@@ -1,10 +1,10 @@
 package frc.team1778.lib.util.driver;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 /**
  * This creates and sets most of the convenient settings for TalonSRX. This includes feedback
@@ -63,7 +63,7 @@ public class TalonSRXFactory {
    * @param id This is the CAN ID in which the TalonSRX is configured with.
    * @return A TalonSRX, configured with the default parameters.
    */
-  public static SimpleTalonSRX createDefaultTalonSRX(int id) {
+  public static SimpleTalonSRX createDefaultTalon(int id) {
     return new SimpleTalonSRX(id);
   }
 
@@ -75,12 +75,9 @@ public class TalonSRXFactory {
    * @param config This is the Configuration that stores all of the settings of the Talon.
    * @return A TalonSRX, configured to follow the master.
    */
-  public static SimpleTalonSRX createSlaveTalon(int id, int masterId, Configuration config) {
-    SimpleTalonSRX talon = createTalon(id, config);
-
-    talon.configSelectedFeedbackSensor(FeedbackDevice.None, 0, config.TIMEOUT_IN_MS);
-    talon.set(ControlMode.Follower, masterId);
-
+  public static SimpleTalonSRX createSlaveTalon(int id, TalonSRX master) {
+    SimpleTalonSRX talon = createDefaultTalon(id);
+    talon.follow(master);
     return talon;
   }
 
