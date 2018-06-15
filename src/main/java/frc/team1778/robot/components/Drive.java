@@ -35,6 +35,8 @@ public class Drive extends Subsystem {
     CLOSED_LOOP_VELOCITY
   };
 
+  public static final long SHIFT_DEBOUNCE_TIME = 250;
+
   private static TalonSRXFactory.Configuration driveConfiguration =
       new TalonSRXFactory.Configuration();
 
@@ -58,6 +60,7 @@ public class Drive extends Subsystem {
 
   private SystemState currentState;
   private boolean isInHighGear;
+  private long lastShiftTime;
 
   /**
    * Returns a static instance of Drive, to be used instead of instantiating new objects of Drive.
@@ -83,8 +86,9 @@ public class Drive extends Subsystem {
     leftSlave.setInverted(false);
     rightSlave.setInverted(true);
 
-    isInHighGear = false;
     currentState = SystemState.OPEN_LOOP_PERCENTAGE;
+    isInHighGear = false;
+    lastShiftTime = System.currentTimeMillis();
   }
 
   /**
@@ -129,6 +133,21 @@ public class Drive extends Subsystem {
     if (setToHighGear != isInHighGear) {
       isInHighGear = setToHighGear;
       shifter.set(!setToHighGear);
+    }
+  }
+
+  /**
+   * Sets the shifter position.
+   *
+   * @param setToHighGear The wanted state of the gear shifter.
+   * @param checkDebounce If true, it first checks if the shifter has been triggered directly
+   *     before.
+   */
+  public void setHighGear(boolean setToHighGear, boolean checkDebounce) {
+    if (checkDebounce
+        ? (System.currentTimeMillis() - lastShiftTime >= SHIFT_DEBOUNCE_TIME)
+        : true) {
+      setHighGear(setToHighGear);
     }
   }
 
