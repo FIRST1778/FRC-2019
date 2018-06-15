@@ -57,7 +57,7 @@ public class Drive extends Subsystem {
   }
 
   private SystemState currentState;
-  private boolean isHighGear;
+  private boolean isInHighGear;
 
   /**
    * Returns a static instance of Drive, to be used instead of instantiating new objects of Drive.
@@ -83,7 +83,7 @@ public class Drive extends Subsystem {
     leftSlave.setInverted(false);
     rightSlave.setInverted(true);
 
-    isHighGear = false;
+    isInHighGear = false;
     currentState = SystemState.OPEN_LOOP_PERCENTAGE;
   }
 
@@ -101,7 +101,10 @@ public class Drive extends Subsystem {
   public void sendTelemetry() {}
 
   @Override
-  public void resetEncoders() {}
+  public void resetEncoders() {
+    leftMaster.setSelectedSensorPosition(0, 0, driveConfiguration.TIMEOUT_IN_MS);
+    rightMaster.setSelectedSensorPosition(0, 0, driveConfiguration.TIMEOUT_IN_MS);
+  }
 
   @Override
   public void zeroSensors() {
@@ -113,8 +116,8 @@ public class Drive extends Subsystem {
    *
    * @return The state of the shifting solenoid.
    */
-  public boolean isInHighGear() {
-    return isHighGear;
+  public boolean isHighGear() {
+    return isInHighGear;
   }
 
   /**
@@ -123,8 +126,8 @@ public class Drive extends Subsystem {
    * @param setToHighGear The wanted state of the gear shifter.
    */
   public void setHighGear(boolean setToHighGear) {
-    if (setToHighGear != isHighGear) {
-      isHighGear = setToHighGear;
+    if (setToHighGear != isInHighGear) {
+      isInHighGear = setToHighGear;
       shifter.set(!setToHighGear);
     }
   }
