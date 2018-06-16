@@ -10,7 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  * This creates and sets most of the convenient settings for TalonSRX. This includes feedback
  * devices, voltage limits, control modes, inversion, etc.
  *
- * <p>This is adapted from 254's code, but is updated to work with the newer TalonSRX API.
+ * <p>This is adapted from 254's code, but is updated to work with the newer {@link TalonSRX} API.
  *
  * @author FRC 1778 Chill Out
  * @see <a

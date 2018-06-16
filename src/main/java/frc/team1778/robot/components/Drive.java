@@ -12,8 +12,9 @@ import frc.team1778.lib.util.driver.TalonSRXFactory;
 import frc.team1778.robot.Ports;
 
 /**
- * This is the robot's drivetrain. This class handles the four TalonSRX motor controllers attached
- * to the ganged left and right motors, as well as the solenoids to shift between gears.
+ * This is the robot's drivetrain. This class handles the four {@link TalonSRX} motor controllers
+ * attached to the ganged left and right motors, as well as a {@link Solenoid} to shift between
+ * gears.
  *
  * <p>The drivetrain consists of four (4) TalonSRX motor controllers four (4) CIM motors, and one
  * (1) solenoid to trigger the two (2) pistons.

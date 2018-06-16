@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 /**
  * A simple wrapper for the TalonSRX class. It simplifies some basic commands, but that is about it.
  *
- * <p>This is adapted from 254's code, but is updated to work with the newer TalonSRX API.
+ * <p>This is adapted from 254's code, but is updated to work with the newer {@link TalonSRX} API.
  *
  * @author FRC 1778 Chill Out
  */
