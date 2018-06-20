@@ -9,13 +9,16 @@ import edu.wpi.first.wpilibj.SPI;
  */
 public class Ports {
   // Talons
-  public static final int LEFT_DRIVE_MASTER_ID = 1;
-  public static final int LEFT_DRIVE_SLAVE_ID = 3;
-  public static final int RIGHT_DRIVE_MASTER_ID = 2;
+  public static final int LEFT_DRIVE_MASTER_ID = 3;
+  public static final int LEFT_DRIVE_SLAVE_ID = 7;
+  public static final int RIGHT_DRIVE_MASTER_ID = 8;
   public static final int RIGHT_DRIVE_SLAVE_ID = 4;
 
   // Solenoids
-  public static final int DRIVE_SHIFTER = 0;
+  public static final int LEFT_DRIVE_SHIFTER_FORWARD = 1;
+  public static final int LEFT_DRIVE_SHIFTER_REVERSE = 2;
+  public static final int RIGHT_DRIVE_SHIFTER_FORWARD = 6;
+  public static final int RIGHT_DRIVE_SHIFTER_REVERSE = 5;
 
   // Sensors
   public static final SPI.Port NAVX_SPI = SPI.Port.kMXP;

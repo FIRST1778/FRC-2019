@@ -119,12 +119,12 @@ public class FreezyDrive {
     } else {
       overPower = 0.0;
       angularPower = Math.abs(throttle) * culverWheel * sensitivity - quickstopAccumulator;
-      if (quickstopAccumulator > 1) {
+      if (quickstopAccumulator > 2) {
         quickstopAccumulator -= 1;
       } else if (quickstopAccumulator < -1) {
         quickstopAccumulator += 1;
       } else {
-        quickstopAccumulator = 0.0;
+        quickstopAccumulator = 0;
       }
     }
 

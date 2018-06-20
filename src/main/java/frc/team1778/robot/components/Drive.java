@@ -4,6 +4,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.team1778.lib.util.DriveSignal;
 import frc.team1778.lib.util.driver.NavX;
@@ -26,7 +28,8 @@ public class Drive extends Subsystem {
 
   private final SimpleTalonSRX leftMaster, rightMaster, leftSlave, rightSlave;
 
-  private final Solenoid shifter;
+  private final DoubleSolenoid leftShifter;
+  private final DoubleSolenoid rightShifter;
 
   private final NavX navX;
 
@@ -78,7 +81,10 @@ public class Drive extends Subsystem {
     leftSlave = TalonSRXFactory.createSlaveTalon(Ports.LEFT_DRIVE_SLAVE_ID, leftMaster);
     rightSlave = TalonSRXFactory.createSlaveTalon(Ports.RIGHT_DRIVE_SLAVE_ID, rightMaster);
 
-    shifter = new Solenoid(Ports.DRIVE_SHIFTER);
+    leftShifter =
+        new DoubleSolenoid(Ports.LEFT_DRIVE_SHIFTER_FORWARD, Ports.LEFT_DRIVE_SHIFTER_REVERSE);
+    rightShifter =
+        new DoubleSolenoid(Ports.RIGHT_DRIVE_SHIFTER_FORWARD, Ports.RIGHT_DRIVE_SHIFTER_REVERSE);
 
     navX = new NavX(Ports.NAVX_SPI);
 
@@ -133,7 +139,8 @@ public class Drive extends Subsystem {
   public void setHighGear(boolean setToHighGear) {
     if (setToHighGear != isInHighGear) {
       isInHighGear = setToHighGear;
-      shifter.set(!setToHighGear);
+      leftShifter.set(setToHighGear ? Value.kForward : Value.kReverse);
+      rightShifter.set(setToHighGear ? Value.kForward : Value.kReverse);
     }
   }
 

@@ -136,9 +136,9 @@ public class Controls {
       case INTERLINK_ELITE_CONTROLLER:
         return driverController.getRawButton(InterLinkElite.RIGHT_TOP_SWITCH);
       case LOGITECH_F310:
-        return driverController.getRawButton(LogitechF310.RIGHT_BUMPER);
+        return driverController.getRawButton(LogitechF310.A);
       case LOGITECH_DUAL_ACTION:
-        return driverController.getRawButton(LogitechDualAction.RIGHT_BUMPER);
+        return driverController.getRawButton(LogitechDualAction.B1);
       default:
         return false;
     }
@@ -157,6 +157,24 @@ public class Controls {
         return driverController.getRawButton(LogitechF310.LEFT_BUMPER);
       case LOGITECH_DUAL_ACTION:
         return driverController.getRawButton(LogitechDualAction.LEFT_BUMPER);
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * Returns the driver's gear shifting switch.
+   *
+   * @return The driver controller's gear shifting switch state.
+   */
+  public boolean getHighGearShift() {
+    switch (DRIVER_CONTROLLER_TYPE) {
+      case INTERLINK_ELITE_CONTROLLER:
+        return driverController.getRawButton(InterLinkElite.LEFT_TOP_FORWARD);
+      case LOGITECH_F310:
+        return driverController.getRawButton(LogitechF310.RIGHT_BUMPER);
+      case LOGITECH_DUAL_ACTION:
+        return driverController.getRawButton(LogitechDualAction.RIGHT_BUMPER);
       default:
         return false;
     }
