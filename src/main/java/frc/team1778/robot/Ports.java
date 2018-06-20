@@ -15,6 +15,7 @@ public class Ports {
   public static final int RIGHT_DRIVE_SLAVE_ID = 4;
 
   // Solenoids
+  public static final int PCM_ID = 1;
   public static final int LEFT_DRIVE_SHIFTER_FORWARD = 1;
   public static final int LEFT_DRIVE_SHIFTER_REVERSE = 2;
   public static final int RIGHT_DRIVE_SHIFTER_FORWARD = 6;
