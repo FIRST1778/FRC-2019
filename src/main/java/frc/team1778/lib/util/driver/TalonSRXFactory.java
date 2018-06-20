@@ -58,38 +58,38 @@ public class TalonSRXFactory {
   }
 
   /**
-   * Create a basic SimpleTalonSRX.
+   * Create a basic TalonSRX.
    *
    * @param id This is the CAN ID in which the TalonSRX is configured with.
    * @return A TalonSRX, configured with the default parameters.
    */
-  public static SimpleTalonSRX createDefaultTalon(int id) {
-    return new SimpleTalonSRX(id);
+  public static TalonSRX createDefaultTalon(int id) {
+    return new TalonSRX(id);
   }
 
   /**
-   * Create a slave SimpleTalonSRX.
+   * Create a slave TalonSRX.
    *
    * @param id This is the CAN ID in which the TalonSRX is configured with.
    * @param masterId This is the CAN ID for the slave to follow.
    * @param config This is the Configuration that stores all of the settings of the Talon.
    * @return A TalonSRX, configured to follow the master.
    */
-  public static SimpleTalonSRX createSlaveTalon(int id, TalonSRX master) {
-    SimpleTalonSRX talon = createDefaultTalon(id);
+  public static TalonSRX createSlaveTalon(int id, TalonSRX master) {
+    TalonSRX talon = createDefaultTalon(id);
     talon.follow(master);
     return talon;
   }
 
   /**
-   * Create a full fledged SimpleTalonSRX, this sets everything that will be used.
+   * Create a full fledged TalonSRX, this sets everything that will be used.
    *
    * @param id This is the CAN ID in which the TalonSRX is configured with.
    * @param config This is the Configuration that stores all of the settings of the Talon.
    * @return The configured TalonSRX
    */
-  public static SimpleTalonSRX createTalon(int id, Configuration config) {
-    SimpleTalonSRX talon = new SimpleTalonSRX(id);
+  public static TalonSRX createTalon(int id, Configuration config) {
+    TalonSRX talon = new TalonSRX(id);
 
     talon.configSelectedFeedbackSensor(config.FEEDBACK_DEVICE, 0, config.TIMEOUT_IN_MS);
     talon.setSelectedSensorPosition(0, 0, config.TIMEOUT_IN_MS);
