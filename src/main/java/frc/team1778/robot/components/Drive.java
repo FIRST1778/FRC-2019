@@ -1,12 +1,16 @@
 package frc.team1778.robot.components;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.team1778.lib.util.DriveSignal;
+import frc.team1778.lib.util.driver.TalonSRXFactory;
 import frc.team1778.robot.Ports;
 
 /**
@@ -39,11 +43,10 @@ public class Drive extends Subsystem {
 
   public static final long SHIFT_DEBOUNCE_TIME = 250;
 
-  //  private static TalonSRXFactory.Configuration driveConfiguration = new
-  // TalonSRXFactory.Configuration();
-
-  /*static {
-    // Drive Config
+  private static TalonSRXFactory.Configuration driveConfiguration =
+      new TalonSRXFactory.Configuration();
+  // Drive Config
+  static {
     driveConfiguration.FEEDBACK_DEVICE = FeedbackDevice.QuadEncoder;
     driveConfiguration.STATUS_FRAME_PERIOD = 10;
     driveConfiguration.STATUS_FRAME = StatusFrameEnhanced.Status_13_Base_PIDF0;
@@ -58,7 +61,7 @@ public class Drive extends Subsystem {
     driveConfiguration.PEAK_CURRENT_LIMIT = 25;
     driveConfiguration.PEAK_CURRENT_LIMIT_DURATION = 100;
     driveConfiguration.ENABLE_CURRENT_LIMIT = true;
-  }*/
+  }
 
   private SystemState currentState;
   private boolean isInHighGear;
@@ -76,10 +79,7 @@ public class Drive extends Subsystem {
   private Drive() {
     compressor = new Compressor(Ports.PCM_ID);
 
-    leftMaster =
-        new TalonSRX(
-            Ports.LEFT_DRIVE_MASTER_ID); // TalonSRXFactory.createTalon(Ports.LEFT_DRIVE_MASTER_ID,
-    // driveConfiguration);
+    leftMaster = TalonSRXFactory.createDefaultTalon(Ports.LEFT_DRIVE_MASTER_ID);
     rightMaster =
         new TalonSRX(
             Ports
@@ -95,9 +95,11 @@ public class Drive extends Subsystem {
                 .LEFT_DRIVE_SLAVE_ID); // TalonSRXFactory.createSlaveTalon(Ports.RIGHT_DRIVE_SLAVE_ID, rightMaster);
 
     leftShifter =
-        new DoubleSolenoid(Ports.PCM_ID, Ports.LEFT_DRIVE_SHIFTER_FORWARD, Ports.LEFT_DRIVE_SHIFTER_REVERSE);
+        new DoubleSolenoid(
+            Ports.PCM_ID, Ports.LEFT_DRIVE_SHIFTER_FORWARD, Ports.LEFT_DRIVE_SHIFTER_REVERSE);
     rightShifter =
-        new DoubleSolenoid(Ports.PCM_ID, Ports.RIGHT_DRIVE_SHIFTER_FORWARD, Ports.RIGHT_DRIVE_SHIFTER_REVERSE);
+        new DoubleSolenoid(
+            Ports.PCM_ID, Ports.RIGHT_DRIVE_SHIFTER_FORWARD, Ports.RIGHT_DRIVE_SHIFTER_REVERSE);
     leftShifter.set(Value.kOff);
     rightShifter.set(Value.kOff);
 
