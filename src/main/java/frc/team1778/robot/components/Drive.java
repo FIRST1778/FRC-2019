@@ -74,7 +74,7 @@ public class Drive extends Subsystem {
   }
 
   private Drive() {
-    compressor = new Compressor(2);
+    compressor = new Compressor(Ports.PCM_ID);
 
     leftMaster =
         new TalonSRX(
@@ -95,10 +95,9 @@ public class Drive extends Subsystem {
                 .LEFT_DRIVE_SLAVE_ID); // TalonSRXFactory.createSlaveTalon(Ports.RIGHT_DRIVE_SLAVE_ID, rightMaster);
 
     leftShifter =
-        new DoubleSolenoid(2, Ports.LEFT_DRIVE_SHIFTER_FORWARD, Ports.LEFT_DRIVE_SHIFTER_REVERSE);
+        new DoubleSolenoid(Ports.PCM_ID, Ports.LEFT_DRIVE_SHIFTER_FORWARD, Ports.LEFT_DRIVE_SHIFTER_REVERSE);
     rightShifter =
-        new DoubleSolenoid(2, Ports.RIGHT_DRIVE_SHIFTER_FORWARD, Ports.RIGHT_DRIVE_SHIFTER_REVERSE);
-
+        new DoubleSolenoid(Ports.PCM_ID, Ports.RIGHT_DRIVE_SHIFTER_FORWARD, Ports.RIGHT_DRIVE_SHIFTER_REVERSE);
     leftShifter.set(Value.kOff);
     rightShifter.set(Value.kOff);
 
