@@ -57,6 +57,8 @@ public class TalonSRXFactory {
     public int MOTION_ACCELERATION = 0;
   }
 
+  private static final Configuration DEFAULT_CONFIGURATION = new Configuration();
+
   /**
    * Create a basic TalonSRX.
    *
@@ -64,7 +66,7 @@ public class TalonSRXFactory {
    * @return A TalonSRX, configured with the default parameters.
    */
   public static TalonSRX createDefaultTalon(int id) {
-    return new TalonSRX(id);
+    return createTalon(id, DEFAULT_CONFIGURATION);
   }
 
   /**
@@ -76,7 +78,7 @@ public class TalonSRXFactory {
    * @return A TalonSRX, configured to follow the master.
    */
   public static TalonSRX createSlaveTalon(int id, TalonSRX master) {
-    TalonSRX talon = createDefaultTalon(id);
+    TalonSRX talon = createTalon(id, DEFAULT_CONFIGURATION);
     talon.follow(master);
     return talon;
   }
