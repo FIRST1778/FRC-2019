@@ -16,10 +16,10 @@ public class Ports {
 
   // Solenoids
   public static final int PCM_ID = 1;
-  public static final int LEFT_DRIVE_SHIFTER_FORWARD = 1;
-  public static final int LEFT_DRIVE_SHIFTER_REVERSE = 2;
-  public static final int RIGHT_DRIVE_SHIFTER_FORWARD = 6;
-  public static final int RIGHT_DRIVE_SHIFTER_REVERSE = 5;
+  public static final int LEFT_SHIFTER_FORWARD = 1;
+  public static final int LEFT_SHIFTER_REVERSE = 2;
+  public static final int RIGHT_SHIFTER_FORWARD = 6;
+  public static final int RIGHT_SHIFTER_REVERSE = 5;
 
   // Sensors
   public static final SPI.Port NAVX_SPI = SPI.Port.kMXP;
