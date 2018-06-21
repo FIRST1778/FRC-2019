@@ -2,7 +2,6 @@ package frc.team1778.robot.components;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Compressor;
@@ -10,6 +9,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.team1778.lib.util.DriveSignal;
+import frc.team1778.lib.util.driver.NavX;
 import frc.team1778.lib.util.driver.TalonSRXFactory;
 import frc.team1778.robot.Ports;
 
@@ -28,12 +28,12 @@ public class Drive extends Subsystem {
 
   private Compressor compressor;
 
-  private final TalonSRX leftMaster, rightMaster, leftSlave, rightSlave;
+  private TalonSRX leftMaster, rightMaster, leftSlave, rightSlave;
 
-  private final DoubleSolenoid leftShifter;
-  private final DoubleSolenoid rightShifter;
+  private DoubleSolenoid leftShifter;
+  private DoubleSolenoid rightShifter;
 
-  // private final NavX navX;
+  private NavX navX;
 
   public enum SystemState {
     OPEN_LOOP_PERCENTAGE,
@@ -48,7 +48,6 @@ public class Drive extends Subsystem {
   // Drive Config
   static {
     driveConfiguration.FEEDBACK_DEVICE = FeedbackDevice.QuadEncoder;
-    driveConfiguration.STATUS_FRAME_PERIOD = 10;
     driveConfiguration.STATUS_FRAME = StatusFrameEnhanced.Status_13_Base_PIDF0;
     driveConfiguration.PID_KP = 15;
     driveConfiguration.PID_KI = 0.01;
@@ -56,7 +55,6 @@ public class Drive extends Subsystem {
     driveConfiguration.PID_KF = 0.2;
     driveConfiguration.MOTION_CRUISE_VELOCITY = 640;
     driveConfiguration.MOTION_ACCELERATION = 200;
-    driveConfiguration.NEUTRAL_POWER_MODE = NeutralMode.Brake;
     driveConfiguration.CONTINUOUS_CURRENT_LIMIT = 25;
     driveConfiguration.PEAK_CURRENT_LIMIT = 25;
     driveConfiguration.PEAK_CURRENT_LIMIT_DURATION = 100;
@@ -79,43 +77,28 @@ public class Drive extends Subsystem {
   private Drive() {
     compressor = new Compressor(Ports.PCM_ID);
 
-    leftMaster = TalonSRXFactory.createDefaultTalon(Ports.LEFT_DRIVE_MASTER_ID);
-    rightMaster =
-        new TalonSRX(
-            Ports
-                .RIGHT_DRIVE_MASTER_ID); // TalonSRXFactory.createTalon(Ports.RIGHT_DRIVE_MASTER_ID,
-    // driveConfiguration);
-    leftSlave =
-        new TalonSRX(
-            Ports
-                .LEFT_DRIVE_SLAVE_ID); // TalonSRXFactory.createSlaveTalon(Ports.LEFT_DRIVE_SLAVE_ID, leftMaster);
-    rightSlave =
-        new TalonSRX(
-            Ports
-                .LEFT_DRIVE_SLAVE_ID); // TalonSRXFactory.createSlaveTalon(Ports.RIGHT_DRIVE_SLAVE_ID, rightMaster);
+    leftMaster = new TalonSRX(Ports.LEFT_DRIVE_MASTER_ID);
+    rightMaster = new TalonSRX(Ports.RIGHT_DRIVE_MASTER_ID);
+    TalonSRXFactory.configureTalon(leftMaster, driveConfiguration);
+    TalonSRXFactory.configureTalon(rightMaster, driveConfiguration);
+
+    leftSlave = TalonSRXFactory.createSlaveTalon(Ports.LEFT_DRIVE_SLAVE_ID, leftMaster);
+    rightSlave = TalonSRXFactory.createSlaveTalon(Ports.LEFT_DRIVE_SLAVE_ID, rightMaster);
 
     leftShifter =
-        new DoubleSolenoid(
-            Ports.PCM_ID, Ports.LEFT_DRIVE_SHIFTER_FORWARD, Ports.LEFT_DRIVE_SHIFTER_REVERSE);
+        new DoubleSolenoid(Ports.PCM_ID, Ports.LEFT_SHIFTER_FORWARD, Ports.LEFT_SHIFTER_REVERSE);
     rightShifter =
-        new DoubleSolenoid(
-            Ports.PCM_ID, Ports.RIGHT_DRIVE_SHIFTER_FORWARD, Ports.RIGHT_DRIVE_SHIFTER_REVERSE);
-    leftShifter.set(Value.kOff);
-    rightShifter.set(Value.kOff);
-
-    // navX = new NavX(Ports.NAVX_SPI);
-
-    leftSlave.follow(leftMaster);
-    rightSlave.follow(rightMaster);
+        new DoubleSolenoid(Ports.PCM_ID, Ports.RIGHT_SHIFTER_FORWARD, Ports.RIGHT_SHIFTER_REVERSE);
 
     leftMaster.setInverted(false);
     rightMaster.setInverted(true);
     leftSlave.setInverted(false);
     rightSlave.setInverted(true);
+    leftMaster.setSensorPhase(false);
+    rightMaster.setSensorPhase(true);
 
     currentState = SystemState.OPEN_LOOP_PERCENTAGE;
     isInHighGear = false;
-    lastShiftTime = System.currentTimeMillis();
   }
 
   /**
@@ -124,23 +107,21 @@ public class Drive extends Subsystem {
    *
    * @return The drivebase's NavX
    */
-  // public NavX getNavX() {
-  //  return navX;
-  // }
+  public NavX getNavX() {
+    return navX;
+  }
 
   @Override
   public void sendTelemetry() {}
 
   @Override
   public void resetEncoders() {
-    leftMaster.setSelectedSensorPosition(0, 0, 10); // driveConfiguration.TIMEOUT_IN_MS);
-    rightMaster.setSelectedSensorPosition(0, 0, 10); // driveConfiguration.TIMEOUT_IN_MS);
+    leftMaster.setSelectedSensorPosition(0, 0, driveConfiguration.TIMEOUT_IN_MS);
+    rightMaster.setSelectedSensorPosition(0, 0, driveConfiguration.TIMEOUT_IN_MS);
   }
 
   @Override
-  public void zeroSensors() {
-    // navX.zeroYaw();
-  }
+  public void zeroSensors() {}
 
   /**
    * Returns the current state of the shifter.

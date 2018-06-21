@@ -66,7 +66,9 @@ public class TalonSRXFactory {
    * @return A TalonSRX, configured with the default parameters.
    */
   public static TalonSRX createDefaultTalon(int id) {
-    return createTalon(id, DEFAULT_CONFIGURATION);
+    TalonSRX talon = new TalonSRX(id);
+    configureTalon(talon, DEFAULT_CONFIGURATION);
+    return talon;
   }
 
   /**
@@ -74,25 +76,22 @@ public class TalonSRXFactory {
    *
    * @param id This is the CAN ID in which the TalonSRX is configured with.
    * @param masterId This is the CAN ID for the slave to follow.
-   * @param config This is the Configuration that stores all of the settings of the Talon.
    * @return A TalonSRX, configured to follow the master.
    */
-  public static TalonSRX createSlaveTalon(int id, TalonSRX master) {
-    TalonSRX talon = createTalon(id, DEFAULT_CONFIGURATION);
+  public static TalonSRX createSlaveTalon(int slaveId, TalonSRX master) {
+    TalonSRX talon = createDefaultTalon(slaveId);
     talon.follow(master);
     return talon;
   }
 
   /**
-   * Create a full fledged TalonSRX, this sets everything that will be used.
+   * Configure a full fledged TalonSRX, this sets all of the configuration paramters set in the
+   * config.
    *
-   * @param id This is the CAN ID in which the TalonSRX is configured with.
-   * @param config This is the Configuration that stores all of the settings of the Talon.
-   * @return The configured TalonSRX
+   * @param talon This is the TalonSRX to configure.
+   * @param config This is the Configuration that stores all of the settings of the TalonSRX.
    */
-  public static TalonSRX createTalon(int id, Configuration config) {
-    TalonSRX talon = new TalonSRX(id);
-
+  public static void configureTalon(TalonSRX talon, Configuration config) {
     talon.configSelectedFeedbackSensor(config.FEEDBACK_DEVICE, 0, config.TIMEOUT_IN_MS);
     talon.setSelectedSensorPosition(0, 0, config.TIMEOUT_IN_MS);
     talon.setStatusFramePeriod(
@@ -121,7 +120,5 @@ public class TalonSRXFactory {
     talon.config_kF(config.PROFILE_SLOT_ID, config.PID_KF, config.TIMEOUT_IN_MS);
     talon.configMotionCruiseVelocity(config.MOTION_CRUISE_VELOCITY, config.TIMEOUT_IN_MS);
     talon.configMotionAcceleration(config.MOTION_ACCELERATION, config.TIMEOUT_IN_MS);
-
-    return talon;
   }
 }
