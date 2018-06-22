@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.team1778.lib.gamepads.InterLinkElite;
 import frc.team1778.lib.gamepads.LogitechDualAction;
 import frc.team1778.lib.gamepads.LogitechF310;
+import frc.team1778.lib.gamepads.XboxOne;
+import frc.team1778.lib.gamepads.XboxOneElite;
 
 /**
  * Use this class to map controls between different controllers.
@@ -20,16 +22,28 @@ public class Controls {
         return "Interlink Elite Controller";
       }
     },
+    LOGITECH_DUAL_ACTION {
+      @Override
+      public String toString() {
+        return "Logitech Dual Action Gamepad";
+      }
+    },
     LOGITECH_F310 {
       @Override
       public String toString() {
         return "Logitech F310 Gamepad";
       }
     },
-    LOGITECH_DUAL_ACTION {
+    XBOX_ONE {
       @Override
       public String toString() {
-        return "Logitech Dual Action Gamepad";
+        return "Xbox one Gamepad";
+      }
+    },
+    XBOX_ONE_ELITE {
+      @Override
+      public String toString() {
+        return "Xbox One Elite Controller";
       }
     }
   };
@@ -80,11 +94,15 @@ public class Controls {
   public double getThrottle() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case INTERLINK_ELITE_CONTROLLER:
-        return driverController.getRawAxis(InterLinkElite.Axis.LEFT_Y);
-      case LOGITECH_F310:
-        return -driverController.getRawAxis(LogitechF310.Axis.LEFT_Y);
+        return -driverController.getRawAxis(InterLinkElite.Axis.LEFT_Y);
       case LOGITECH_DUAL_ACTION:
         return -driverController.getRawAxis(LogitechDualAction.Axis.LEFT_Y);
+      case LOGITECH_F310:
+        return -driverController.getRawAxis(LogitechF310.Axis.LEFT_Y);
+      case XBOX_ONE:
+        return -driverController.getRawAxis(XboxOne.Axis.LEFT_Y);
+      case XBOX_ONE_ELITE:
+        return -driverController.getRawAxis(XboxOneElite.Axis.LEFT_Y);
       default:
         return 0;
     }
@@ -99,10 +117,14 @@ public class Controls {
     switch (DRIVER_CONTROLLER_TYPE) {
       case INTERLINK_ELITE_CONTROLLER:
         return driverController.getRawAxis(InterLinkElite.Axis.RIGHT_X);
-      case LOGITECH_F310:
-        return driverController.getRawAxis(LogitechF310.Axis.RIGHT_X);
       case LOGITECH_DUAL_ACTION:
         return driverController.getRawAxis(LogitechDualAction.Axis.RIGHT_X);
+      case LOGITECH_F310:
+        return driverController.getRawAxis(LogitechF310.Axis.RIGHT_X);
+      case XBOX_ONE:
+        return driverController.getRawAxis(XboxOne.Axis.RIGHT_X);
+      case XBOX_ONE_ELITE:
+        return driverController.getRawAxis(XboxOneElite.Axis.RIGHT_X);
       default:
         return 0;
     }
@@ -116,11 +138,15 @@ public class Controls {
   public double getWheelY() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case INTERLINK_ELITE_CONTROLLER:
-        return driverController.getRawAxis(InterLinkElite.Axis.RIGHT_Y);
-      case LOGITECH_F310:
-        return -driverController.getRawAxis(LogitechF310.Axis.RIGHT_Y);
+        return -driverController.getRawAxis(InterLinkElite.Axis.RIGHT_Y);
       case LOGITECH_DUAL_ACTION:
         return -driverController.getRawAxis(LogitechDualAction.Axis.RIGHT_Y);
+      case LOGITECH_F310:
+        return -driverController.getRawAxis(LogitechF310.Axis.RIGHT_Y);
+      case XBOX_ONE:
+        return -driverController.getRawAxis(XboxOne.Axis.RIGHT_Y);
+      case XBOX_ONE_ELITE:
+        return -driverController.getRawAxis(XboxOneElite.Axis.RIGHT_Y);
       default:
         return 0;
     }
@@ -134,47 +160,59 @@ public class Controls {
   public boolean getQuickTurn() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case INTERLINK_ELITE_CONTROLLER:
-        return driverController.getRawButton(InterLinkElite.RIGHT_TOP_SWITCH);
-      case LOGITECH_F310:
-        return driverController.getRawButton(LogitechF310.A);
+        return driverController.getRawButton(InterLinkElite.RIGHT_SHOULDER_SWITCH);
       case LOGITECH_DUAL_ACTION:
-        return driverController.getRawButton(LogitechDualAction.B1);
+        return driverController.getRawButton(LogitechDualAction.RIGHT_BUMPER);
+      case LOGITECH_F310:
+        return driverController.getRawButton(LogitechF310.RIGHT_BUMPER);
+      case XBOX_ONE:
+        return driverController.getRawButton(XboxOne.RIGHT_BUMPER);
+      case XBOX_ONE_ELITE:
+        return driverController.getRawButton(XboxOneElite.RIGHT_BUMPER);
       default:
         return false;
     }
   }
 
   /**
-   * Returns the driver's gear shifting switch.
+   * Returns the driver's gear shift down switch.
    *
    * @return The driver controller's gear shifting switch state.
    */
   public boolean getLowGearShift() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case INTERLINK_ELITE_CONTROLLER:
-        return driverController.getRawButton(InterLinkElite.LEFT_TOP_BACK);
-      case LOGITECH_F310:
-        return driverController.getRawButton(LogitechF310.LEFT_BUMPER);
+        return driverController.getRawButton(InterLinkElite.LEFT_SHOULDER_DOWN_SWITCH);
       case LOGITECH_DUAL_ACTION:
-        return driverController.getRawButton(LogitechDualAction.LEFT_BUMPER);
+        return driverController.getRawButton(LogitechDualAction.LEFT_TRIGGER);
+      case LOGITECH_F310:
+        return driverController.getRawAxis(LogitechF310.Axis.LEFT_TRIGGER) >= 0.5;
+      case XBOX_ONE:
+        return driverController.getRawAxis(XboxOne.Axis.LEFT_TRIGGER) >= 0.5;
+      case XBOX_ONE_ELITE:
+        return driverController.getRawAxis(XboxOneElite.Axis.LEFT_TRIGGER) >= 0.5;
       default:
         return false;
     }
   }
 
   /**
-   * Returns the driver's gear shifting switch.
+   * Returns the driver's gear shift up switch.
    *
    * @return The driver controller's gear shifting switch state.
    */
   public boolean getHighGearShift() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case INTERLINK_ELITE_CONTROLLER:
-        return driverController.getRawButton(InterLinkElite.LEFT_TOP_FORWARD);
-      case LOGITECH_F310:
-        return driverController.getRawButton(LogitechF310.RIGHT_BUMPER);
+        return driverController.getRawButton(InterLinkElite.LEFT_SHOULDER_UP_SWITCH);
       case LOGITECH_DUAL_ACTION:
-        return driverController.getRawButton(LogitechDualAction.RIGHT_BUMPER);
+        return driverController.getRawButton(LogitechDualAction.RIGHT_TRIGGER);
+      case LOGITECH_F310:
+        return driverController.getRawAxis(LogitechF310.Axis.RIGHT_TRIGGER) >= 0.5;
+      case XBOX_ONE:
+        return driverController.getRawAxis(XboxOne.Axis.RIGHT_TRIGGER) >= 0.5;
+      case XBOX_ONE_ELITE:
+        return driverController.getRawAxis(XboxOneElite.Axis.RIGHT_TRIGGER) >= 0.5;
       default:
         return false;
     }

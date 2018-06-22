@@ -45,7 +45,7 @@ public class Drive extends Subsystem {
 
   private static TalonSRXFactory.Configuration driveConfiguration =
       new TalonSRXFactory.Configuration();
-  
+
   // Drive Config
   static {
     driveConfiguration.FEEDBACK_DEVICE = FeedbackDevice.QuadEncoder;
