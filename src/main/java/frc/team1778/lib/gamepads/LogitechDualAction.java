@@ -1,4 +1,4 @@
-package frc.team1778.lib.util.gamepads;
+package frc.team1778.lib.gamepads;
 
 /**
  * Output mapping constants for the Logitech Dual Action gamepad

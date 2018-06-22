@@ -1,4 +1,4 @@
-package frc.team1778.lib.util.driver;
+package frc.team1778.lib.driver;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;

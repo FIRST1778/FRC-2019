@@ -8,9 +8,9 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Solenoid;
-import frc.team1778.lib.util.DriveSignal;
-import frc.team1778.lib.util.driver.NavX;
-import frc.team1778.lib.util.driver.TalonSRXFactory;
+import frc.team1778.lib.DriveSignal;
+import frc.team1778.lib.driver.NavX;
+import frc.team1778.lib.driver.TalonSRXFactory;
 import frc.team1778.robot.Ports;
 
 /**

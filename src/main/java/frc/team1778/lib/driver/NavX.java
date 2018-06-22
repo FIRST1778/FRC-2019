@@ -1,4 +1,4 @@
-package frc.team1778.lib.util.driver;
+package frc.team1778.lib.driver;
 
 import com.kauailabs.navx.AHRSProtocol.AHRSUpdateBase;
 import com.kauailabs.navx.frc.AHRS;

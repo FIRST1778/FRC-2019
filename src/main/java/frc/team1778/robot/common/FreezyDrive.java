@@ -1,7 +1,7 @@
 package frc.team1778.robot.common;
 
-import frc.team1778.lib.util.DriveSignal;
-import frc.team1778.lib.util.SimpleUtil;
+import frc.team1778.lib.DriveSignal;
+import frc.team1778.lib.SimpleUtil;
 
 /**
  * Implements something similar to "Cheesy Drive", courtesy of 254, and "Culver Drive", courtesy of

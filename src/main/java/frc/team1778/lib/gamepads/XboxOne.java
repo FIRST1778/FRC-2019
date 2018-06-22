@@ -1,11 +1,11 @@
-package frc.team1778.lib.util.gamepads;
+package frc.team1778.lib.gamepads;
 
 /**
- * Output mapping constants for the Xbox One Elite gamepad
+ * Output mapping constants for the Xbox One gamepad
  *
  * @author FRC 1778 Chill Out
  */
-public class XboxOneElite {
+public class XboxOne {
   /** The dPad 'axis', used with GetPOV() */
   public static final int DPAD = 0;
   /** The lower button of four, labelled "A" */
