@@ -1,4 +1,4 @@
-package frc.team1778.lib.util;
+package frc.team1778.lib;
 
 /** A drivetrain command consisting of the left, right motor settings. */
 public class DriveSignal {

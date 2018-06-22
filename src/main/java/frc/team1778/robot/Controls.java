@@ -1,9 +1,9 @@
 package frc.team1778.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import frc.team1778.lib.util.gamepads.InterLinkElite;
-import frc.team1778.lib.util.gamepads.LogitechDualAction;
-import frc.team1778.lib.util.gamepads.LogitechF310;
+import frc.team1778.lib.gamepads.InterLinkElite;
+import frc.team1778.lib.gamepads.LogitechDualAction;
+import frc.team1778.lib.gamepads.LogitechF310;
 
 /**
  * Use this class to map controls between different controllers.

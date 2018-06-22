@@ -1,4 +1,4 @@
-package frc.team1778.lib.util;
+package frc.team1778.lib;
 
 public class SimpleUtil {
 
