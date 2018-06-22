@@ -45,6 +45,7 @@ public class Drive extends Subsystem {
 
   private static TalonSRXFactory.Configuration driveConfiguration =
       new TalonSRXFactory.Configuration();
+  
   // Drive Config
   static {
     driveConfiguration.FEEDBACK_DEVICE = FeedbackDevice.QuadEncoder;
@@ -63,7 +64,6 @@ public class Drive extends Subsystem {
 
   private SystemState currentState;
   private boolean isInHighGear;
-  private long lastShiftTime;
 
   /**
    * Returns a static instance of Drive, to be used instead of instantiating new objects of Drive.
@@ -142,21 +142,6 @@ public class Drive extends Subsystem {
       isInHighGear = setToHighGear;
       leftShifter.set(setToHighGear ? Value.kForward : Value.kReverse);
       rightShifter.set(setToHighGear ? Value.kForward : Value.kReverse);
-    }
-  }
-
-  /**
-   * Sets the shifter position.
-   *
-   * @param setToHighGear The wanted state of the gear shifter.
-   * @param checkDebounce If true, it first checks if the shifter has been triggered directly
-   *     before.
-   */
-  public void setHighGear(boolean setToHighGear, boolean checkDebounce) {
-    if (checkDebounce
-        ? (System.currentTimeMillis() - lastShiftTime >= SHIFT_DEBOUNCE_TIME)
-        : true) {
-      setHighGear(setToHighGear);
     }
   }
 
