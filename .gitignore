@@ -16,7 +16,6 @@ tmp/
 .project
 /.idea
 .classpath
-.vscode/
 
 # Toast/GradleRIO
 run/
