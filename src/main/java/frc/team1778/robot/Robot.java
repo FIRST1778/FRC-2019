@@ -56,17 +56,4 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void testPeriodic() {}
-
-  /**
-   * Puts all subsystem data on the SmartDashboard.
-   *
-   * @param debug If true, more feedback data will be logged.
-   */
-  public void updateSmartDashboard(boolean debug) {
-    // Add general SmartDashboard values here
-
-    if (debug) {
-      // Add specialized SmartDashboard values here
-    }
-  }
 }
