@@ -44,7 +44,6 @@ public class TalonSRXFactory {
     public int PEAK_CURRENT_LIMIT_DURATION = 0;
     public boolean ENABLE_CURRENT_LIMIT = false;
     public double OPEN_LOOP_RAMP_TIME_SECONDS = 0.0;
-    public boolean INVERT_DIRECTION = false;
     public boolean INVERT_SENSOR_PHASE = false;
     public NeutralMode NEUTRAL_POWER_MODE = NeutralMode.Brake;
 
@@ -110,7 +109,6 @@ public class TalonSRXFactory {
     talon.configOpenloopRamp(config.OPEN_LOOP_RAMP_TIME_SECONDS, config.TIMEOUT_IN_MS);
     talon.configAllowableClosedloopError(
         config.PROFILE_SLOT_ID, config.ALLOWABLE_CLOSED_LOOP_ERROR, config.TIMEOUT_IN_MS);
-    talon.setInverted(config.INVERT_DIRECTION);
     talon.setSensorPhase(config.INVERT_SENSOR_PHASE);
     talon.setNeutralMode(config.NEUTRAL_POWER_MODE);
     talon.selectProfileSlot(config.PROFILE_SLOT_ID, 0);
