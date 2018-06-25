@@ -64,7 +64,8 @@ public class Controls {
   }
 
   /**
-   * Returns a static instance of Controls, to be used instead of instantiating new objects of Controls.
+   * Returns a static instance of Controls, to be used instead of instantiating new objects of
+   * Controls.
    *
    * @return an instance of Controls to avoid multiple objects of the same hardware devices
    */
