@@ -1,24 +1,40 @@
 package frc.team1778.lib;
 
+/**
+ * Contains simple methods to handle basic utility operations.
+ *
+ * @author FRC 1778 Chill Out
+ */
 public class SimpleUtil {
-
-  public static double limit(double v, double maxMagnitude) {
-    return limit(v, -maxMagnitude, maxMagnitude);
+  /**
+   * Limits the input value to the specified max value in either direction.
+   *
+   * @param value the input value to limit
+   * @param max the max magnitude to limit the input value to
+   */
+  public static double limit(double value, double max) {
+    return limit(value, -max, max);
   }
 
-  public static double limit(double v, double min, double max) {
-    return Math.min(max, Math.max(min, v));
+  /**
+   * Limits the input value to the specified min and max values.
+   *
+   * @param value the input value to limit
+   * @param max the minimum to limit the input value to
+   * @param max the maximum to limit the input value to
+   */
+  public static double limit(double value, double min, double max) {
+    return Math.min(max, Math.max(min, value));
   }
 
-  public static double limit(boolean limitHigh, double input, double limit) {
-    if (limitHigh)
-      if (input > limit) return limit;
-      else return input;
-    else if (input < limit) return limit;
-    else return input;
-  }
-
-  public static double handleDeadband(double val, double deadband) {
-    return (Math.abs(val) > Math.abs(deadband)) ? val : 0.0;
+  /**
+   * Handles the deadband on the input value. If the value is within the deadband, it will be cut to
+   * zero.
+   *
+   * @param value the input value to handle
+   * @param deadband the amount of deadband that is applied to the input value
+   */
+  public static double handleDeadband(double value, double deadband) {
+    return (Math.abs(value) > Math.abs(deadband)) ? value : 0.0;
   }
 }

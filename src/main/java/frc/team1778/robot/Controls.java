@@ -63,6 +63,11 @@ public class Controls {
     operatorController = new Joystick(PORT_OPERATOR_CONTROLLER);
   }
 
+  /**
+   * Returns a static instance of Controls, to be used instead of instantiating new objects of Controls.
+   *
+   * @return an instance of Controls to avoid multiple objects of the same hardware devices
+   */
   public static Controls getInstance() {
     return instance;
   }
@@ -70,16 +75,16 @@ public class Controls {
   /**
    * Returns the driver joystick/controller.
    *
-   * @return The driver joystick/controller.
+   * @return the driver's joystick or controller
    */
   public Joystick getDriverController() {
     return driverController;
   }
 
   /**
-   * Returns the oeprator joystick/controller.
+   * Returns the operator joystick/controller.
    *
-   * @return The operator joystick/controller.
+   * @return the operator's joystick or controller.
    */
   public Joystick getOperatorController() {
     return operatorController;
@@ -87,9 +92,9 @@ public class Controls {
 
   // Driver Controls
   /**
-   * Returns the driver's throttl stick y-axis.
+   * Returns the driver's throttle stick.
    *
-   * @return The driver controller's throttle stick y-axis.
+   * @return the driver's throttle stick
    */
   public double getThrottle() {
     switch (DRIVER_CONTROLLER_TYPE) {
@@ -111,7 +116,7 @@ public class Controls {
   /**
    * Returns the driver's turn stick x-axis.
    *
-   * @return The driver controller's turning stick x-axis.
+   * @return the driver's turn stick x-axis
    */
   public double getWheelX() {
     switch (DRIVER_CONTROLLER_TYPE) {
@@ -133,7 +138,7 @@ public class Controls {
   /**
    * Returns the driver's turn stick y-axis.
    *
-   * @return The driver controller's turning stick y-axis.
+   * @return the driver's turn stick y-axis.
    */
   public double getWheelY() {
     switch (DRIVER_CONTROLLER_TYPE) {
@@ -153,9 +158,9 @@ public class Controls {
   }
 
   /**
-   * Returns the driver's quickturn switch.
+   * Returns the driver's quickturn switch state.
    *
-   * @return The driver controller's quickturn switch state.
+   * @return the driver's quickturn switch state
    */
   public boolean getQuickTurn() {
     switch (DRIVER_CONTROLLER_TYPE) {
@@ -175,9 +180,9 @@ public class Controls {
   }
 
   /**
-   * Returns the driver's gear shift down switch.
+   * Returns the driver's gear shift down switch state.
    *
-   * @return The driver controller's gear shifting switch state.
+   * @return the driver's gear shift down switch state
    */
   public boolean getLowGearShift() {
     switch (DRIVER_CONTROLLER_TYPE) {
@@ -197,9 +202,9 @@ public class Controls {
   }
 
   /**
-   * Returns the driver's gear shift up switch.
+   * Returns the driver's gear shift up switch state.
    *
-   * @return The driver controller's gear shifting switch state.
+   * @return the driver's gear shift up switch state
    */
   public boolean getHighGearShift() {
     switch (DRIVER_CONTROLLER_TYPE) {

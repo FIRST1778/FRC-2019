@@ -34,6 +34,19 @@ public class FreezyDrive {
   private double quickstopAccumulator;
   private double negativeInertiaAccumulator;
 
+  /**
+   * Calculates wheel powers for curvature drive.
+   *
+   * @param throttle the throttle value of the input, which is the primary longitudinal force
+   * @param wheelX the wheel's horizontal axis, which will most likely be a joystick axis when
+   *     trying to simulate a steering wheel
+   * @param wheelX the wheel's vertical axis, which will most likely be a joystick axis when trying
+   *     to simulate a steering wheel
+   * @param isQuickTurn whether or not to use the quickturn feature, which allows the robot to spin
+   *     more quickly
+   * @param isHighGear the state of the drivetrain's gear shifter
+   * @return a DriveSignal of the left and right powers calculated
+   */
   public DriveSignal freezyDrive(
       double throttle, double wheelX, double wheelY, boolean isQuickTurn, boolean isHighGear) {
     double angle = Math.atan2(wheelX, wheelY) * (360 / (2 * Math.PI));
