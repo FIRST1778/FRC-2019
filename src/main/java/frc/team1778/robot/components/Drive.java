@@ -68,7 +68,7 @@ public class Drive extends Subsystem {
   /**
    * Returns a static instance of Drive, to be used instead of instantiating new objects of Drive.
    *
-   * @return An instance of Drive
+   * @return an instance of Drive to avoid multiple objects of the same hardware devices
    */
   public static Drive getinstance() {
     return instance;
@@ -105,7 +105,7 @@ public class Drive extends Subsystem {
    * Returns the drivebase's NavX IMU. Use this instead of reinstantiating the NavX, which will
    * result in no response from the sensor.
    *
-   * @return The drivebase's NavX
+   * @return the drivebase's NavX IMU
    */
   public NavX getNavX() {
     return navX;
@@ -126,7 +126,7 @@ public class Drive extends Subsystem {
   /**
    * Returns the current state of the shifter.
    *
-   * @return The state of the shifting solenoid.
+   * @return the state of the gear shifting solenoid
    */
   public boolean isHighGear() {
     return isInHighGear;
@@ -135,7 +135,7 @@ public class Drive extends Subsystem {
   /**
    * Sets the shifter position.
    *
-   * @param setToHighGear The wanted state of the gear shifter.
+   * @param setToHighGear the wanted state of the gear shifter
    */
   public void setHighGear(boolean setToHighGear) {
     if (setToHighGear != isInHighGear) {
@@ -148,7 +148,7 @@ public class Drive extends Subsystem {
   /**
    * Sets the drive control mode/state to operate the TalonSRX's with.
    *
-   * @param newState The state to set the system to use.
+   * @param newState the wanted state to set the system to use
    */
   public void setDriveState(SystemState newState) {
     currentState = newState;
@@ -158,7 +158,7 @@ public class Drive extends Subsystem {
    * Sets the values to be sent to the motors, which can change depending on the state of the
    * system.
    *
-   * @param signals The signals to send each of the motors.
+   * @param signals the signals to send both sides of the drivetrain
    */
   public void setPowers(DriveSignal signals) {
     setPowers(signals.getLeft(), signals.getRight());
@@ -168,8 +168,8 @@ public class Drive extends Subsystem {
    * Sets the values to be sent to the motors, which can change depending on the state of the
    * system.
    *
-   * @param left The left signal to send to the left motor.
-   * @param right The right signal to send to the right motor.
+   * @param left the left signal to send to the left side of the drivetrain
+   * @param right the right signal to send to the right side of the drivetrain
    */
   public void setPowers(double left, double right) {
     switch (currentState) {

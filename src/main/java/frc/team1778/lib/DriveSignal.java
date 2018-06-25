@@ -1,25 +1,40 @@
 package frc.team1778.lib;
 
-/** A drivetrain command consisting of the left, right motor settings. */
+/**
+ * A drivetrain command consisting of the left and right motor signals.
+ *
+ * @author FRC 1778 Chill Out
+ */
 public class DriveSignal {
-  protected double mLeftMotor;
-  protected double mRightMotor;
+  private double leftPower;
+  private double rightPower;
 
+  /**
+   * Holde the left and right signals for the drivetrain.
+   *
+   * @param left the signal for the left side of the drivetrain
+   * @param right the signal for the right side of the drivetrain
+   */
   public DriveSignal(double left, double right) {
-    mLeftMotor = left;
-    mRightMotor = right;
+    leftPower = left;
+    rightPower = right;
   }
 
+  /**
+   * Returns the left signal level of the signal
+   *
+   * @return the left signal
+   */
   public double getLeft() {
-    return mLeftMotor;
+    return leftPower;
   }
 
+  /**
+   * Returns the right signal level of the signal
+   *
+   * @return the right signal
+   */
   public double getRight() {
-    return mRightMotor;
-  }
-
-  @Override
-  public String toString() {
-    return "L: " + mLeftMotor + ", R: " + mRightMotor;
+    return rightPower;
   }
 }

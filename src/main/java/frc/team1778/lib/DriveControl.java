@@ -76,7 +76,7 @@ public class DriveControl {
       if (Math.abs(linearPower) < 0.2) {
         double alpha = 0.1;
         quickStopAccumulator =
-            (1 - alpha) * quickStopAccumulator + alpha * 5 * -1 * SimpleUtil.limit(true, wheel, 1);
+            (1 - alpha) * quickStopAccumulator + alpha * 5 * -1 * SimpleUtil.limit(wheel, 1);
       }
       overPower = 1.0;
       sensitivity = 1.0;
