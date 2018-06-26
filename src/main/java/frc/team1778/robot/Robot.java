@@ -42,9 +42,9 @@ public class Robot extends IterativeRobot {
   @Override
   public void teleopPeriodic() {
     if (controlInterpreter.getHighGearShift()) {
-      drive.setHighGear(true);
+      drive.setHighGear();
     } else if (controlInterpreter.getLowGearShift()) {
-      drive.setHighGear(false);
+      drive.setLowGear();
     }
     freezyDriver.freezyDrive(
         controlInterpreter.getThrottle(),
