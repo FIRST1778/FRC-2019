@@ -26,7 +26,7 @@ import frc.team1778.robot.Ports;
 public class Drive extends Subsystem {
   private static Drive instance = new Drive();
 
-  private Compressor compressor;
+  private Compressor compressor = new Compressor();
 
   private TalonSRX leftMaster, rightMaster, leftSlave, rightSlave;
 
@@ -132,17 +132,16 @@ public class Drive extends Subsystem {
     return isInHighGear;
   }
 
-  /**
-   * Sets the shifter position.
-   *
-   * @param setToHighGear the wanted state of the gear shifter
-   */
-  public void setHighGear(boolean setToHighGear) {
-    if (setToHighGear != isInHighGear) {
-      isInHighGear = setToHighGear;
-      leftShifter.set(setToHighGear ? Value.kForward : Value.kReverse);
-      rightShifter.set(setToHighGear ? Value.kForward : Value.kReverse);
-    }
+  /** Shifts to high gear by activating the solenoids. */
+  public void setHighGear() {
+    leftShifter.set(Value.kForward);
+    rightShifter.set(Value.kForward);
+  }
+
+  /** Shifts to low gear by deactivating the solenoids. */
+  public void setLowGear() {
+    leftShifter.set(Value.kReverse);
+    rightShifter.set(Value.kReverse);
   }
 
   /**
