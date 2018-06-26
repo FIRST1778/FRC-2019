@@ -101,16 +101,6 @@ public class Drive extends Subsystem {
     isInHighGear = false;
   }
 
-  /**
-   * Returns the drivebase's NavX IMU. Use this instead of reinstantiating the NavX, which will
-   * result in no response from the sensor.
-   *
-   * @return the drivebase's NavX IMU
-   */
-  public NavX getNavX() {
-    return navX;
-  }
-
   @Override
   public void sendTelemetry() {}
 
@@ -122,6 +112,16 @@ public class Drive extends Subsystem {
 
   @Override
   public void zeroSensors() {}
+
+  /**
+   * Returns the drivebase's NavX IMU. Use this instead of reinstantiating the NavX, which will
+   * result in no response from the sensor.
+   *
+   * @return the drivebase's NavX IMU
+   */
+  public NavX getNavX() {
+    return navX;
+  }
 
   /**
    * Returns the current state of the shifter.
