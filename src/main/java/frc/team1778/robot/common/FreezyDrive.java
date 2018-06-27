@@ -10,8 +10,8 @@ import frc.team1778.lib.SimpleUtil;
  * @author FRC 1778 Chill Out
  */
 public class FreezyDrive {
-  private static final double THROTTLE_DEADBAND = 0.02;
-  private static final double WHEEL_DEADBAND = 0.02;
+  private static final double THROTTLE_DEADBAND = 0.04;
+  private static final double MAGNITUDE_DEADBAND = 0.02;
 
   private static final double HIGH_GEAR_WHEEL_NON_LINEARITY = 0.65;
   private static final double LOW_GEAR_WHEEL_NON_LINEARITY = 0.65;
@@ -49,18 +49,19 @@ public class FreezyDrive {
    */
   public DriveSignal freezyDrive(
       double throttle, double wheelX, double wheelY, boolean isQuickTurn, boolean isHighGear) {
-    double angle = Math.atan2(wheelX, wheelY) * (360 / (2 * Math.PI));
+    double angle = Math.toDegrees(Math.atan2(wheelX, wheelY));
     double magnitude =
         Math.sqrt(
                 Math.pow(Math.abs(wheelX * Math.sqrt(2 - Math.pow(wheelY, 2))), 2)
                     + Math.pow(Math.abs(wheelY * Math.sqrt(2 - Math.pow(wheelX, 2))), 2))
             / Math.sqrt(2);
 
-    angle = ((angle <= 0) ? 90 : -90) + angle;
-    double culverWheel = magnitude * angle;
-
-    culverWheel = SimpleUtil.handleDeadband(culverWheel, WHEEL_DEADBAND);
+    magnitude = SimpleUtil.handleDeadband(magnitude, MAGNITUDE_DEADBAND);
     throttle = SimpleUtil.handleDeadband(throttle, THROTTLE_DEADBAND);
+
+    double culverWheel = magnitude * (angle / 180.0);
+
+    System.out.println("Throttle: " + throttle + ", Wheel: " + culverWheel);
 
     double negativeInertia = culverWheel - oldWheel;
     oldWheel = culverWheel;
