@@ -33,7 +33,7 @@ public class Drive extends Subsystem {
   private DoubleSolenoid leftShifter;
   private DoubleSolenoid rightShifter;
 
-  private NavX navX;
+  //private NavX navX;
 
   public enum SystemState {
     OPEN_LOOP_PERCENTAGE,
@@ -119,9 +119,9 @@ public class Drive extends Subsystem {
    *
    * @return the drivebase's NavX IMU
    */
-  public NavX getNavX() {
+  /*public NavX getNavX() {
     return navX;
-  }
+  }*/
 
   /**
    * Returns the current state of the shifter.
@@ -130,6 +130,19 @@ public class Drive extends Subsystem {
    */
   public boolean isHighGear() {
     return isInHighGear;
+  }
+
+  /**
+   * Shifts to high gear by activating the solenoids.\
+   *
+   * @param setHighGear shifts to highGear if true, low gear if false
+   */
+  public void setGear(boolean setHighGear) {
+    if (setHighGear) {
+      setHighGear();
+    } else {
+      setLowGear();
+    }
   }
 
   /** Shifts to high gear by activating the solenoids. */
