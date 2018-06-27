@@ -13,7 +13,7 @@ import frc.team1778.robot.components.Drive;
  */
 public class Robot extends IterativeRobot {
   private Drive drive = Drive.getinstance();
-  private FreezyDrive freezyDriver;
+  private FreezyDrive freezyDriver = new FreezyDrive();
   private Controls controlInterpreter = Controls.getInstance();
 
   @Override
@@ -46,12 +46,14 @@ public class Robot extends IterativeRobot {
     } else if (controlInterpreter.getLowGearShift()) {
       drive.setLowGear();
     }
-    freezyDriver.freezyDrive(
-        controlInterpreter.getThrottle(),
-        controlInterpreter.getWheelX(),
-        controlInterpreter.getWheelY(),
-        controlInterpreter.getQuickTurn(),
-        drive.isHighGear());
+
+    drive.setPowers(
+        freezyDriver.freezyDrive(
+            controlInterpreter.getThrottle(),
+            controlInterpreter.getWheelX(),
+            controlInterpreter.getWheelY(),
+            controlInterpreter.getQuickTurn(),
+            drive.isHighGear()));
   }
 
   @Override
