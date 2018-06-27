@@ -61,8 +61,6 @@ public class FreezyDrive {
 
     double culverWheel = magnitude * (angle / 180.0);
 
-    System.out.println("Throttle: " + throttle + ", Wheel: " + culverWheel);
-
     double negativeInertia = culverWheel - oldWheel;
     oldWheel = culverWheel;
 
