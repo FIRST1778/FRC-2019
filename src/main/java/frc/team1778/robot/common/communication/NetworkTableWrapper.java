@@ -50,7 +50,7 @@ public class NetworkTableWrapper {
    * @param data the value
    * @throws IllegalArgumentException If key is null
    */
-  public static synchronized void putData(String key, Sendable data) {
+  public synchronized void putData(String key, Sendable data) {
     Data sddata = tablesToData.get(key);
     if (sddata == null || sddata.m_sendable != data) {
       if (sddata != null) {
@@ -75,7 +75,7 @@ public class NetworkTableWrapper {
    * @param value the value
    * @throws IllegalArgumentException If key is null
    */
-  public static void putData(Sendable value) {
+  public void putData(Sendable value) {
     putData(value.getName(), value);
   }
 
@@ -86,7 +86,7 @@ public class NetworkTableWrapper {
    * @return the value
    * @throws IllegalArgumentException if the key is null
    */
-  public static synchronized Sendable getData(String key) {
+  public synchronized Sendable getData(String key) {
     Data data = tablesToData.get(key);
     if (data == null) {
       throw new IllegalArgumentException("SmartDashboard data does not exist: " + key);
@@ -101,7 +101,7 @@ public class NetworkTableWrapper {
    * @param key the key name
    * @return Network table entry.
    */
-  public static NetworkTableEntry getEntry(String key) {
+  public NetworkTableEntry getEntry(String key) {
     return table.getEntry(key);
   }
 
@@ -111,7 +111,7 @@ public class NetworkTableWrapper {
    * @param key the key to search for
    * @return true if the table as a value assigned to the given key
    */
-  public static boolean containsKey(String key) {
+  public boolean containsKey(String key) {
     return table.containsKey(key);
   }
 
@@ -121,7 +121,7 @@ public class NetworkTableWrapper {
    * @param types bitmask of types; 0 is treated as a "don't care".
    * @return keys currently in the table
    */
-  public static Set<String> getKeys(int types) {
+  public Set<String> getKeys(int types) {
     return table.getKeys(types);
   }
 
@@ -130,7 +130,7 @@ public class NetworkTableWrapper {
    *
    * @return keys currently in the table.
    */
-  public static Set<String> getKeys() {
+  public Set<String> getKeys() {
     return table.getKeys();
   }
 
@@ -139,7 +139,7 @@ public class NetworkTableWrapper {
    *
    * @param key the key name
    */
-  public static void setPersistent(String key) {
+  public void setPersistent(String key) {
     getEntry(key).setPersistent();
   }
 
@@ -148,7 +148,7 @@ public class NetworkTableWrapper {
    *
    * @param key the key name
    */
-  public static void clearPersistent(String key) {
+  public void clearPersistent(String key) {
     getEntry(key).clearPersistent();
   }
 
@@ -158,7 +158,7 @@ public class NetworkTableWrapper {
    * @param key the key name
    * @return True if the value is persistent.
    */
-  public static boolean isPersistent(String key) {
+  public boolean isPersistent(String key) {
     return getEntry(key).isPersistent();
   }
 
@@ -168,7 +168,7 @@ public class NetworkTableWrapper {
    * @param key the key name
    * @param flags the flags to set (bitmask)
    */
-  public static void setFlags(String key, int flags) {
+  public void setFlags(String key, int flags) {
     getEntry(key).setFlags(flags);
   }
 
@@ -178,7 +178,7 @@ public class NetworkTableWrapper {
    * @param key the key name
    * @param flags the flags to clear (bitmask)
    */
-  public static void clearFlags(String key, int flags) {
+  public void clearFlags(String key, int flags) {
     getEntry(key).clearFlags(flags);
   }
 
@@ -188,7 +188,7 @@ public class NetworkTableWrapper {
    * @param key the key name
    * @return the flags, or 0 if the key is not defined
    */
-  public static int getFlags(String key) {
+  public int getFlags(String key) {
     return getEntry(key).getFlags();
   }
 
@@ -197,7 +197,7 @@ public class NetworkTableWrapper {
    *
    * @param key the key name
    */
-  public static void delete(String key) {
+  public void delete(String key) {
     table.delete(key);
   }
 
@@ -208,7 +208,7 @@ public class NetworkTableWrapper {
    * @param value the value that will be assigned
    * @return False if the table key already exists with a different type
    */
-  public static boolean putBoolean(String key, boolean value) {
+  public boolean putBoolean(String key, boolean value) {
     return getEntry(key).setBoolean(value);
   }
 
@@ -219,7 +219,7 @@ public class NetworkTableWrapper {
    * @param defaultValue the default value to set if key does not exist.
    * @return False if the table key exists with a different type
    */
-  public static boolean setDefaultBoolean(String key, boolean defaultValue) {
+  public boolean setDefaultBoolean(String key, boolean defaultValue) {
     return getEntry(key).setDefaultBoolean(defaultValue);
   }
 
@@ -232,7 +232,7 @@ public class NetworkTableWrapper {
    * @return the value associated with the given key or the given default value if there is no value
    *     associated with the key
    */
-  public static boolean getBoolean(String key, boolean defaultValue) {
+  public boolean getBoolean(String key, boolean defaultValue) {
     return getEntry(key).getBoolean(defaultValue);
   }
 
@@ -243,7 +243,7 @@ public class NetworkTableWrapper {
    * @param value the value that will be assigned
    * @return False if the table key already exists with a different type
    */
-  public static boolean putNumber(String key, double value) {
+  public boolean putNumber(String key, double value) {
     return getEntry(key).setDouble(value);
   }
 
@@ -254,7 +254,7 @@ public class NetworkTableWrapper {
    * @param defaultValue the default value to set if key does not exist.
    * @return False if the table key exists with a different type
    */
-  public static boolean setDefaultNumber(String key, double defaultValue) {
+  public boolean setDefaultNumber(String key, double defaultValue) {
     return getEntry(key).setDefaultDouble(defaultValue);
   }
 
@@ -267,7 +267,7 @@ public class NetworkTableWrapper {
    * @return the value associated with the given key or the given default value if there is no value
    *     associated with the key
    */
-  public static double getNumber(String key, double defaultValue) {
+  public double getNumber(String key, double defaultValue) {
     return getEntry(key).getDouble(defaultValue);
   }
 
@@ -278,7 +278,7 @@ public class NetworkTableWrapper {
    * @param value the value that will be assigned
    * @return False if the table key already exists with a different type
    */
-  public static boolean putString(String key, String value) {
+  public boolean putString(String key, String value) {
     return getEntry(key).setString(value);
   }
 
@@ -289,7 +289,7 @@ public class NetworkTableWrapper {
    * @param defaultValue the default value to set if key does not exist.
    * @return False if the table key exists with a different type
    */
-  public static boolean setDefaultString(String key, String defaultValue) {
+  public boolean setDefaultString(String key, String defaultValue) {
     return getEntry(key).setDefaultString(defaultValue);
   }
 
@@ -302,7 +302,7 @@ public class NetworkTableWrapper {
    * @return the value associated with the given key or the given default value if there is no value
    *     associated with the key
    */
-  public static String getString(String key, String defaultValue) {
+  public String getString(String key, String defaultValue) {
     return getEntry(key).getString(defaultValue);
   }
 
@@ -313,7 +313,7 @@ public class NetworkTableWrapper {
    * @param value the value that will be assigned
    * @return False if the table key already exists with a different type
    */
-  public static boolean putBooleanArray(String key, boolean[] value) {
+  public boolean putBooleanArray(String key, boolean[] value) {
     return getEntry(key).setBooleanArray(value);
   }
 
@@ -324,7 +324,7 @@ public class NetworkTableWrapper {
    * @param value the value that will be assigned
    * @return False if the table key already exists with a different type
    */
-  public static boolean putBooleanArray(String key, Boolean[] value) {
+  public boolean putBooleanArray(String key, Boolean[] value) {
     return getEntry(key).setBooleanArray(value);
   }
 
@@ -335,7 +335,7 @@ public class NetworkTableWrapper {
    * @param defaultValue the default value to set if key does not exist.
    * @return False if the table key exists with a different type
    */
-  public static boolean setDefaultBooleanArray(String key, boolean[] defaultValue) {
+  public boolean setDefaultBooleanArray(String key, boolean[] defaultValue) {
     return getEntry(key).setDefaultBooleanArray(defaultValue);
   }
 
@@ -346,7 +346,7 @@ public class NetworkTableWrapper {
    * @param defaultValue the default value to set if key does not exist.
    * @return False if the table key exists with a different type
    */
-  public static boolean setDefaultBooleanArray(String key, Boolean[] defaultValue) {
+  public boolean setDefaultBooleanArray(String key, Boolean[] defaultValue) {
     return getEntry(key).setDefaultBooleanArray(defaultValue);
   }
 
@@ -359,7 +359,7 @@ public class NetworkTableWrapper {
    * @return the value associated with the given key or the given default value if there is no value
    *     associated with the key
    */
-  public static boolean[] getBooleanArray(String key, boolean[] defaultValue) {
+  public boolean[] getBooleanArray(String key, boolean[] defaultValue) {
     return getEntry(key).getBooleanArray(defaultValue);
   }
 
@@ -372,7 +372,7 @@ public class NetworkTableWrapper {
    * @return the value associated with the given key or the given default value if there is no value
    *     associated with the key
    */
-  public static Boolean[] getBooleanArray(String key, Boolean[] defaultValue) {
+  public Boolean[] getBooleanArray(String key, Boolean[] defaultValue) {
     return getEntry(key).getBooleanArray(defaultValue);
   }
 
@@ -383,7 +383,7 @@ public class NetworkTableWrapper {
    * @param value the value that will be assigned
    * @return False if the table key already exists with a different type
    */
-  public static boolean putNumberArray(String key, double[] value) {
+  public boolean putNumberArray(String key, double[] value) {
     return getEntry(key).setDoubleArray(value);
   }
 
@@ -394,7 +394,7 @@ public class NetworkTableWrapper {
    * @param value the value that will be assigned
    * @return False if the table key already exists with a different type
    */
-  public static boolean putNumberArray(String key, Double[] value) {
+  public boolean putNumberArray(String key, Double[] value) {
     return getEntry(key).setNumberArray(value);
   }
 
@@ -405,7 +405,7 @@ public class NetworkTableWrapper {
    * @param defaultValue the default value to set if key does not exist.
    * @return False if the table key exists with a different type
    */
-  public static boolean setDefaultNumberArray(String key, double[] defaultValue) {
+  public boolean setDefaultNumberArray(String key, double[] defaultValue) {
     return getEntry(key).setDefaultDoubleArray(defaultValue);
   }
 
@@ -416,7 +416,7 @@ public class NetworkTableWrapper {
    * @param defaultValue the default value to set if key does not exist.
    * @return False if the table key exists with a different type
    */
-  public static boolean setDefaultNumberArray(String key, Double[] defaultValue) {
+  public boolean setDefaultNumberArray(String key, Double[] defaultValue) {
     return getEntry(key).setDefaultNumberArray(defaultValue);
   }
 
@@ -429,7 +429,7 @@ public class NetworkTableWrapper {
    * @return the value associated with the given key or the given default value if there is no value
    *     associated with the key
    */
-  public static double[] getNumberArray(String key, double[] defaultValue) {
+  public double[] getNumberArray(String key, double[] defaultValue) {
     return getEntry(key).getDoubleArray(defaultValue);
   }
 
@@ -442,7 +442,7 @@ public class NetworkTableWrapper {
    * @return the value associated with the given key or the given default value if there is no value
    *     associated with the key
    */
-  public static Double[] getNumberArray(String key, Double[] defaultValue) {
+  public Double[] getNumberArray(String key, Double[] defaultValue) {
     return getEntry(key).getDoubleArray(defaultValue);
   }
 
@@ -453,7 +453,7 @@ public class NetworkTableWrapper {
    * @param value the value that will be assigned
    * @return False if the table key already exists with a different type
    */
-  public static boolean putStringArray(String key, String[] value) {
+  public boolean putStringArray(String key, String[] value) {
     return getEntry(key).setStringArray(value);
   }
 
@@ -464,7 +464,7 @@ public class NetworkTableWrapper {
    * @param defaultValue the default value to set if key does not exist.
    * @return False if the table key exists with a different type
    */
-  public static boolean setDefaultStringArray(String key, String[] defaultValue) {
+  public boolean setDefaultStringArray(String key, String[] defaultValue) {
     return getEntry(key).setDefaultStringArray(defaultValue);
   }
 
@@ -477,7 +477,7 @@ public class NetworkTableWrapper {
    * @return the value associated with the given key or the given default value if there is no value
    *     associated with the key
    */
-  public static String[] getStringArray(String key, String[] defaultValue) {
+  public String[] getStringArray(String key, String[] defaultValue) {
     return getEntry(key).getStringArray(defaultValue);
   }
 
@@ -488,7 +488,7 @@ public class NetworkTableWrapper {
    * @param value the value that will be assigned
    * @return False if the table key already exists with a different type
    */
-  public static boolean putRaw(String key, byte[] value) {
+  public boolean putRaw(String key, byte[] value) {
     return getEntry(key).setRaw(value);
   }
 
@@ -500,7 +500,7 @@ public class NetworkTableWrapper {
    * @param len the length of the value
    * @return False if the table key already exists with a different type
    */
-  public static boolean putRaw(String key, ByteBuffer value, int len) {
+  public boolean putRaw(String key, ByteBuffer value, int len) {
     return getEntry(key).setRaw(value, len);
   }
 
@@ -511,7 +511,7 @@ public class NetworkTableWrapper {
    * @param defaultValue the default value to set if key does not exist.
    * @return False if the table key exists with a different type
    */
-  public static boolean setDefaultRaw(String key, byte[] defaultValue) {
+  public boolean setDefaultRaw(String key, byte[] defaultValue) {
     return getEntry(key).setDefaultRaw(defaultValue);
   }
 
@@ -524,12 +524,12 @@ public class NetworkTableWrapper {
    * @return the value associated with the given key or the given default value if there is no value
    *     associated with the key
    */
-  public static byte[] getRaw(String key, byte[] defaultValue) {
+  public byte[] getRaw(String key, byte[] defaultValue) {
     return getEntry(key).getRaw(defaultValue);
   }
 
   /** Puts all sendable data to the dashboard. */
-  public static synchronized void updateValues() {
+  public synchronized void updateValues() {
     for (Data data : tablesToData.values()) {
       data.m_builder.updateTable();
     }
