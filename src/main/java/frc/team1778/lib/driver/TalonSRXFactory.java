@@ -65,9 +65,7 @@ public class TalonSRXFactory {
    * @return a TalonSRX, configured with the default parameters
    */
   public static TalonSRX createDefaultTalon(int id) {
-    TalonSRX talon = new TalonSRX(id);
-    configureTalon(talon, DEFAULT_CONFIGURATION);
-    return talon;
+    return createTalon(id, DEFAULT_CONFIGURATION);
   }
 
   /**
@@ -90,7 +88,9 @@ public class TalonSRXFactory {
    * @param talon the TalonSRX to apply the new configuration
    * @param config the Configuration that stores all of the settings for the TalonSRX
    */
-  public static void configureTalon(TalonSRX talon, Configuration config) {
+  public static TalonSRX createTalon(int id, Configuration config) {
+    TalonSRX talon = new TalonSRX(id);
+
     talon.configSelectedFeedbackSensor(config.FEEDBACK_DEVICE, 0, config.TIMEOUT_IN_MS);
     talon.setSelectedSensorPosition(0, 0, config.TIMEOUT_IN_MS);
     talon.setStatusFramePeriod(
@@ -118,5 +118,7 @@ public class TalonSRXFactory {
     talon.config_kF(config.PROFILE_SLOT_ID, config.PID_KF, config.TIMEOUT_IN_MS);
     talon.configMotionCruiseVelocity(config.MOTION_CRUISE_VELOCITY, config.TIMEOUT_IN_MS);
     talon.configMotionAcceleration(config.MOTION_ACCELERATION, config.TIMEOUT_IN_MS);
+
+    return talon;
   }
 }
