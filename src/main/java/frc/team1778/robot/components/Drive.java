@@ -25,7 +25,7 @@ import frc.team1778.robot.Ports;
 public class Drive extends Subsystem {
   private static Drive instance = new Drive();
 
-  private Compressor compressor = new Compressor();
+  private Compressor compressor = new Compressor(Ports.PCM_ID);
 
   private TalonSRX leftMaster, rightMaster, leftSlave, rightSlave;
 
@@ -74,25 +74,23 @@ public class Drive extends Subsystem {
   }
 
   private Drive() {
-    compressor = new Compressor(Ports.PCM_ID);
-
-    leftMaster = new TalonSRX(Ports.LEFT_DRIVE_MASTER_ID);
-    rightMaster = new TalonSRX(Ports.RIGHT_DRIVE_MASTER_ID);
-    TalonSRXFactory.configureTalon(leftMaster, driveConfiguration);
-    TalonSRXFactory.configureTalon(rightMaster, driveConfiguration);
+    leftMaster = TalonSRXFactory.createDefaultTalon(Ports.LEFT_DRIVE_MASTER_ID);
+    rightMaster = TalonSRXFactory.createDefaultTalon(Ports.RIGHT_DRIVE_MASTER_ID);
+    // TalonSRXFactory.configureTalon(leftMaster, driveConfiguration);
+    // TalonSRXFactory.configureTalon(rightMaster, driveConfiguration);
 
     leftSlave = TalonSRXFactory.createSlaveTalon(Ports.LEFT_DRIVE_SLAVE_ID, leftMaster);
-    rightSlave = TalonSRXFactory.createSlaveTalon(Ports.LEFT_DRIVE_SLAVE_ID, rightMaster);
+    rightSlave = TalonSRXFactory.createSlaveTalon(Ports.RIGHT_DRIVE_SLAVE_ID, rightMaster);
 
     leftShifter =
         new DoubleSolenoid(Ports.PCM_ID, Ports.LEFT_SHIFTER_FORWARD, Ports.LEFT_SHIFTER_REVERSE);
     rightShifter =
         new DoubleSolenoid(Ports.PCM_ID, Ports.RIGHT_SHIFTER_FORWARD, Ports.RIGHT_SHIFTER_REVERSE);
 
-    leftMaster.setInverted(false);
-    rightMaster.setInverted(true);
-    leftSlave.setInverted(false);
-    rightSlave.setInverted(true);
+    leftMaster.setInverted(true);
+    rightMaster.setInverted(false);
+    leftSlave.setInverted(true);
+    rightSlave.setInverted(false);
     leftMaster.setSensorPhase(false);
     rightMaster.setSensorPhase(true);
 
