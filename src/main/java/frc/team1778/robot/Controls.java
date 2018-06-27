@@ -48,12 +48,11 @@ public class Controls {
     }
   };
 
-  private static final ControllerType DRIVER_CONTROLLER_TYPE =
-      ControllerType.INTERLINK_ELITE_CONTROLLER;
+  private static final ControllerType DRIVER_CONTROLLER_TYPE = ControllerType.LOGITECH_F310;
   private static final ControllerType OPERATOR_CONTROLLER_TYPE = ControllerType.LOGITECH_F310;
 
-  private static final int PORT_DRIVER_CONTROLLER = 1;
-  private static final int PORT_OPERATOR_CONTROLLER = 2;
+  private static final int PORT_DRIVER_CONTROLLER = 0;
+  private static final int PORT_OPERATOR_CONTROLLER = 1;
 
   private Joystick driverController;
   private Joystick operatorController;
@@ -166,7 +165,7 @@ public class Controls {
   public boolean getQuickTurn() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case INTERLINK_ELITE_CONTROLLER:
-        return driverController.getRawButton(InterLinkElite.RIGHT_SHOULDER_SWITCH);
+        return driverController.getRawButton(1);
       case LOGITECH_DUAL_ACTION:
         return driverController.getRawButton(LogitechDualAction.RIGHT_BUMPER);
       case LOGITECH_F310:
