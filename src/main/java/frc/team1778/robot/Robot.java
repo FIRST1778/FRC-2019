@@ -25,10 +25,16 @@ public class Robot extends IterativeRobot {
   public void disabledInit() {}
 
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    drive.resetEncoders();
+    drive.setDriveState(Drive.SystemState.CLOSED_LOOP_POSITION);
+  }
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    drive.resetEncoders();
+    drive.setDriveState(Drive.SystemState.OPEN_LOOP_PERCENTAGE);
+  }
 
   @Override
   public void testInit() {}
@@ -37,7 +43,11 @@ public class Robot extends IterativeRobot {
   public void disabledPeriodic() {}
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    drive.setPowers(1000, 0);
+
+    drive.sendTelemetry();
+  }
 
   @Override
   public void teleopPeriodic() {
