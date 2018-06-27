@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.team1778.lib.DriveSignal;
-import frc.team1778.lib.driver.NavX;
 import frc.team1778.lib.driver.TalonSRXFactory;
 import frc.team1778.robot.Ports;
 
@@ -33,7 +32,7 @@ public class Drive extends Subsystem {
   private DoubleSolenoid leftShifter;
   private DoubleSolenoid rightShifter;
 
-  //private NavX navX;
+  // private NavX navX;
 
   public enum SystemState {
     OPEN_LOOP_PERCENTAGE,
