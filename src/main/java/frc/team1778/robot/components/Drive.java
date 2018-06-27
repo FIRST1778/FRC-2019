@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -26,8 +25,6 @@ import frc.team1778.robot.common.communication.NetworkTableWrapper;
 public class Drive extends Subsystem {
   private static Drive instance = new Drive();
 
-  private Compressor compressor = new Compressor(Ports.PCM_ID);
-
   private TalonSRX leftMaster, rightMaster, leftSlave, rightSlave;
 
   private DoubleSolenoid leftShifter;
@@ -45,24 +42,7 @@ public class Drive extends Subsystem {
 
   public static final long SHIFT_DEBOUNCE_TIME = 250;
 
-  private static TalonSRXFactory.Configuration driveConfiguration =
-      new TalonSRXFactory.Configuration();
-
-  // Drive Config
-  static {
-    driveConfiguration.FEEDBACK_DEVICE = FeedbackDevice.QuadEncoder;
-    driveConfiguration.STATUS_FRAME = StatusFrameEnhanced.Status_13_Base_PIDF0;
-    driveConfiguration.PID_KP = 15;
-    driveConfiguration.PID_KI = 0.01;
-    driveConfiguration.PID_KD = 0.1;
-    driveConfiguration.PID_KF = 0.2;
-    driveConfiguration.MOTION_CRUISE_VELOCITY = 640;
-    driveConfiguration.MOTION_ACCELERATION = 200;
-    driveConfiguration.CONTINUOUS_CURRENT_LIMIT = 25;
-    driveConfiguration.PEAK_CURRENT_LIMIT = 25;
-    driveConfiguration.PEAK_CURRENT_LIMIT_DURATION = 100;
-    driveConfiguration.ENABLE_CURRENT_LIMIT = true;
-  }
+  private static TalonSRXFactory.Configuration driveConfiguration;
 
   private SystemState currentState;
   private boolean isInHighGear;
@@ -77,10 +57,22 @@ public class Drive extends Subsystem {
   }
 
   private Drive() {
-    leftMaster = TalonSRXFactory.createDefaultTalon(Ports.LEFT_DRIVE_MASTER_ID);
-    rightMaster = TalonSRXFactory.createDefaultTalon(Ports.RIGHT_DRIVE_MASTER_ID);
-    // TalonSRXFactory.configureTalon(leftMaster, driveConfiguration);
-    // TalonSRXFactory.configureTalon(rightMaster, driveConfiguration);
+    driveConfiguration = new TalonSRXFactory.Configuration();
+    driveConfiguration.FEEDBACK_DEVICE = FeedbackDevice.QuadEncoder;
+    driveConfiguration.STATUS_FRAME = StatusFrameEnhanced.Status_13_Base_PIDF0;
+    driveConfiguration.PID_KP = 15;
+    driveConfiguration.PID_KI = 0.01;
+    driveConfiguration.PID_KD = 0.1;
+    driveConfiguration.PID_KF = 0.2;
+    driveConfiguration.MOTION_CRUISE_VELOCITY = 640;
+    driveConfiguration.MOTION_ACCELERATION = 200;
+    driveConfiguration.CONTINUOUS_CURRENT_LIMIT = 25;
+    driveConfiguration.PEAK_CURRENT_LIMIT = 25;
+    driveConfiguration.PEAK_CURRENT_LIMIT_DURATION = 100;
+    driveConfiguration.ENABLE_CURRENT_LIMIT = true;
+
+    leftMaster = TalonSRXFactory.createTalon(Ports.LEFT_DRIVE_MASTER_ID, driveConfiguration);
+    rightMaster = TalonSRXFactory.createTalon(Ports.RIGHT_DRIVE_MASTER_ID, driveConfiguration);
 
     leftSlave = TalonSRXFactory.createSlaveTalon(Ports.LEFT_DRIVE_SLAVE_ID, leftMaster);
     rightSlave = TalonSRXFactory.createSlaveTalon(Ports.RIGHT_DRIVE_SLAVE_ID, rightMaster);
@@ -90,8 +82,8 @@ public class Drive extends Subsystem {
     rightShifter =
         new DoubleSolenoid(Ports.PCM_ID, Ports.RIGHT_SHIFTER_FORWARD, Ports.RIGHT_SHIFTER_REVERSE);
 
-    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
-    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+    // leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+    // rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
 
     leftMaster.setInverted(true);
     rightMaster.setInverted(false);
