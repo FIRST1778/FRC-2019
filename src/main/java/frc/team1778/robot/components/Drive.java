@@ -2,7 +2,9 @@ package frc.team1778.robot.components;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -37,7 +39,7 @@ public class Drive extends Subsystem {
   public enum SystemState {
     OPEN_LOOP_PERCENTAGE,
     OPEN_LOOP_CURRENT,
-    CLOSED_LOOP_VELOCITY
+    CLOSED_LOOP_POSITION
   };
 
   public static final long SHIFT_DEBOUNCE_TIME = 250;
@@ -60,16 +62,17 @@ public class Drive extends Subsystem {
     driveConfiguration = new TalonSRXFactory.Configuration();
     driveConfiguration.FEEDBACK_DEVICE = FeedbackDevice.QuadEncoder;
     driveConfiguration.STATUS_FRAME = StatusFrameEnhanced.Status_13_Base_PIDF0;
-    driveConfiguration.PID_KP = 15;
-    driveConfiguration.PID_KI = 0.01;
-    driveConfiguration.PID_KD = 0.1;
-    driveConfiguration.PID_KF = 0.2;
-    driveConfiguration.MOTION_CRUISE_VELOCITY = 640;
-    driveConfiguration.MOTION_ACCELERATION = 200;
+    driveConfiguration.PID_KP = 1.0;
+    driveConfiguration.PID_KI = 0.0;
+    driveConfiguration.PID_KD = 0.0;
+    driveConfiguration.PID_KF = 0.0;
+    driveConfiguration.MOTION_CRUISE_VELOCITY = 1000;
+    driveConfiguration.MOTION_ACCELERATION = 300;
     driveConfiguration.CONTINUOUS_CURRENT_LIMIT = 25;
     driveConfiguration.PEAK_CURRENT_LIMIT = 25;
     driveConfiguration.PEAK_CURRENT_LIMIT_DURATION = 100;
     driveConfiguration.ENABLE_CURRENT_LIMIT = true;
+    driveConfiguration.NEUTRAL_POWER_MODE = NeutralMode.Coast;
 
     leftMaster = TalonSRXFactory.createTalon(Ports.LEFT_DRIVE_MASTER_ID, driveConfiguration);
     rightMaster = TalonSRXFactory.createTalon(Ports.RIGHT_DRIVE_MASTER_ID, driveConfiguration);
@@ -82,17 +85,14 @@ public class Drive extends Subsystem {
     rightShifter =
         new DoubleSolenoid(Ports.PCM_ID, Ports.RIGHT_SHIFTER_FORWARD, Ports.RIGHT_SHIFTER_REVERSE);
 
-    // leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
-    // rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
-
     leftMaster.setInverted(true);
     rightMaster.setInverted(false);
     leftSlave.setInverted(true);
     rightSlave.setInverted(false);
-    leftMaster.setSensorPhase(false);
+    leftMaster.setSensorPhase(true);
     rightMaster.setSensorPhase(true);
 
-    currentState = SystemState.OPEN_LOOP_PERCENTAGE;
+    setDriveState(SystemState.OPEN_LOOP_PERCENTAGE);
     setLowGear();
   }
 
@@ -212,9 +212,9 @@ public class Drive extends Subsystem {
         leftMaster.set(ControlMode.Current, left);
         rightMaster.set(ControlMode.Current, right);
         break;
-      case CLOSED_LOOP_VELOCITY:
-        leftMaster.set(ControlMode.Velocity, left);
-        rightMaster.set(ControlMode.Velocity, right);
+      case CLOSED_LOOP_POSITION:
+        leftMaster.set(ControlMode.MotionMagic, left);
+        rightMaster.set(ControlMode.MotionMagic, right);
         break;
       default:
         break;
