@@ -18,7 +18,7 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void robotInit() {
-    drive.zeroSensors();
+    drive.sendTelemetry();
   }
 
   @Override
@@ -54,6 +54,8 @@ public class Robot extends IterativeRobot {
             controlInterpreter.getWheelY(),
             controlInterpreter.getQuickTurn(),
             drive.isHighGear()));
+
+    drive.sendTelemetry();
   }
 
   @Override

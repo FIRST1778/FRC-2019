@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import frc.team1778.lib.DriveSignal;
 import frc.team1778.lib.driver.TalonSRXFactory;
 import frc.team1778.robot.Ports;
+import frc.team1778.robot.common.communication.NetworkTableWrapper;
 
 /**
  * This is the robot's drivetrain. This class handles the four {@link TalonSRX} motor controllers
@@ -31,6 +32,8 @@ public class Drive extends Subsystem {
 
   private DoubleSolenoid leftShifter;
   private DoubleSolenoid rightShifter;
+
+  private NetworkTableWrapper networkTable = new NetworkTableWrapper("Drive");
 
   // private NavX navX;
 
@@ -87,6 +90,9 @@ public class Drive extends Subsystem {
     rightShifter =
         new DoubleSolenoid(Ports.PCM_ID, Ports.RIGHT_SHIFTER_FORWARD, Ports.RIGHT_SHIFTER_REVERSE);
 
+    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+
     leftMaster.setInverted(true);
     rightMaster.setInverted(false);
     leftSlave.setInverted(true);
@@ -95,11 +101,15 @@ public class Drive extends Subsystem {
     rightMaster.setSensorPhase(true);
 
     currentState = SystemState.OPEN_LOOP_PERCENTAGE;
-    isInHighGear = false;
+    setLowGear();
   }
 
   @Override
-  public void sendTelemetry() {}
+  public void sendTelemetry() {
+    networkTable.putBoolean("In High Gear", isInHighGear);
+    networkTable.putNumber("Left Encoder", getLeftEncoderPosition());
+    networkTable.putNumber("Right Encoder", getRightEncoderPosition());
+  }
 
   @Override
   public void resetEncoders() {
@@ -119,6 +129,24 @@ public class Drive extends Subsystem {
   /*public NavX getNavX() {
     return navX;
   }*/
+
+  /**
+   * Returns the current encoder position of the left motor.
+   *
+   * @return the current encoder position of the left motor
+   */
+  public long getLeftEncoderPosition() {
+    return leftMaster.getSelectedSensorPosition(driveConfiguration.PROFILE_SLOT_ID);
+  }
+
+  /**
+   * Returns the current encoder position of the right motor.
+   *
+   * @return the current encoder position of the right motor
+   */
+  public long getRightEncoderPosition() {
+    return rightMaster.getSelectedSensorPosition(driveConfiguration.PROFILE_SLOT_ID);
+  }
 
   /**
    * Returns the current state of the shifter.
@@ -146,12 +174,14 @@ public class Drive extends Subsystem {
   public void setHighGear() {
     leftShifter.set(Value.kForward);
     rightShifter.set(Value.kForward);
+    isInHighGear = false;
   }
 
   /** Shifts to low gear by deactivating the solenoids. */
   public void setLowGear() {
     leftShifter.set(Value.kReverse);
     rightShifter.set(Value.kReverse);
+    isInHighGear = true;
   }
 
   /**
