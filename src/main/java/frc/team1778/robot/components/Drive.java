@@ -97,7 +97,9 @@ public class Drive extends Subsystem {
 
   @Override
   public void sendTelemetry() {
-    networkTable.putBoolean("In High Gear", isInHighGear);
+    networkTable.putBoolean("High Gear", isHighGear());
+    networkTable.putBoolean("Brake Mode", isBraking());
+    networkTable.putString("Drive Mode", currentMode.toString());
     networkTable.putNumber("Left Encoder", getLeftEncoderPosition());
     networkTable.putNumber("Right Encoder", getRightEncoderPosition());
   }
