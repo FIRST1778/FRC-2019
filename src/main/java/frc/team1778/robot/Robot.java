@@ -27,13 +27,13 @@ public class Robot extends IterativeRobot {
   @Override
   public void autonomousInit() {
     drive.resetEncoders();
-    drive.setDriveState(Drive.SystemState.CLOSED_LOOP_POSITION);
+    drive.setDriveMode(Drive.SystemMode.CLOSED_LOOP_POSITION);
   }
 
   @Override
   public void teleopInit() {
     drive.resetEncoders();
-    drive.setDriveState(Drive.SystemState.OPEN_LOOP_PERCENTAGE);
+    drive.setDriveMode(Drive.SystemMode.OPEN_LOOP_PERCENTAGE);
   }
 
   @Override
@@ -51,11 +51,10 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void teleopPeriodic() {
-    if (controlInterpreter.getHighGearShift()) {
-      drive.setHighGear();
-    } else if (controlInterpreter.getLowGearShift()) {
-      drive.setLowGear();
-    }
+    drive.setGear(
+        controlInterpreter.getHighGearShift()
+            ? true
+            : (controlInterpreter.getLowGearShift() ? false : drive.isHighGear()));
 
     drive.setPowers(
         freezyDriver.freezyDrive(
