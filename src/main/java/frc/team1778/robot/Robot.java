@@ -1,9 +1,10 @@
 package frc.team1778.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import frc.team1778.lib.gamepads.LogitechF310;
+import frc.team1778.robot.autonomous.AutoPaths;
 import frc.team1778.robot.common.FreezyDrive;
 import frc.team1778.robot.components.Drive;
+import jaci.pathfinder.followers.EncoderFollower;
 
 /**
  * This is the main hub for all other classes. Each of the overrided methods are synced with FMS and
@@ -17,8 +18,12 @@ public class Robot extends IterativeRobot {
   private FreezyDrive freezyDriver = new FreezyDrive();
   private Controls controlInterpreter = Controls.getInstance();
 
+  private EncoderFollower[] autoPathFollowers;
+
   @Override
   public void robotInit() {
+    autoPathFollowers = drive.generatePathFollowers(AutoPaths.testPath);
+
     drive.sendTelemetry();
   }
 
@@ -26,16 +31,10 @@ public class Robot extends IterativeRobot {
   public void disabledInit() {}
 
   @Override
-  public void autonomousInit() {
-    drive.resetEncoders();
-    drive.setDriveMode(Drive.SystemMode.CLOSED_LOOP_POSITION);
-  }
+  public void autonomousInit() {}
 
   @Override
-  public void teleopInit() {
-    drive.resetEncoders();
-    drive.setDriveMode(Drive.SystemMode.OPEN_LOOP_PERCENTAGE);
-  }
+  public void teleopInit() {}
 
   @Override
   public void testInit() {}
@@ -45,7 +44,7 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void autonomousPeriodic() {
-    drive.setPowers(1000, 0);
+    drive.followPath(autoPathFollowers, false);
 
     drive.sendTelemetry();
   }
@@ -63,13 +62,6 @@ public class Robot extends IterativeRobot {
             controlInterpreter.getWheelX(),
             controlInterpreter.getQuickTurn(),
             drive.isHighGear()));
-
-    drive.enableBrake(
-        controlInterpreter.getDriverController().getRawButton(LogitechF310.A)
-            ? true
-            : (controlInterpreter.getDriverController().getRawButton(LogitechF310.B)
-                ? false
-                : drive.isBraking()));
 
     drive.sendTelemetry();
   }
