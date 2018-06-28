@@ -4,11 +4,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.Solenoid;
 import frc.team1778.lib.DriveSignal;
 import frc.team1778.lib.driver.TalonSRXFactory;
 import frc.team1778.robot.Ports;
@@ -16,11 +14,11 @@ import frc.team1778.robot.common.communication.NetworkTableWrapper;
 
 /**
  * This is the robot's drivetrain. This class handles the four {@link TalonSRX} motor controllers
- * attached to the ganged left and right motors, as well as a {@link Solenoid} to shift between
- * gears.
+ * attached to the ganged left and right motors, as well as a {@link DoubleSolenoid} to shift
+ * between gears.
  *
- * <p>The drivetrain consists of four (4) TalonSRX motor controllers four (4) CIM motors, and one
- * (1) solenoid to trigger the two (2) pistons.
+ * <p>The drivetrain consists of four (4) TalonSRX motor controllers four (4) CIM motors, two (2)
+ * encoders, and two (2) double solenoids to trigger the two (2) shifting cylinders.
  *
  * @author FRC 1778 Chill Out
  */
@@ -36,18 +34,17 @@ public class Drive extends Subsystem {
 
   // private NavX navX;
 
-  public enum SystemState {
+  public enum SystemMode {
     OPEN_LOOP_PERCENTAGE,
     OPEN_LOOP_CURRENT,
     CLOSED_LOOP_POSITION
   };
 
-  public static final long SHIFT_DEBOUNCE_TIME = 250;
-
   private static TalonSRXFactory.Configuration driveConfiguration;
 
-  private SystemState currentState;
+  private SystemMode currentMode;
   private boolean isInHighGear;
+  private boolean isInBrakeMode;
 
   /**
    * Returns a static instance of Drive, to be used instead of instantiating new objects of Drive.
@@ -72,7 +69,8 @@ public class Drive extends Subsystem {
     driveConfiguration.PEAK_CURRENT_LIMIT = 25;
     driveConfiguration.PEAK_CURRENT_LIMIT_DURATION = 100;
     driveConfiguration.ENABLE_CURRENT_LIMIT = true;
-    driveConfiguration.NEUTRAL_POWER_MODE = NeutralMode.Coast;
+    driveConfiguration.OPEN_LOOP_RAMP_TIME_SECONDS = 0.25;
+    driveConfiguration.CLOSED_LOOP_RAMP_TIME_SECONDS = 0.25;
 
     leftMaster = TalonSRXFactory.createTalon(Ports.LEFT_DRIVE_MASTER_ID, driveConfiguration);
     rightMaster = TalonSRXFactory.createTalon(Ports.RIGHT_DRIVE_MASTER_ID, driveConfiguration);
@@ -92,8 +90,9 @@ public class Drive extends Subsystem {
     leftMaster.setSensorPhase(true);
     rightMaster.setSensorPhase(true);
 
-    setDriveState(SystemState.OPEN_LOOP_PERCENTAGE);
-    setLowGear();
+    setDriveMode(SystemMode.OPEN_LOOP_PERCENTAGE);
+    enableBrake(true);
+    setGear(true);
   }
 
   @Override
@@ -123,7 +122,7 @@ public class Drive extends Subsystem {
   }*/
 
   /**
-   * Returns the current encoder position of the left motor.
+   * Returns the current encoder position of the left motor in encoder ticks.
    *
    * @return the current encoder position of the left motor
    */
@@ -132,7 +131,7 @@ public class Drive extends Subsystem {
   }
 
   /**
-   * Returns the current encoder position of the right motor.
+   * Returns the current encoder position of the right motor in encoder ticks.
    *
    * @return the current encoder position of the right motor
    */
@@ -141,39 +140,45 @@ public class Drive extends Subsystem {
   }
 
   /**
+   * Shifts to either high or low gear by activating or deactivating the solenoids.
+   *
+   * @param setHighGear shifts to high gear if true, or low gear if false
+   */
+  public void setGear(boolean setHighGear) {
+    leftShifter.set(setHighGear ? Value.kForward : Value.kReverse);
+    rightShifter.set(setHighGear ? Value.kForward : Value.kReverse);
+
+    isInHighGear = setHighGear;
+  }
+
+  /**
    * Returns the current state of the shifter.
    *
-   * @return the state of the gear shifting solenoid
+   * @return the state of the gear shifting solenoid, true if in high gear, or false if in low gear
    */
   public boolean isHighGear() {
     return isInHighGear;
   }
 
   /**
-   * Shifts to high gear by activating the solenoids.\
+   * Enables or disables the brake on the motors when resting.
    *
-   * @param setHighGear shifts to highGear if true, low gear if false
+   * @param brake sets the Talons to brake if true, or coast if false
    */
-  public void setGear(boolean setHighGear) {
-    if (setHighGear) {
-      setHighGear();
-    } else {
-      setLowGear();
-    }
+  public void enableBrake(boolean brake) {
+    leftMaster.setNeutralMode(brake ? NeutralMode.Brake : NeutralMode.Coast);
+    rightMaster.setNeutralMode(brake ? NeutralMode.Brake : NeutralMode.Coast);
+
+    isInBrakeMode = brake;
   }
 
-  /** Shifts to high gear by activating the solenoids. */
-  public void setHighGear() {
-    leftShifter.set(Value.kForward);
-    rightShifter.set(Value.kForward);
-    isInHighGear = false;
-  }
-
-  /** Shifts to low gear by deactivating the solenoids. */
-  public void setLowGear() {
-    leftShifter.set(Value.kReverse);
-    rightShifter.set(Value.kReverse);
-    isInHighGear = true;
+  /**
+   * Returns the current state of the drive motors' brake mode.
+   *
+   * @return whether or not the drive motors are set to brake when neutral or coast
+   */
+  public boolean isBraking() {
+    return isInBrakeMode;
   }
 
   /**
@@ -181,8 +186,18 @@ public class Drive extends Subsystem {
    *
    * @param newState the wanted state to set the system to use
    */
-  public void setDriveState(SystemState newState) {
-    currentState = newState;
+  public void setDriveMode(SystemMode mode) {
+    currentMode = mode;
+  }
+
+  /**
+   * Returns the current mode in which the drive is operating with.
+   *
+   * @return the mode the drivebase is using at the time
+   * @see SystemState
+   */
+  public SystemMode getDriveMode() {
+    return currentMode;
   }
 
   /**
@@ -203,7 +218,7 @@ public class Drive extends Subsystem {
    * @param right the right signal to send to the right side of the drivetrain
    */
   public void setPowers(double left, double right) {
-    switch (currentState) {
+    switch (currentMode) {
       case OPEN_LOOP_PERCENTAGE:
         leftMaster.set(ControlMode.PercentOutput, left);
         rightMaster.set(ControlMode.PercentOutput, right);
