@@ -1,6 +1,7 @@
 package frc.team1778.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import frc.team1778.lib.gamepads.LogitechF310;
 import frc.team1778.robot.common.FreezyDrive;
 import frc.team1778.robot.components.Drive;
 
@@ -60,9 +61,15 @@ public class Robot extends IterativeRobot {
         freezyDriver.freezyDrive(
             controlInterpreter.getThrottle(),
             controlInterpreter.getWheelX(),
-            controlInterpreter.getWheelY(),
             controlInterpreter.getQuickTurn(),
             drive.isHighGear()));
+
+    drive.enableBrake(
+        controlInterpreter.getDriverController().getRawButton(LogitechF310.A)
+            ? true
+            : (controlInterpreter.getDriverController().getRawButton(LogitechF310.B)
+                ? false
+                : drive.isBraking()));
 
     drive.sendTelemetry();
   }
