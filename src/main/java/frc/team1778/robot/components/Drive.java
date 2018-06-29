@@ -12,7 +12,6 @@ import frc.team1778.lib.driver.NavX;
 import frc.team1778.lib.driver.TalonSRXFactory;
 import frc.team1778.robot.Constants;
 import frc.team1778.robot.Ports;
-import frc.team1778.robot.common.SimplePID;
 import frc.team1778.robot.common.communication.NetworkTableWrapper;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
@@ -39,6 +38,9 @@ public class Drive extends Subsystem {
   private DoubleSolenoid rightShifter;
 
   private NetworkTableWrapper networkTable = new NetworkTableWrapper("Drive");
+
+  private EncoderFollower leftFollower;
+  private EncoderFollower rightFollower;
 
   // private NavX navX;
 
@@ -259,100 +261,87 @@ public class Drive extends Subsystem {
   public void prepareForPath() {
     pathDone = false;
     pathRunning = false;
+    
+    if (leftFollower != null) {
+      leftFollower.reset();
+    }
+
+    if (rightFollower != null) {
+      rightFollower.reset();
+    }
+
     resetEncoders();
     zeroSensors();
   }
 
-  public EncoderFollower[] generatePathFollowers(Waypoint[] path) {
+  public Trajectory generatePath(Waypoint[] path) {
     Trajectory.Config config =
         new Trajectory.Config(
-            Trajectory.FitMethod.HERMITE_CUBIC,
+            Trajectory.FitMethod.HERMITE_QUINTIC,
             Trajectory.Config.SAMPLES_FAST,
             Constants.Path.DELTA_TIME,
             Constants.Path.MAX_VELOCITY,
             Constants.Path.MAX_ACCELERATION,
             Constants.Path.MAX_JERK);
-    System.out.println("Path: finished Trajectory.Config instantiation");
-    Trajectory toFollow = Pathfinder.generate(path, config);
-    System.out.println("Path: finished Trajectory generation");
-    TankModifier modifier = new TankModifier(toFollow).modify(Constants.Path.TRACK_WIDTH);
-    System.out.println("Path: ");
-    EncoderFollower left = new EncoderFollower(modifier.getLeftTrajectory());
-    EncoderFollower right = new EncoderFollower(modifier.getRightTrajectory());
-    System.out.println("Path: finished EncoderFollower instantiations");
-    left.configureEncoder(
+
+    return Pathfinder.generate(path, config);
+  }
+
+  public void setupFollowersForTrajectory(Trajectory trajectory) {
+    TankModifier modifier = new TankModifier(trajectory).modify(Constants.Path.TRACK_WIDTH);
+
+    leftFollower = new EncoderFollower(modifier.getLeftTrajectory());
+    rightFollower = new EncoderFollower(modifier.getRightTrajectory());
+
+    leftFollower.configureEncoder(
         leftMaster.getSelectedSensorPosition(0),
         Constants.Drive.ENCODER_TICKS_PER_ROTATION,
         Constants.Drive.WHEEL_DIAMETER);
-    right.configureEncoder(
+    rightFollower.configureEncoder(
         rightMaster.getSelectedSensorPosition(0),
         Constants.Drive.ENCODER_TICKS_PER_ROTATION,
         Constants.Drive.WHEEL_DIAMETER);
 
-    System.out.println("Path: finished configureEncoder");
-    left.configurePIDVA(
+    leftFollower.configurePIDVA(
         Constants.Path.PRIMARY_PID.getkP(),
         Constants.Path.PRIMARY_PID.getkI(),
         Constants.Path.PRIMARY_PID.getkD(),
         Constants.Path.KV,
         Constants.Path.KA);
-    right.configurePIDVA(
+    rightFollower.configurePIDVA(
         Constants.Path.PRIMARY_PID.getkP(),
         Constants.Path.PRIMARY_PID.getkI(),
         Constants.Path.PRIMARY_PID.getkD(),
         Constants.Path.KV,
         Constants.Path.KA);
-
-    System.out.println("Path:finished configurePIDVA ");
-    return new EncoderFollower[] {
-      left, right,
-    };
   }
 
-  public void followPath(EncoderFollower[] followers, boolean reversePath) {
+  public void followPath(boolean reversePath) {
     pathRunning = true;
-
-    EncoderFollower leftFollower = followers[0];
-    EncoderFollower rightFollower = followers[1];
 
     double left;
     double right;
 
-    Constants.PIDConstants gyroPID = Constants.Path.GYRO_PID;
-
     if (reversePath) {
-      left = leftFollower.calculate(leftMaster.getSelectedSensorPosition(0));
-      right = rightFollower.calculate(rightMaster.getSelectedSensorPosition(0));
-    } else {
-      gyroPID.setkP(-gyroPID.getkP());
-      gyroPID.setkI(-gyroPID.getkI());
-      gyroPID.setkD(-gyroPID.getkD());
-
       left = leftFollower.calculate(-leftMaster.getSelectedSensorPosition(0));
       right = rightFollower.calculate(-rightMaster.getSelectedSensorPosition(0));
+    } else {
+      left = leftFollower.calculate(leftMaster.getSelectedSensorPosition(0));
+      right = rightFollower.calculate(rightMaster.getSelectedSensorPosition(0));
     }
 
-    double gyroHeading = Pathfinder.d2r(leftFollower.getHeading());
-    /*reversePath
-    ? -navX.getYaw() - Constants.Path.ANGLE_OFFSET
-    : navX.getYaw() + Constants.Path.ANGLE_OFFSET;*/
-
-    double angleSetpoint = Pathfinder.r2d(leftFollower.getHeading());
-    double angle = Pathfinder.boundHalfDegrees(gyroHeading);
-
-    SimplePID turnPID = new SimplePID(gyroPID);
-    double turn = 0; //turnPID.calculate(angle, angleSetpoint);
+    networkTable.putNumber("Left Power", left);
+    networkTable.putNumber("Right Power", right);
 
     if (reversePath) {
-      setPowers(-left + turn, -right - turn);
+      setPowers(-left, -right);
     } else {
-      setPowers(left + turn, right - turn);
+      setPowers(left, right);
     }
 
     if (leftFollower.isFinished() && rightFollower.isFinished()) {
       pathDone = true;
       pathRunning = false;
-      Constants.Path.ANGLE_OFFSET = Pathfinder.boundHalfDegrees(angleSetpoint - gyroHeading);
     }
   }
 

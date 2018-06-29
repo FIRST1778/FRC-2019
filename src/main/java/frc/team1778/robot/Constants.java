@@ -7,22 +7,22 @@ package frc.team1778.robot;
  */
 public class Constants {
   public static class Path {
-    public static final PIDConstants PRIMARY_PID = new PIDConstants(2, 0.0, 0.0);
+    public static final PIDConstants PRIMARY_PID = new PIDConstants(0.018, 0.0, 0.0);
     public static final PIDConstants GYRO_PID = new PIDConstants(0.0, 0.0, 0.0);
 
-    public static final double MAX_VELOCITY = 0.25;
-    public static final double KV = 1.0 / MAX_VELOCITY;
-    public static final double MAX_ACCELERATION = 1.0;
-    public static final double KA = 0.05;
-    public static final double MAX_JERK = 30.0;
-    public static final double TRACK_WIDTH = 0.5715;
+    public static final double MAX_VELOCITY = 24.0;
+    public static final double KV = 0.02; //1.0 / MAX_VELOCITY;
+    public static final double MAX_ACCELERATION = 12;
+    public static final double KA = 0.0;
+    public static final double MAX_JERK = 240.0;
+    public static final double TRACK_WIDTH = 22.25;
     public static final double DELTA_TIME = 0.05;
 
     public static double ANGLE_OFFSET;
   }
 
   public static class Drive {
-    public static final double WHEEL_DIAMETER = 0.1016;
+    public static final double WHEEL_DIAMETER = 4.0;
     public static final int ENCODER_TICKS_PER_ROTATION = 10800;
   }
 
