@@ -7,11 +7,11 @@ package frc.team1778.robot;
  */
 public class Constants {
   public static class Path {
-    public static final PIDConstants PRIMARY_PID = new PIDConstants(0.018, 0.0, 0.0);
-    public static final PIDConstants GYRO_PID = new PIDConstants(0.0, 0.0, 0.0);
+    public static final PIDConstants PRIMARY_PID = new PIDConstants(0.25, 0.0, 0.0);
+    public static final PIDConstants GYRO_PID = new PIDConstants(0.1, 0.0, 0.0);
 
-    public static final double MAX_VELOCITY = 24.0;
-    public static final double KV = 0.02; //1.0 / MAX_VELOCITY;
+    public static final double MAX_VELOCITY = 1;
+    public static final double KV = 0.5;
     public static final double MAX_ACCELERATION = 12;
     public static final double KA = 0.0;
     public static final double MAX_JERK = 240.0;

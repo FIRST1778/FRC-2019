@@ -21,7 +21,7 @@ public class Robot extends IterativeRobot {
   @Override
   public void robotInit() {
     Trajectory path = drive.generatePath(AutoPaths.testPath);
-    drive.setupFollowersForTrajectory(path);
+    drive.setupFollowersForTrajectory(path, false);
     drive.sendTelemetry();
   }
 
@@ -44,7 +44,7 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void autonomousPeriodic() {
-    drive.followPath(false);
+    drive.followPath();
 
     drive.sendTelemetry();
   }
