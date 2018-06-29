@@ -59,4 +59,11 @@ public class SimplePID {
 
     return output;
   }
+
+  /** Inverts all of the PID gains, so if kP is set to 0.8, it will change to -0.8. */
+  public void invertGains() {
+    kP = -kP;
+    kI = -kI;
+    kD = -kD;
+  }
 }

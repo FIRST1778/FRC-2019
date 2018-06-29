@@ -12,6 +12,7 @@ import frc.team1778.lib.driver.NavX;
 import frc.team1778.lib.driver.TalonSRXFactory;
 import frc.team1778.robot.Constants;
 import frc.team1778.robot.Ports;
+import frc.team1778.robot.common.SimplePID;
 import frc.team1778.robot.common.communication.NetworkTableWrapper;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
@@ -42,7 +43,9 @@ public class Drive extends Subsystem {
   private EncoderFollower leftFollower;
   private EncoderFollower rightFollower;
 
-  // private NavX navX;
+  private SimplePID gyroPathPID;
+
+  private NavX navX;
 
   public enum SystemMode {
     OPEN_LOOP_PERCENTAGE,
@@ -57,6 +60,7 @@ public class Drive extends Subsystem {
   private boolean isInBrakeMode;
   private boolean pathDone;
   private boolean pathRunning;
+  private boolean reversePath;
 
   /**
    * Returns a static instance of Drive, to be used instead of instantiating new objects of Drive.
@@ -95,7 +99,7 @@ public class Drive extends Subsystem {
     rightShifter =
         new DoubleSolenoid(Ports.PCM_ID, Ports.RIGHT_SHIFTER_FORWARD, Ports.RIGHT_SHIFTER_REVERSE);
 
-    // navX = new NavX(Ports.NAVX_SPI);
+    navX = new NavX(Ports.NAVX_SPI);
 
     leftMaster.setInverted(true);
     rightMaster.setInverted(false);
@@ -115,10 +119,11 @@ public class Drive extends Subsystem {
     networkTable.putBoolean("High Gear", isHighGear());
     networkTable.putBoolean("Brake Mode", isBraking());
     networkTable.putString("Drive Mode", currentMode.toString());
-    networkTable.putNumber("Left Encoder", getLeftEncoderPosition());
-    networkTable.putNumber("Right Encoder", getRightEncoderPosition());
+    networkTable.putNumber("Left Encoder", convertEncoderTicksToInches(getLeftEncoderPosition()));
+    networkTable.putNumber("Right Encoder", convertEncoderTicksToInches(getRightEncoderPosition()));
     networkTable.putBoolean("Path Done", isPathDone());
     networkTable.putBoolean("Path Running", pathRunning);
+    networkTable.putNumber("NavX Yaw", navX.getYaw());
   }
 
   @Override
@@ -129,7 +134,7 @@ public class Drive extends Subsystem {
 
   @Override
   public void zeroSensors() {
-    // navX.zeroYaw();
+    navX.zeroYaw();
   }
 
   /**
@@ -139,7 +144,7 @@ public class Drive extends Subsystem {
    * @return the drivebase's NavX IMU
    */
   public NavX getNavX() {
-    return null; // navX;
+    return navX;
   }
 
   /**
@@ -147,7 +152,7 @@ public class Drive extends Subsystem {
    *
    * @return the current encoder position of the left motor
    */
-  public long getLeftEncoderPosition() {
+  public int getLeftEncoderPosition() {
     return leftMaster.getSelectedSensorPosition(driveConfiguration.PROFILE_SLOT_ID);
   }
 
@@ -156,8 +161,19 @@ public class Drive extends Subsystem {
    *
    * @return the current encoder position of the right motor
    */
-  public long getRightEncoderPosition() {
+  public int getRightEncoderPosition() {
     return rightMaster.getSelectedSensorPosition(driveConfiguration.PROFILE_SLOT_ID);
+  }
+
+  /**
+   * Converts a number of encoder ticks into distance based on the size of the wheel.
+   *
+   * @param encoderTicks the number of encoder ticks to convert
+   * @return the converted inches from the encoder ticks
+   */
+  public double convertEncoderTicksToInches(int encoderTicks) {
+    return ((Math.PI * Constants.Drive.WHEEL_DIAMETER) / Constants.Drive.ENCODER_TICKS_PER_ROTATION)
+        * encoderTicks;
   }
 
   /**
@@ -261,7 +277,7 @@ public class Drive extends Subsystem {
   public void prepareForPath() {
     pathDone = false;
     pathRunning = false;
-    
+
     if (leftFollower != null) {
       leftFollower.reset();
     }
@@ -287,7 +303,13 @@ public class Drive extends Subsystem {
     return Pathfinder.generate(path, config);
   }
 
-  public void setupFollowersForTrajectory(Trajectory trajectory) {
+  public void setupFollowersForTrajectory(Trajectory trajectory, boolean reverse) {
+    reversePath = reverse;
+    gyroPathPID = new SimplePID(Constants.Path.GYRO_PID);
+    if (reverse) {
+      gyroPathPID.invertGains();
+    }
+
     TankModifier modifier = new TankModifier(trajectory).modify(Constants.Path.TRACK_WIDTH);
 
     leftFollower = new EncoderFollower(modifier.getLeftTrajectory());
@@ -316,19 +338,25 @@ public class Drive extends Subsystem {
         Constants.Path.KA);
   }
 
-  public void followPath(boolean reversePath) {
+  public void followPath() {
     pathRunning = true;
 
     double left;
     double right;
 
     if (reversePath) {
-      left = leftFollower.calculate(-leftMaster.getSelectedSensorPosition(0));
-      right = rightFollower.calculate(-rightMaster.getSelectedSensorPosition(0));
+      left = leftFollower.calculate(-getLeftEncoderPosition());
+      right = rightFollower.calculate(-getRightEncoderPosition());
     } else {
-      left = leftFollower.calculate(leftMaster.getSelectedSensorPosition(0));
-      right = rightFollower.calculate(rightMaster.getSelectedSensorPosition(0));
+      left = leftFollower.calculate(getLeftEncoderPosition());
+      right = rightFollower.calculate(getRightEncoderPosition());
     }
+
+    double turn = gyroPathPID.calculate(navX.getYaw(), leftFollower.getHeading());
+
+    networkTable.putNumber("Turn", turn);
+
+    networkTable.putNumber("Heading", leftFollower.getHeading());
 
     networkTable.putNumber("Left Power", left);
     networkTable.putNumber("Right Power", right);
@@ -336,7 +364,7 @@ public class Drive extends Subsystem {
     if (reversePath) {
       setPowers(-left, -right);
     } else {
-      setPowers(left, right);
+      setPowers(left - turn, right + turn);
     }
 
     if (leftFollower.isFinished() && rightFollower.isFinished()) {
