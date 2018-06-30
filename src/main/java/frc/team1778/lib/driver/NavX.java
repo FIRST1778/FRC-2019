@@ -5,7 +5,7 @@ import com.kauailabs.navx.frc.AHRS;
 import com.kauailabs.navx.frc.ITimestampedDataSubscriber;
 import edu.wpi.first.wpilibj.SPI;
 
-/** Driver for a NavX board. Basically a wrapper for the {@link AHRS} class */
+/** Driver for a NavX board. Basically a wrapper for the AHRS class */
 public class NavX {
   protected class Callback implements ITimestampedDataSubscriber {
     @Override

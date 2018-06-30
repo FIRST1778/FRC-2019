@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import frc.team1778.robot.autonomous.AutoPaths;
 import frc.team1778.robot.common.FreezyDrive;
 import frc.team1778.robot.components.Drive;
-import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.followers.EncoderFollower;
 
 /**
  * This is the main hub for all other classes. Each of the overrided methods are synced with FMS and
@@ -18,10 +18,11 @@ public class Robot extends IterativeRobot {
   private FreezyDrive freezyDriver = new FreezyDrive();
   private Controls controlInterpreter = Controls.getInstance();
 
+  EncoderFollower[] testPathFollowers;
+
   @Override
   public void robotInit() {
-    Trajectory path = drive.generatePath(AutoPaths.testPath);
-    drive.setupFollowersForTrajectory(path, false);
+    testPathFollowers = drive.generatePath(AutoPaths.testPath, false);
     drive.sendTelemetry();
   }
 
@@ -44,7 +45,7 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void autonomousPeriodic() {
-    drive.followPath();
+    drive.followPath(testPathFollowers);
 
     drive.sendTelemetry();
   }
