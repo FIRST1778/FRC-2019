@@ -50,7 +50,7 @@ java -jar .\google-java-format-1.6-all-deps.jar -i .\src\main\java\frc\team1778\
 
 ### Javadoc
 
-Javadocs are declared using all of the rules of block comments, but begins with `/**`, having a second asterisk.
+Javadocs are declared using all of the rules of block comments, but begin with `/**`, having a second asterisk.
 
 Any public class and every public or protected method is required to have a Javadoc. This is already required by the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html#s7-javadoc).
 

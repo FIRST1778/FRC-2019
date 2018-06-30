@@ -21,9 +21,8 @@ import jaci.pathfinder.followers.EncoderFollower;
 import jaci.pathfinder.modifiers.TankModifier;
 
 /**
- * This is the robot's drivetrain. This class handles the four {@link TalonSRX} motor controllers
- * attached to the ganged left and right motors, as well as a {@link DoubleSolenoid} to shift
- * between gears.
+ * This is the robot's drivetrain. This class handles the four TalonSRX motor controllers attached
+ * to the ganged left and right motors, as well as a DoubleSolenoid to shift between gears.
  *
  * <p>The drivetrain consists of four (4) TalonSRX motor controllers four (4) CIM motors, two (2)
  * encoders, and two (2) double solenoids to trigger the two (2) shifting cylinders.
@@ -39,9 +38,6 @@ public class Drive extends Subsystem {
   private DoubleSolenoid rightShifter;
 
   private NetworkTableWrapper networkTable = new NetworkTableWrapper("Drive");
-
-  private EncoderFollower leftFollower;
-  private EncoderFollower rightFollower;
 
   private SimplePID gyroPathPID;
 
@@ -111,7 +107,6 @@ public class Drive extends Subsystem {
     setDriveMode(SystemMode.OPEN_LOOP_PERCENTAGE);
     enableBrake(true);
     setGear(true);
-    prepareForPath();
   }
 
   @Override
@@ -273,24 +268,40 @@ public class Drive extends Subsystem {
     }
   }
 
-  /* Path Following Below */
+  /**
+   * Prepares the drivebase by resetting encoders and sensors. This also resets the EncoderFollowers
+   * to the beginning of their trajectories.
+   *
+   * @param followers EncoderFollowers for the left and right motors
+   */
+  public void prepareForPath(EncoderFollower[] followers) {
+    if (followers[0] != null) {
+      followers[0].reset();
+    }
+
+    if (followers[1] != null) {
+      followers[1].reset();
+    }
+
+    prepareForPath();
+  }
+
+  /** Prepares the drivebase by resetting encoders and sensors. */
   public void prepareForPath() {
     pathDone = false;
     pathRunning = false;
-
-    if (leftFollower != null) {
-      leftFollower.reset();
-    }
-
-    if (rightFollower != null) {
-      rightFollower.reset();
-    }
-
     resetEncoders();
     zeroSensors();
   }
 
-  public Trajectory generatePath(Waypoint[] path) {
+  /**
+   * Generates EncoderFollowers for the left and right motors to follow the given path.
+   *
+   * @param path the path made up of Waypoints
+   * @param reverse reverses the path causing the robot to drive backwards if true
+   * @return an array containing EncoderFollower EncoderFollowers for the left and right TalonSRXs
+   */
+  public EncoderFollower[] generatePath(Waypoint[] path, boolean reverse) {
     Trajectory.Config config =
         new Trajectory.Config(
             Trajectory.FitMethod.HERMITE_QUINTIC,
@@ -300,10 +311,8 @@ public class Drive extends Subsystem {
             Constants.Path.MAX_ACCELERATION,
             Constants.Path.MAX_JERK);
 
-    return Pathfinder.generate(path, config);
-  }
+    Trajectory trajectory = Pathfinder.generate(path, config);
 
-  public void setupFollowersForTrajectory(Trajectory trajectory, boolean reverse) {
     reversePath = reverse;
     gyroPathPID = new SimplePID(Constants.Path.GYRO_PID);
     if (reverse) {
@@ -312,8 +321,8 @@ public class Drive extends Subsystem {
 
     TankModifier modifier = new TankModifier(trajectory).modify(Constants.Path.TRACK_WIDTH);
 
-    leftFollower = new EncoderFollower(modifier.getLeftTrajectory());
-    rightFollower = new EncoderFollower(modifier.getRightTrajectory());
+    EncoderFollower leftFollower = new EncoderFollower(modifier.getLeftTrajectory());
+    EncoderFollower rightFollower = new EncoderFollower(modifier.getRightTrajectory());
 
     leftFollower.configureEncoder(
         leftMaster.getSelectedSensorPosition(0),
@@ -336,27 +345,34 @@ public class Drive extends Subsystem {
         Constants.Path.PRIMARY_PID.getkD(),
         Constants.Path.KV,
         Constants.Path.KA);
+
+    return new EncoderFollower[] {leftFollower, rightFollower};
   }
 
-  public void followPath() {
+  /**
+   * Follows the path indicated by the generated EncoderFollowers.
+   *
+   * @param followers an array of EncoderFollowers for the left and right motors to follow
+   */
+  public void followPath(EncoderFollower[] followers) {
     pathRunning = true;
 
     double left;
     double right;
 
     if (reversePath) {
-      left = leftFollower.calculate(-getLeftEncoderPosition());
-      right = rightFollower.calculate(-getRightEncoderPosition());
+      left = followers[0].calculate(-getLeftEncoderPosition());
+      right = followers[1].calculate(-getRightEncoderPosition());
     } else {
-      left = leftFollower.calculate(getLeftEncoderPosition());
-      right = rightFollower.calculate(getRightEncoderPosition());
+      left = followers[0].calculate(getLeftEncoderPosition());
+      right = followers[1].calculate(getRightEncoderPosition());
     }
 
-    double turn = gyroPathPID.calculate(navX.getYaw(), leftFollower.getHeading());
+    double turn = gyroPathPID.calculate(navX.getYaw(), followers[0].getHeading());
 
     networkTable.putNumber("Turn", turn);
 
-    networkTable.putNumber("Heading", leftFollower.getHeading());
+    networkTable.putNumber("Heading", followers[0].getHeading());
 
     networkTable.putNumber("Left Power", left);
     networkTable.putNumber("Right Power", right);
@@ -367,7 +383,7 @@ public class Drive extends Subsystem {
       setPowers(left - turn, right + turn);
     }
 
-    if (leftFollower.isFinished() && rightFollower.isFinished()) {
+    if (followers[0].isFinished() && followers[1].isFinished()) {
       pathDone = true;
       pathRunning = false;
     }

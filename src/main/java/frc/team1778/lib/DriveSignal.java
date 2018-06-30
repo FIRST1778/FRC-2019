@@ -10,7 +10,7 @@ public class DriveSignal {
   private double rightPower;
 
   /**
-   * Holde the left and right signals for the drivetrain.
+   * Holds the left and right signals for the drivetrain.
    *
    * @param left the signal for the left side of the drivetrain
    * @param right the signal for the right side of the drivetrain
