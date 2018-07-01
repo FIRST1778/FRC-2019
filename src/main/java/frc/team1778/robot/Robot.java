@@ -31,7 +31,8 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void autonomousInit() {
-    drive.prepareForPath();
+    drive.setGear(true);
+    drive.prepareForPath(testPathFollowers);
   }
 
   @Override

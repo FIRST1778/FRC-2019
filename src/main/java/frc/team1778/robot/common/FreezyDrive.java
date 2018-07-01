@@ -10,7 +10,7 @@ import frc.team1778.lib.SimpleUtil;
  * @author FRC 1778 Chill Out
  */
 public class FreezyDrive {
-  private static final double THROTTLE_DEADBAND = 0.04;
+  private static final double THROTTLE_DEADBAND = 0.02;
   private static final double MAGNITUDE_DEADBAND = 0.02;
   private static final double WHEEL_DEADBAND = 0.02;
 
@@ -59,6 +59,8 @@ public class FreezyDrive {
 
     magnitude = SimpleUtil.handleDeadband(magnitude, MAGNITUDE_DEADBAND);
     throttle = SimpleUtil.handleDeadband(throttle, THROTTLE_DEADBAND);
+
+    throttle = Math.pow(throttle, 3);
 
     double culverWheel = magnitude * (angle / 180.0);
 
@@ -175,6 +177,8 @@ public class FreezyDrive {
       double throttle, double culverWheel, boolean isQuickTurn, boolean isHighGear) {
     culverWheel = SimpleUtil.handleDeadband(culverWheel, WHEEL_DEADBAND);
     throttle = SimpleUtil.handleDeadband(throttle, THROTTLE_DEADBAND);
+
+    throttle = Math.pow(throttle, 3);
 
     double negativeInertia = culverWheel - oldWheel;
     oldWheel = culverWheel;

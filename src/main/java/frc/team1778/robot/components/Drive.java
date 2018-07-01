@@ -118,7 +118,6 @@ public class Drive extends Subsystem {
     networkTable.putNumber("Right Encoder", convertEncoderTicksToInches(getRightEncoderPosition()));
     networkTable.putBoolean("Path Done", isPathDone());
     networkTable.putBoolean("Path Running", pathRunning);
-    networkTable.putNumber("NavX Yaw", navX.getYaw());
   }
 
   @Override
@@ -368,19 +367,22 @@ public class Drive extends Subsystem {
       right = followers[1].calculate(getRightEncoderPosition());
     }
 
-    double turn = gyroPathPID.calculate(navX.getYaw(), followers[0].getHeading());
+    double headingSetpoint = Pathfinder.r2d(followers[0].getHeading());
+    double heading = reversePath ? -navX.getYaw() : navX.getYaw();
+
+    double turn = gyroPathPID.calculate(heading, headingSetpoint);
 
     networkTable.putNumber("Turn", turn);
-
-    networkTable.putNumber("Heading", followers[0].getHeading());
+    networkTable.putNumber("Heading", heading);
+    networkTable.putNumber("Setpoint", headingSetpoint);
 
     networkTable.putNumber("Left Power", left);
     networkTable.putNumber("Right Power", right);
 
     if (reversePath) {
-      setPowers(-left, -right);
+      setPowers(-left + turn, -right - turn);
     } else {
-      setPowers(left - turn, right + turn);
+      setPowers(left + turn, right - turn);
     }
 
     if (followers[0].isFinished() && followers[1].isFinished()) {
