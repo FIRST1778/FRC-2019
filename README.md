@@ -18,6 +18,7 @@ The following commands work best from Git Bash, which is installed with Git, but
 
 - First create a new directory to store all of the code if you do not already have one. For this example, it will be '~/Documents/code'
 - Clone this repository into that directory:
+
 ```sh
 ~ $ cd ~/Documents/code
 ~/Documents/code $ git clone https://github.com/HillelCoates/2018-offseason.git
@@ -30,11 +31,11 @@ If you prefer not to or can't use Git, the alternative is to just download the m
 ## Deployment
 
 To deploy to the RoboRIO, GradleRIO makes this very easy. For this, it is recommended to use Powershell on Windows. In VS Code, you can set this as the Terminal application.
+
 - `./gradlew build` will build your code
 - `./gradlew deploy` will build and deploy your code
 - `./gradlew riolog` will display the RoboRIO's console output
-    - use `-Pfakeds` if there is not a driverstation connected
-
+  - use `-Pfakeds` if there is not a driverstation connected
 - use `--offline` with all commands when at a competition or when tethered
 
 For more information, read the [GradleRIO README](https://github.com/Open-RIO/GradleRIO/blob/master/README.md).
@@ -44,6 +45,7 @@ For more information, read the [GradleRIO README](https://github.com/Open-RIO/Gr
 Make sure that all code you write follows the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html). This makes everything much easier to read.
 
 In addition, use Google's Java formatter, which is in this directory. To do this run the following, changing the file path:
+
 ```sh
 java -jar .\google-java-format-1.6-all-deps.jar -i .\src\main\java\frc\team1778\path\to\file.java
 ```
@@ -57,6 +59,7 @@ Any public class and every public or protected method is required to have a Java
 ### Commit and push to GitHub
 
 Commit often, you should be able to see the progress of your code by looking at commits. Try to only commit if the code is runnable and has been built without errors. If it is not runnable, but you have to commit anyways, indicate as such in the commit message. To do this, first run the following:
+
 ```sh
 git add -A # Stages all changed files
 git status # Shows exactly what will be staged, make sure it is what you changed
@@ -68,6 +71,7 @@ git commit -m "Commit message" # Commits staged changes and documents it with th
 ```
 
 At the end of every work day, or when a milestone has been reached, push all commits.
+
 ```sh
 git push origin master # Pushes commits from the origin to the master branch
 ```
@@ -75,6 +79,7 @@ git push origin master # Pushes commits from the origin to the master branch
 ## Key features
 
 Feature and in-depth description. Make sure that each line of code displayed is documented with inline comments.
+
 ```java
 // The constructor for Thing does not take any arguments
 private thing = new Thing();
