@@ -1,4 +1,4 @@
-package frc.team1778.robot.common.communication;
+package frc.team1778.lib;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -18,10 +18,10 @@ import java.util.Set;
  * @author FRC 1778 Chill Out
  */
 public class NetworkTableWrapper {
-  private static NetworkTable table;
+  private NetworkTable table;
 
   public NetworkTableWrapper(String tableName) {
-    table = NetworkTableInstance.getDefault().getTable(tableName);
+    table = NetworkTableInstance.getDefault().getTable("custom/" + tableName);
   }
 
   private static class Data {
