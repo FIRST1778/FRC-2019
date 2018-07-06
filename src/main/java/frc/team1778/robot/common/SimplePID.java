@@ -1,7 +1,5 @@
 package frc.team1778.robot.common;
 
-import frc.team1778.robot.Constants;
-
 /**
  * Handles a basic PID loop by calculating the output over time based on an input and setpoint.
  *
@@ -32,7 +30,7 @@ public class SimplePID {
    *
    * @param pid the pid gains to use
    */
-  public SimplePID(Constants.PIDConstants pid) {
+  public SimplePID(PIDConstants pid) {
     this.kP = pid.getkP();
     this.kI = pid.getkI();
     this.kD = pid.getkD();
@@ -48,6 +46,13 @@ public class SimplePID {
    */
   public double calculate(double input, double setPoint) {
     long deltaTime = System.currentTimeMillis() - lastTime;
+
+    if (deltaTime >= 500) {
+      deltaTime = 0;
+      integral = 0;
+      lastError = 0;
+    }
+
     double error = setPoint - input;
 
     integral += error * deltaTime;
@@ -65,5 +70,78 @@ public class SimplePID {
     kP = -kP;
     kI = -kI;
     kD = -kD;
+  }
+
+  public static class PIDConstants {
+    private double kP;
+    private double kI;
+    private double kD;
+
+    /**
+     * Holds the three PID gain constants requred for a PID loop.
+     *
+     * @param kP the kP to set
+     * @param kI the kI to set
+     * @param kD the kD to set
+     */
+    public PIDConstants(double kP, double kI, double kD) {
+      this.kP = kP;
+      this.kI = kI;
+      this.kD = kD;
+    }
+
+    /**
+     * Sets the new kP.
+     *
+     * @param kP the kP to set
+     */
+    public void setkP(double kP) {
+      this.kP = kP;
+    }
+
+    /**
+     * Sets the new kI.
+     *
+     * @param kI the kI to set
+     */
+    public void setkI(double kI) {
+      this.kI = kI;
+    }
+
+    /**
+     * Sets the new kD.
+     *
+     * @param kD the kD to set
+     */
+    public void setkD(double kD) {
+      this.kD = kD;
+    }
+
+    /**
+     * Returns the current kP gain
+     *
+     * @return the kP gain
+     */
+    public double getkP() {
+      return kP;
+    }
+
+    /**
+     * Returns the current kI gain
+     *
+     * @return the kI gain
+     */
+    public double getkI() {
+      return kI;
+    }
+
+    /**
+     * Returns the current kD gain
+     *
+     * @return the kD gain
+     */
+    public double getkD() {
+      return kD;
+    }
   }
 }
