@@ -13,7 +13,7 @@ import frc.team1778.lib.driver.TalonSRXFactory;
 import frc.team1778.robot.Constants;
 import frc.team1778.robot.Ports;
 import frc.team1778.robot.common.SimplePID;
-import frc.team1778.robot.common.communication.NetworkTableWrapper;
+import frc.team1778.lib.NetworkTableWrapper;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
@@ -41,6 +41,8 @@ public class Drive extends Subsystem {
 
   private SimplePID gyroPathPID;
 
+  private SimplePID turnAnglePID = new SimplePID(Constants.Drive.TURN_PID);
+
   private NavX navX;
 
   public enum SystemMode {
@@ -65,6 +67,11 @@ public class Drive extends Subsystem {
    */
   public static Drive getinstance() {
     return instance;
+  }
+
+  @Override
+  public String getSubsystemName() {
+    return "Drive";
   }
 
   private Drive() {
@@ -106,7 +113,7 @@ public class Drive extends Subsystem {
 
     setDriveMode(SystemMode.OPEN_LOOP_PERCENTAGE);
     enableBrake(true);
-    setGear(true);
+    setGear(false);
   }
 
   @Override
@@ -116,6 +123,7 @@ public class Drive extends Subsystem {
     networkTable.putString("Drive Mode", currentMode.toString());
     networkTable.putNumber("Left Encoder", convertEncoderTicksToInches(getLeftEncoderPosition()));
     networkTable.putNumber("Right Encoder", convertEncoderTicksToInches(getRightEncoderPosition()));
+    networkTable.putNumber("Yaw", navX.getYaw());
     networkTable.putBoolean("Path Done", isPathDone());
     networkTable.putBoolean("Path Running", pathRunning);
   }
@@ -267,6 +275,12 @@ public class Drive extends Subsystem {
     }
   }
 
+  public void turnToHeading(double heading) {
+    double output = turnAnglePID.calculate(navX.getYaw(), heading);
+
+    setPowers(-output, output);
+  }
+
   /**
    * Prepares the drivebase by resetting encoders and sensors. This also resets the EncoderFollowers
    * to the beginning of their trajectories.
@@ -380,9 +394,9 @@ public class Drive extends Subsystem {
     networkTable.putNumber("Right Power", right);
 
     if (reversePath) {
-      setPowers(-left + turn, -right - turn);
+      setPowers(-left - turn, -right + turn);
     } else {
-      setPowers(left + turn, right - turn);
+      setPowers(left - turn, right + turn);
     }
 
     if (followers[0].isFinished() && followers[1].isFinished()) {

@@ -3,6 +3,7 @@ package frc.team1778.robot;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import frc.team1778.robot.autonomous.AutoPaths;
 import frc.team1778.robot.common.FreezyDrive;
+import frc.team1778.lib.NetworkTableWrapper;
 import frc.team1778.robot.components.Drive;
 import jaci.pathfinder.followers.EncoderFollower;
 
@@ -17,6 +18,11 @@ public class Robot extends IterativeRobot {
   private Drive drive = Drive.getinstance();
   private FreezyDrive freezyDriver = new FreezyDrive();
   private Controls controlInterpreter = Controls.getInstance();
+
+  private boolean isTurning;
+  private double goalAngle;
+
+  private NetworkTableWrapper visionTable = new NetworkTableWrapper("Vision");
 
   EncoderFollower[] testPathFollowers;
 
@@ -58,13 +64,21 @@ public class Robot extends IterativeRobot {
             ? true
             : (controlInterpreter.getLowGearShift() ? false : drive.isHighGear()));
 
-    drive.setPowers(
-        freezyDriver.freezyDrive(
-            controlInterpreter.getThrottle(),
-            controlInterpreter.getWheelX(),
-            controlInterpreter.getWheelY(),
-            controlInterpreter.getQuickTurn(),
-            drive.isHighGear()));
+    if (!isTurning && drive.getNavX().getYaw() - goalAngle < 1) {
+      goalAngle = drive.getNavX().getYaw() - visionTable.getNumber("yawAngle", 0);
+    }
+
+    drive.getNetworkTable().putNumber("goalAngle", goalAngle);
+
+    drive.turnToHeading(goalAngle);
+
+    /*drive.setPowers(
+    freezyDriver.freezyDrive(
+        controlInterpreter.getThrottle(),
+        controlInterpreter.getWheelX(),
+        controlInterpreter.getWheelY(),
+        controlInterpreter.getQuickTurn(),
+        drive.isHighGear()));*/
 
     drive.sendTelemetry();
   }
