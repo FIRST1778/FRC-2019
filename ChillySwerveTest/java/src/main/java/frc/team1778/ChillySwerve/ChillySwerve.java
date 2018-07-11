@@ -5,7 +5,16 @@ import frc.team1778.Systems.NavXSensor;
 import frc.team1778.Utility.HardwareIDs;
 import edu.wpi.first.wpilibj.Joystick;
 
+import jaci.pathfinder.followers.EncoderFollower;
+
 public class ChillySwerve {
+
+	private static final double AUTO_DRIVE_ANGLE_CORRECT_COEFF = 0.02;
+	private static final double GYRO_CORRECT_COEFF = 0.03;
+					
+	// used as angle baseline (if we don't reset gyro)
+	private static double initialAngle = 0.0;
+	private static double headingDeg = 0.0;
 	
 	// swerve units
 	private static ChillySwerveUnit frontLeft, frontRight;
@@ -66,6 +75,23 @@ public class ChillySwerve {
 		initialized = true;
 	}
 	
+	public static void autoInit(boolean resetGyro, double headingDeg, boolean magicMotion) {
+		// set all wheels forward, motors off
+		reset();
+
+		if (resetGyro) {
+			NavXSensor.reset();
+			initialAngle = 0.0;
+		}
+		else
+			//initialAngle = NavXSensor.getAngle();
+			initialAngle = headingDeg;				// target heading if not resetting gyro
+	}
+
+	public static void autoStop() {
+		reset();
+	}
+
 	public static void teleopInit() {
 		reset();
 	}
@@ -159,9 +185,9 @@ public class ChillySwerve {
 	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/BL_angle", wa3);		
 	    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"ChillySwerve/BR_angle", wa4);		
 		
-		//setDrivePower(ws2, ws1, ws3, ws4);
-		//setLocation(angleToLoc(wa2), angleToLoc(wa1),
-		//		angleToLoc(wa3), angleToLoc(wa4));
+		setDrivePower(ws2, ws1, ws3, ws4);
+		setLocation(angleToLoc(wa2), angleToLoc(wa1),
+				angleToLoc(wa3), angleToLoc(wa4));
 	}
 
 	public static void humanDrive(double fwd, double str, double rot) {
@@ -176,6 +202,14 @@ public class ChillySwerve {
 			swerveDrive(fwd, str, rot);
 		}
 	}
+
+	// mode used with Pathfinder
+	public static void directDrive(EncoderFollower fl, EncoderFollower fr, EncoderFollower bl, EncoderFollower br) {
+		frontLeft.drivePath(fl);
+    	frontRight.drivePath(fr);
+		backLeft.drivePath(bl);
+		backRight.drivePath(br);
+    }
 
 	public static void fieldCentricDrive(double fwd, double str, double rot) {
 		
@@ -246,6 +280,60 @@ public class ChillySwerve {
 
 	public static void setAllLocation(double loc) {
 		setLocation(loc, loc, loc, loc);
+	}
+
+
+	// Sensor measurement methods
+	//==========================================================
+	public static double getDistanceInches() {
+		// TODO: calculate and return measured distance in inches
+		return 0;
+	}
+
+	//Classic drive methods
+	//=============================================================
+	public static void drive(double left, double right)
+	{
+		// Deprecated - Tank drive no longer used
+	}
+
+	public static void autoGyroStraight(double speed, double angleDeg) {
+		// autonomous operation of drive straight in a direction relative to field POV - uses gyro
+		
+		double gyroAngle = NavXSensor.getAngle();
+		
+		// subtract the initial angle offset, if any
+		gyroAngle -= initialAngle;
+		
+		// calculate speed adjustment for left and right sides (negative sign added as feedback)
+		double driveAngle = -gyroAngle * AUTO_DRIVE_ANGLE_CORRECT_COEFF;
+				
+		double leftSpeed = speed+driveAngle;		
+		double rightSpeed = speed-driveAngle;
+				
+		// compute swerve parameters
+		double angleRad = angleDeg * (Math.PI/180);
+		double fwd = speed*Math.sin(angleRad);
+		double str = speed*Math.cos(angleRad);
+		double rot = 0;
+
+		fieldCentricDrive(fwd, str, rot);
+	}
+	
+	public static void autoMagicStraight(double targetPosInches, int speedRpm, int accelRpm) {	
+	}
+	
+	public static void autoMagicTurn(double targetPosInchesLeft, double targetPosInchesRight, int speedRpm, int accelRpm) {
+	}
+
+	//Turn methods
+	//===================================================
+	public static void rotateLeft(double speed) {		
+		//drive(-speed, speed);
+	}
+
+	public static void rotateRight(double speed) {
+		//drive(speed, -speed);
 	}
 
 }

@@ -4,13 +4,15 @@ import frc.team1778.ChillySwerve.ChillySwerve;
 import frc.team1778.NetworkComm.InputOutputComm;
 import frc.team1778.NetworkComm.RPIComm;
 import frc.team1778.Systems.NavXSensor;
+import frc.team1778.StateMachine.AutoStateMachine;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 public class Robot extends IterativeRobot {
 
-    protected DriverStation ds;
+	protected DriverStation ds;
+	protected AutoStateMachine autoSM;
  
     @Override
     public void robotInit() { 
@@ -23,7 +25,7 @@ public class Robot extends IterativeRobot {
 		ChillySwerve.initialize();
 
 		// Create Autonomous State Machine
-		//autoSM = new AutoStateMachine();
+		autoSM = new AutoStateMachine();
 		
 		// retrieve Driver Station instance
 		ds = DriverStation.getInstance();
@@ -36,7 +38,7 @@ public class Robot extends IterativeRobot {
         InputOutputComm.putString(InputOutputComm.LogTable.kMainLog,"MainLog","autonomous mode...");
     	    	 	    	
     	// start the auto state machine
-    	//autoSM.start();       
+    	autoSM.start();       
     }
 
 	/**
@@ -45,7 +47,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
     	
-    	//autoSM.process();
+    	autoSM.process();
  
     	// debug only (read position sensors)
     	getGyroAngle();   	
@@ -66,7 +68,10 @@ public class Robot extends IterativeRobot {
 
     @Override
     public void disabledInit() { 
-    	ChillySwerve.disabledInit();
+		
+		ChillySwerve.disabledInit();
+
+		autoSM.stop();
     }
 
     @Override
