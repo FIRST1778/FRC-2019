@@ -22,7 +22,7 @@ public class Robot extends IterativeRobot {
   private boolean isTurning;
   private double goalAngle;
 
-  private NetworkTableWrapper visionTable = new NetworkTableWrapper("Vision");
+  //private NetworkTableWrapper visionTable = new NetworkTableWrapper("Vision");
 
   EncoderFollower[] testPathFollowers;
 
@@ -64,21 +64,21 @@ public class Robot extends IterativeRobot {
             ? true
             : (controlInterpreter.getLowGearShift() ? false : drive.isHighGear()));
 
-    if (!isTurning && drive.getNavX().getYaw() - goalAngle < 1) {
+    /*if (!isTurning && drive.getNavX().getYaw() - goalAngle < 1) {
       goalAngle = drive.getNavX().getYaw() - visionTable.getNumber("yawAngle", 0);
-    }
+    }*/
 
-    drive.getNetworkTable().putNumber("goalAngle", goalAngle);
+    //drive.getNetworkTable().putNumber("goalAngle", goalAngle);
 
-    drive.turnToHeading(goalAngle);
+    //drive.turnToHeading(goalAngle);
 
-    /*drive.setPowers(
+    drive.setPowers(
     freezyDriver.freezyDrive(
         controlInterpreter.getThrottle(),
         controlInterpreter.getWheelX(),
         controlInterpreter.getWheelY(),
         controlInterpreter.getQuickTurn(),
-        drive.isHighGear()));*/
+        drive.isHighGear()));
 
     drive.sendTelemetry();
   }
