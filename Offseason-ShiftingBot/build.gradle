@@ -1,6 +1,7 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2018.06.21"
+    id "edu.wpi.first.GradleRIO" version "2019.0.0-alpha-3"
+    id "com.diffplug.gradle.spotless" version "3.14.0"
 }
 
 def ROBOT_CLASS = "frc.team1778.robot.Robot"
@@ -32,6 +33,12 @@ dependencies {
     compile pathfinder()
 }
 
+spotless {
+    java {
+        googleJavaFormat()
+    }
+}
+
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
@@ -40,6 +47,6 @@ jar {
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_CLASS)
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.7'
+wrapper {
+    gradleVersion = '4.9'
 }
