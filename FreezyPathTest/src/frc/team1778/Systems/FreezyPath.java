@@ -25,16 +25,16 @@ public class FreezyPath {
 	private static int m_pathToFollow = PATH1;
 
 	// Time Step:           0.05 Seconds
-	// Max Velocity:        30 in/s
-	// Max Acceleration:    30 in/s/s
-	// Max Jerk:            300 in/s/s/s
+	// Max Velocity:        1 m/s
+	// Max Acceleration:    1 m/s/s
+	// Max Jerk:            10 m/s/s/s
 
-	private static final double WHEELBASE_WIDTH_INCHES = 29.5;
+	private static final double WHEELBASE_WIDTH_METERS = 0.75;
 	private static final double PERIOD_SEC = 0.05;
-	//private static final double MAX_VEL = 60.0;
-	private static final double MAX_VEL = 12.0;
-	private static final double MAX_ACCEL = 30.0;
-	private static final double MAX_JERK = 300.0;
+	private static final double MAX_VEL = 0.5;
+	private static final double MAX_ACCEL = 0.5;
+	private static final double MAX_JERK = 5.0;
+	private static final double IN_TO_M = 0.0254;
 	
 	private static final double kP = 1.0;
 	private static final double kI = 0.0;
@@ -55,33 +55,33 @@ public class FreezyPath {
 
 	// path 1 - drive straight 5 ft
 	private static Waypoint[] path1 = new Waypoint[] {
-			new Waypoint(0, 0, ZERO_ANGLE),
-			new Waypoint(60.0, 0.0, ZERO_ANGLE),
-			new Waypoint(90.0, 0.0, ZERO_ANGLE)
+			new Waypoint(0*IN_TO_M, 0*IN_TO_M, ZERO_ANGLE),
+			new Waypoint(60.0*IN_TO_M, 0.0*IN_TO_M, ZERO_ANGLE),
+			new Waypoint(90.0*IN_TO_M, 0.0*IN_TO_M, ZERO_ANGLE)
 	};
 
 	// path 2 - swerve to the left and back to center
 	private static Waypoint[] path2 = new Waypoint[] {
-			new Waypoint(0, 0, ZERO_ANGLE),
-			new Waypoint(60.0, -30.0, ZERO_ANGLE),
-			new Waypoint(90.0, 0.0, ZERO_ANGLE)
+			new Waypoint(0*IN_TO_M, 0*IN_TO_M, ZERO_ANGLE),
+			new Waypoint(60.0*IN_TO_M, -30.0*IN_TO_M, ZERO_ANGLE),
+			new Waypoint(90.0*IN_TO_M, 0.0*IN_TO_M, ZERO_ANGLE)
 	};
 	
 	// path 3 - swerve to the right and back to center
 	private static Waypoint[] path3 = new Waypoint[] {
-			new Waypoint(0, 0, ZERO_ANGLE),
-			new Waypoint(60.0, 30.0, ZERO_ANGLE),
-			new Waypoint(90.0, 0.0, ZERO_ANGLE)
+			new Waypoint(0*IN_TO_M, 0*IN_TO_M, ZERO_ANGLE),
+			new Waypoint(60.0*IN_TO_M, 30.0*IN_TO_M, ZERO_ANGLE),
+			new Waypoint(90.0*IN_TO_M, 0.0*IN_TO_M, ZERO_ANGLE)
 	};
 	
 	// path 4 - drive in a big circle and level out straight
 	private static Waypoint[] path4 = new Waypoint[] {
-			new Waypoint(0, 0, ZERO_ANGLE),
-			new Waypoint(60.0, -60.0, ZERO_ANGLE),
-			new Waypoint(120.0, 0, Pathfinder.d2r(-90.0)),
-			new Waypoint(60.0, 60.0, Pathfinder.d2r(-180.0)),
-			new Waypoint(0, 0, Pathfinder.d2r(-270.0)),
-			new Waypoint(60.0, 0, Pathfinder.d2r(-360.0))
+			new Waypoint(0*IN_TO_M, 0*IN_TO_M, ZERO_ANGLE),
+			new Waypoint(60.0*IN_TO_M, -60.0*IN_TO_M, ZERO_ANGLE),
+			new Waypoint(120.0*IN_TO_M, 0*IN_TO_M, Pathfinder.d2r(-90.0)),
+			new Waypoint(60.0*IN_TO_M, 60.0*IN_TO_M, Pathfinder.d2r(-180.0)),
+			new Waypoint(0*IN_TO_M, 0*IN_TO_M, Pathfinder.d2r(-270.0)),
+			new Waypoint(60.0*IN_TO_M, 0*IN_TO_M, Pathfinder.d2r(-360.0))
 	};
 	
 	// trajectory creation method
