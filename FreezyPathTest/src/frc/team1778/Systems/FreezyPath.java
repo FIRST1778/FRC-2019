@@ -16,6 +16,8 @@ public class FreezyPath {
 	
 	private static boolean initialized = false;
 	
+	public static final double ZERO_ANGLE = 0.001;
+
 	public static final int PATH1 = 0;
 	public static final int PATH2 = 1;
 	public static final int PATH3 = 2;
@@ -53,29 +55,29 @@ public class FreezyPath {
 
 	// path 1 - drive straight 5 ft
 	private static Waypoint[] path1 = new Waypoint[] {
-			new Waypoint(0, 0, 0),
-			new Waypoint(60.0, 0.0, 0),
-			new Waypoint(90.0, 0.0, 0)
+			new Waypoint(0, 0, ZERO_ANGLE),
+			new Waypoint(60.0, 0.0, ZERO_ANGLE),
+			new Waypoint(90.0, 0.0, ZERO_ANGLE)
 	};
 
 	// path 2 - swerve to the left and back to center
 	private static Waypoint[] path2 = new Waypoint[] {
-			new Waypoint(0, 0, 0),
-			new Waypoint(60.0, -30.0, 0),
-			new Waypoint(90.0, 0.0, 0)
+			new Waypoint(0, 0, ZERO_ANGLE),
+			new Waypoint(60.0, -30.0, ZERO_ANGLE),
+			new Waypoint(90.0, 0.0, ZERO_ANGLE)
 	};
 	
 	// path 3 - swerve to the right and back to center
 	private static Waypoint[] path3 = new Waypoint[] {
-			new Waypoint(0, 0, 0),
-			new Waypoint(60.0, 30.0, 0),
-			new Waypoint(90.0, 0.0, 0)
+			new Waypoint(0, 0, ZERO_ANGLE),
+			new Waypoint(60.0, 30.0, ZERO_ANGLE),
+			new Waypoint(90.0, 0.0, ZERO_ANGLE)
 	};
 	
 	// path 4 - drive in a big circle and level out straight
 	private static Waypoint[] path4 = new Waypoint[] {
-			new Waypoint(0, 0, 0),
-			new Waypoint(60.0, -60.0, 0),
+			new Waypoint(0, 0, ZERO_ANGLE),
+			new Waypoint(60.0, -60.0, ZERO_ANGLE),
 			new Waypoint(120.0, 0, Pathfinder.d2r(-90.0)),
 			new Waypoint(60.0, 60.0, Pathfinder.d2r(-180.0)),
 			new Waypoint(0, 0, Pathfinder.d2r(-270.0)),
