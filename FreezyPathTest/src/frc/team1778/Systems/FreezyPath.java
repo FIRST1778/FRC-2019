@@ -16,8 +16,6 @@ public class FreezyPath {
 	
 	private static boolean initialized = false;
 	
-	public static final double ZERO_ANGLE = 0.001;
-
 	public static final int PATH1 = 0;
 	public static final int PATH2 = 1;
 	public static final int PATH3 = 2;
@@ -25,16 +23,15 @@ public class FreezyPath {
 	private static int m_pathToFollow = PATH1;
 
 	// Time Step:           0.05 Seconds
-	// Max Velocity:        1 m/s
-	// Max Acceleration:    1 m/s/s
-	// Max Jerk:            10 m/s/s/s
+	// Max Velocity:        1.5 ft/s
+	// Max Acceleration:    1.5 ft/s/s
+	// Max Jerk:            15 ft/s/s/s
 
-	private static final double WHEELBASE_WIDTH_METERS = 0.75;
+	private static final double WHEELBASE_WIDTH_FT = 29.5/12;
 	private static final double PERIOD_SEC = 0.05;
-	private static final double MAX_VEL = 0.5;
-	private static final double MAX_ACCEL = 0.5;
-	private static final double MAX_JERK = 5.0;
-	private static final double IN_TO_M = 0.0254;
+	private static final double MAX_VEL = 1.5;
+	private static final double MAX_ACCEL = 1.5;
+	private static final double MAX_JERK = 15.0;
 	
 	private static final double kP = 1.0;
 	private static final double kI = 0.0;
@@ -53,35 +50,37 @@ public class FreezyPath {
 		}
 	};
 
-	// path 1 - drive straight 5 ft
+	// All path distances in ft
+
+	// path 1 - drive straight 10 ft
 	private static Waypoint[] path1 = new Waypoint[] {
-			new Waypoint(0*IN_TO_M, 0*IN_TO_M, ZERO_ANGLE),
-			new Waypoint(60.0*IN_TO_M, 0.0*IN_TO_M, ZERO_ANGLE),
-			new Waypoint(90.0*IN_TO_M, 0.0*IN_TO_M, ZERO_ANGLE)
+			new Waypoint(0, 0, Pathfinder.d2r(0)),
+			new Waypoint(5.0, 0.0, Pathfinder.d2r(0)),
+			new Waypoint(10.0, 0.0, Pathfinder.d2r(0))
 	};
 
 	// path 2 - swerve to the left and back to center
 	private static Waypoint[] path2 = new Waypoint[] {
-			new Waypoint(0*IN_TO_M, 0*IN_TO_M, ZERO_ANGLE),
-			new Waypoint(60.0*IN_TO_M, -30.0*IN_TO_M, ZERO_ANGLE),
-			new Waypoint(90.0*IN_TO_M, 0.0*IN_TO_M, ZERO_ANGLE)
+			new Waypoint(0, 0, Pathfinder.d2r(0)),
+			new Waypoint(5.0, -3.0, Pathfinder.d2r(0)),
+			new Waypoint(10.0, 0.0, Pathfinder.d2r(0))
 	};
 	
 	// path 3 - swerve to the right and back to center
 	private static Waypoint[] path3 = new Waypoint[] {
-			new Waypoint(0*IN_TO_M, 0*IN_TO_M, ZERO_ANGLE),
-			new Waypoint(60.0*IN_TO_M, 30.0*IN_TO_M, ZERO_ANGLE),
-			new Waypoint(90.0*IN_TO_M, 0.0*IN_TO_M, ZERO_ANGLE)
+			new Waypoint(0, 0, Pathfinder.d2r(0)),
+			new Waypoint(5.0, 3.0, Pathfinder.d2r(0)),
+			new Waypoint(10.0, 0.0, Pathfinder.d2r(0))
 	};
 	
 	// path 4 - drive in a big circle and level out straight
 	private static Waypoint[] path4 = new Waypoint[] {
-			new Waypoint(0*IN_TO_M, 0*IN_TO_M, ZERO_ANGLE),
-			new Waypoint(60.0*IN_TO_M, -60.0*IN_TO_M, ZERO_ANGLE),
-			new Waypoint(120.0*IN_TO_M, 0*IN_TO_M, Pathfinder.d2r(-90.0)),
-			new Waypoint(60.0*IN_TO_M, 60.0*IN_TO_M, Pathfinder.d2r(-180.0)),
-			new Waypoint(0*IN_TO_M, 0*IN_TO_M, Pathfinder.d2r(-270.0)),
-			new Waypoint(60.0*IN_TO_M, 0*IN_TO_M, Pathfinder.d2r(-360.0))
+			new Waypoint(0, 0, Pathfinder.d2r(0)),
+			new Waypoint(5.0, -5.0, Pathfinder.d2r(0)),
+			new Waypoint(10.0, 0, Pathfinder.d2r(90.0)),
+			new Waypoint(5.0, 5.0, Pathfinder.d2r(180.0)),
+			new Waypoint(0, 0, Pathfinder.d2r(-90.0)),
+			new Waypoint(10.0, 0, Pathfinder.d2r(0))
 	};
 	
 	// trajectory creation method
@@ -124,8 +123,8 @@ public class FreezyPath {
     	leftEncoderFollower = new EncoderFollower(tankModifier.getLeftTrajectory());
     	rightEncoderFollower = new EncoderFollower(tankModifier.getRightTrajectory());		
 
-    	leftEncoderFollower.configureEncoder(0, (int)HardwareIDs.ENCODER_PULSES_PER_REV, HardwareIDs.WHEEL_DIAMETER_INCHES);
-    	rightEncoderFollower.configureEncoder(0, (int)HardwareIDs.ENCODER_PULSES_PER_REV, HardwareIDs.WHEEL_DIAMETER_INCHES);
+    	leftEncoderFollower.configureEncoder(0, (int)HardwareIDs.ENCODER_PULSES_PER_REV, (HardwareIDs.WHEEL_DIAMETER_INCHES/12));
+    	rightEncoderFollower.configureEncoder(0, (int)HardwareIDs.ENCODER_PULSES_PER_REV, (HardwareIDs.WHEEL_DIAMETER_INCHES/12));
     	
     	leftEncoderFollower.configurePIDVA(kP, kI, kD, kV, kA);
     	rightEncoderFollower.configurePIDVA(kP, kI, kD, kV, kA);
@@ -190,6 +189,12 @@ public class FreezyPath {
 
         double angleDifference = Pathfinder.boundHalfDegrees(desired_heading - gyroValueDeg);
         double turn = 0.8 * (-1.0 / 80.0) * angleDifference;
+
+		// debug out
+		InputOutputComm.putDouble("FreezyPath_Left_ft",left);
+		InputOutputComm.putDouble("FreezyPath_Right_ft",right);
+		InputOutputComm.putDouble("Desired_Heading_deg",desired_heading);
+		InputOutputComm.putDouble("Actual_Heading_deg",gyroValueDeg);
 
         // send updated command to DriveAssembly
         DriveAssembly.drive(left + turn, right - turn);			
