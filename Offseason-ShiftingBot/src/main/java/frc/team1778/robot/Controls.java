@@ -1,6 +1,7 @@
 package frc.team1778.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import frc.team1778.lib.gamepads.FreezyController;
 import frc.team1778.lib.gamepads.InterLinkElite;
 import frc.team1778.lib.gamepads.LogitechDualAction;
 import frc.team1778.lib.gamepads.LogitechF310;
@@ -20,6 +21,12 @@ public class Controls {
       @Override
       public String toString() {
         return "Interlink Elite Controller";
+      }
+    },
+    FREEZY_CONTROLLER {
+      @Override
+      public String toString() {
+        return "Freezy Controller";
       }
     },
     LOGITECH_DUAL_ACTION {
@@ -48,7 +55,7 @@ public class Controls {
     }
   };
 
-  private static final ControllerType DRIVER_CONTROLLER_TYPE = ControllerType.LOGITECH_F310;
+  private static final ControllerType DRIVER_CONTROLLER_TYPE = ControllerType.FREEZY_CONTROLLER;
   private static final ControllerType OPERATOR_CONTROLLER_TYPE = ControllerType.LOGITECH_F310;
 
   private static final int PORT_DRIVER_CONTROLLER = 0;
@@ -98,6 +105,8 @@ public class Controls {
    */
   public double getThrottle() {
     switch (DRIVER_CONTROLLER_TYPE) {
+      case FREEZY_CONTROLLER:
+        return driverController.getRawAxis(InterLinkElite.Axis.LEFT_Y);
       case INTERLINK_ELITE_CONTROLLER:
         return -driverController.getRawAxis(InterLinkElite.Axis.LEFT_Y);
       case LOGITECH_DUAL_ACTION:
@@ -120,6 +129,8 @@ public class Controls {
    */
   public double getWheelX() {
     switch (DRIVER_CONTROLLER_TYPE) {
+      case FREEZY_CONTROLLER:
+        return driverController.getRawAxis(InterLinkElite.Axis.RIGHT_X);
       case INTERLINK_ELITE_CONTROLLER:
         return driverController.getRawAxis(InterLinkElite.Axis.RIGHT_X);
       case LOGITECH_DUAL_ACTION:
@@ -142,6 +153,8 @@ public class Controls {
    */
   public double getWheelY() {
     switch (DRIVER_CONTROLLER_TYPE) {
+      case FREEZY_CONTROLLER:
+        return -driverController.getRawAxis(InterLinkElite.Axis.RIGHT_Y);
       case INTERLINK_ELITE_CONTROLLER:
         return -driverController.getRawAxis(InterLinkElite.Axis.RIGHT_Y);
       case LOGITECH_DUAL_ACTION:
@@ -164,8 +177,10 @@ public class Controls {
    */
   public boolean getQuickTurn() {
     switch (DRIVER_CONTROLLER_TYPE) {
+      case FREEZY_CONTROLLER:
+        return driverController.getRawButton(FreezyController.RIGHT_SHOULDER_SWITCH);
       case INTERLINK_ELITE_CONTROLLER:
-        return driverController.getRawButton(1);
+        return driverController.getRawButton(InterLinkElite.RIGHT_SHOULDER_SWITCH);
       case LOGITECH_DUAL_ACTION:
         return driverController.getRawButton(LogitechDualAction.RIGHT_BUMPER);
       case LOGITECH_F310:
@@ -186,6 +201,8 @@ public class Controls {
    */
   public boolean getLowGearShift() {
     switch (DRIVER_CONTROLLER_TYPE) {
+      case FREEZY_CONTROLLER:
+        return !driverController.getRawButton(FreezyController.LEFT_SHOULDER_SWITCH);
       case INTERLINK_ELITE_CONTROLLER:
         return driverController.getRawButton(InterLinkElite.LEFT_SHOULDER_DOWN_SWITCH);
       case LOGITECH_DUAL_ACTION:
@@ -208,6 +225,8 @@ public class Controls {
    */
   public boolean getHighGearShift() {
     switch (DRIVER_CONTROLLER_TYPE) {
+      case FREEZY_CONTROLLER:
+        return driverController.getRawButton(FreezyController.LEFT_SHOULDER_SWITCH);
       case INTERLINK_ELITE_CONTROLLER:
         return driverController.getRawButton(InterLinkElite.LEFT_SHOULDER_UP_SWITCH);
       case LOGITECH_DUAL_ACTION:
