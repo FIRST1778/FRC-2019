@@ -62,7 +62,6 @@ public class Robot extends IterativeRobot {
         freezyDriver.freezyDrive(
             controlInterpreter.getThrottle(),
             controlInterpreter.getWheelX(),
-            controlInterpreter.getWheelY(),
             controlInterpreter.getQuickTurn(),
             drive.isHighGear()));
 
