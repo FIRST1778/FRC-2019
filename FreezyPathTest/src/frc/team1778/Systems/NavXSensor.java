@@ -33,6 +33,7 @@ public class NavXSensor {
 	private static AHRS ahrs = null;
 	
 	private static double yawOffset = 0.0;
+	private static double lastRawAngle = 0.0;
 	
 	public static class Angles {
 		float roll = 0f;
@@ -47,15 +48,12 @@ public class NavXSensor {
 		if (ahrs != null) 
 		{
 			ahrs.reset();
-			ahrs.resetDisplacement();
-			ahrs.zeroYaw();
-			
-			// allow zeroing to take effect
-			Timer.delay(0.1);
 			
 			// get the absolute angle after reset - Not sure why it is non-zero, but we need to record it to zero it out
-			yawOffset = ahrs.getAngle();	
-			System.out.println("yawOffset read = " + yawOffset);
+			//yawOffset = ahrs.getAngle();	
+			//System.out.println("yawOffset read = " + yawOffset);
+
+			yawOffset = 0;	
 		}
 	}
 
@@ -105,17 +103,40 @@ public class NavXSensor {
 		
 	}
 	
-	// returns absolute yaw angle (can be larger than 360 deg)
+	/**
+	 * Returns the angle of the NavX.
+	 * Turning past 360 degrees will go onto 361
+	 * Turning before 0 degrees will go to -1
+	 * 
+	 * @return The angle, in degrees, of the NavX
+	 */
 	public static double getAngle() 
 	{
+		/*
 		double yaw = 0f;
 		
 		if (ahrs != null) {
 			yaw = ahrs.getAngle();	
 			yaw -= yawOffset;  // needed to get to true angle
-		}			
-		
+		}	
 		return yaw;
+		*/
+
+		if (ahrs == null)
+			return 0;
+
+		double rawAngle = ahrs.getAngle();
+		
+		if (rawAngle > 340 && lastRawAngle < 20) {
+			yawOffset -= 360.0;
+		}
+		else if (rawAngle < 20 && lastRawAngle > 340) {
+			yawOffset += 360;
+		}
+		
+		lastRawAngle = rawAngle;
+		
+		return rawAngle + yawOffset;
 		
 	}
 	
