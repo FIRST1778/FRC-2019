@@ -148,7 +148,7 @@ public class AutoNetworkBuilder {
 	
 		// create states
 		AutoState followPathState = new AutoState("<Follow Path State>");
-		FollowPathAction follow = new FollowPathAction("<Follow Path 3>", pathToFollow);
+		FollowPathAction follow = new FollowPathAction("<Follow Path Action>", pathToFollow);
 		PathCompleteEvent pathComplete = new PathCompleteEvent();
 		followPathState.addAction(follow);
 		followPathState.addEvent(pathComplete);

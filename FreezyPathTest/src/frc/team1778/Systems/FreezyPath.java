@@ -184,6 +184,10 @@ public class FreezyPath {
 		trajectoryList.add(setupPathfinder_Path(path2));
 		trajectoryList.add(setupPathfinder_Path(path3));
 		trajectoryList.add(setupPathfinder_Path(path4));
+		trajectoryList.add(setupPathfinder_Path(path5));
+		trajectoryList.add(setupPathfinder_Path(path6));
+		trajectoryList.add(setupPathfinder_Path(path7));
+		trajectoryList.add(setupPathfinder_Path(path8));
 		
 		// create notifier
 		m_notifier = new Notifier(m_handler);
