@@ -16,11 +16,15 @@ public class FreezyPath {
 	
 	private static boolean initialized = false;
 	
-	public static final int PATH1 = 0;
-	public static final int PATH2 = 1;
-	public static final int PATH3 = 2;
-	public static final int PATH4 = 4;
-	private static int m_pathToFollow = PATH1;
+	public static final int STRAIGHT_PATH = 0;
+	public static final int SWERVE_RIGHT_AND_CENTER = 1;
+	public static final int SWERVE_LEFT_AND_CENTER = 2;
+	public static final int SWERVE_RIGHT_TURN_LEFT = 3;
+	public static final int SWERVE_LEFT_TURN_RIGHT = 4;
+	public static final int SWERVE_RIGHT_UTURN_LEFT = 5;
+	public static final int SWERVE_LEFT_UTURN_RIGHT = 6;
+	public static final int CIRCLE_PATH = 7;
+	private static int m_pathToFollow = STRAIGHT_PATH;
 
 	// Time Step:           0.05 Seconds
 	// Max Velocity:        1.5 ft/s
@@ -54,33 +58,63 @@ public class FreezyPath {
 
 	// path 1 - drive straight 10 ft
 	private static Waypoint[] path1 = new Waypoint[] {
-			new Waypoint(0, 0, Pathfinder.d2r(0)),
-			new Waypoint(5.0, 0.0, Pathfinder.d2r(0)),
-			new Waypoint(10.0, 0.0, Pathfinder.d2r(0))
+		new Waypoint(0, 0, Pathfinder.d2r(0)),
+		new Waypoint(5.0, 0.0, Pathfinder.d2r(0)),
+		new Waypoint(10.0, 0.0, Pathfinder.d2r(0))
 	};
 
-	// path 2 - swerve to the left and back to center
-	private static Waypoint[] path2 = new Waypoint[] {
-			new Waypoint(0, 0, Pathfinder.d2r(0)),
-			new Waypoint(5.0, -3.0, Pathfinder.d2r(0)),
-			new Waypoint(10.0, 0.0, Pathfinder.d2r(0))
-	};
-	
-	// path 3 - swerve to the right and back to center
+	// path 2 - swerve to the right and back to center
 	private static Waypoint[] path3 = new Waypoint[] {
-			new Waypoint(0, 0, Pathfinder.d2r(0)),
-			new Waypoint(5.0, 3.0, Pathfinder.d2r(0)),
-			new Waypoint(10.0, 0.0, Pathfinder.d2r(0))
+		new Waypoint(0, 0, Pathfinder.d2r(0)),
+		new Waypoint(5.0, -3.0, Pathfinder.d2r(0)),
+		new Waypoint(10.0, 0.0, Pathfinder.d2r(0))
 	};
-	
-	// path 4 - drive in a big circle and level out straight
+
+	// path 3 - swerve to the left and back to center
+	private static Waypoint[] path2 = new Waypoint[] {
+		new Waypoint(0, 0, Pathfinder.d2r(0)),
+		new Waypoint(5.0, 3.0, Pathfinder.d2r(0)),
+		new Waypoint(10.0, 0.0, Pathfinder.d2r(0))
+	};
+
+	// path 4 - swerve to the right and turn left
 	private static Waypoint[] path4 = new Waypoint[] {
-			new Waypoint(0, 0, Pathfinder.d2r(0)),
-			new Waypoint(5.0, -5.0, Pathfinder.d2r(0)),
-			new Waypoint(10.0, 0, Pathfinder.d2r(90.0)),
-			new Waypoint(5.0, 5.0, Pathfinder.d2r(180.0)),
-			new Waypoint(0, 0, Pathfinder.d2r(-90.0)),
-			new Waypoint(10.0, 0, Pathfinder.d2r(0))
+		new Waypoint(0, 0, Pathfinder.d2r(0)),
+		new Waypoint(5.0, -3.0, Pathfinder.d2r(0)),
+		new Waypoint(10.0, 0.0, Pathfinder.d2r(90))
+	};
+
+	// path 5 - swerve to the left and turn right
+	private static Waypoint[] path5 = new Waypoint[] {
+		new Waypoint(0, 0, Pathfinder.d2r(0)),
+		new Waypoint(5.0, 3.0, Pathfinder.d2r(0)),
+		new Waypoint(10.0, 0.0, Pathfinder.d2r(-90))
+	};
+
+	// path 6 - swerve to the right and u-turn left
+	private static Waypoint[] path6 = new Waypoint[] {
+		new Waypoint(0, 0, Pathfinder.d2r(0)),
+		new Waypoint(5.0, 4.0, Pathfinder.d2r(0)),
+		new Waypoint(10.0, 2.0, Pathfinder.d2r(-90)),
+		new Waypoint(7.5, 0.0, Pathfinder.d2r(-180))
+	};
+
+	// path 7 - swerve to the left and u-turn right
+	private static Waypoint[] path7 = new Waypoint[] {
+		new Waypoint(0, 0, Pathfinder.d2r(0)),
+		new Waypoint(5.0, 4.0, Pathfinder.d2r(0)),
+		new Waypoint(10.0, 2.0, Pathfinder.d2r(90)),
+		new Waypoint(7.5, 0.0, Pathfinder.d2r(180))
+	};
+
+	// path 8 - drive in a big circle and level out straight
+	private static Waypoint[] path8 = new Waypoint[] {
+		new Waypoint(0, 0, Pathfinder.d2r(0)),
+		new Waypoint(5.0, -5.0, Pathfinder.d2r(0)),
+		new Waypoint(10.0, 0, Pathfinder.d2r(90.0)),
+		new Waypoint(5.0, 5.0, Pathfinder.d2r(180.0)),
+		new Waypoint(0, 0, Pathfinder.d2r(270.0)),
+		new Waypoint(10.0, 0, Pathfinder.d2r(360.0))
 	};
 	
 	// trajectory creation method

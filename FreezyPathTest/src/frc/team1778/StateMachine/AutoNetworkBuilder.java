@@ -3,15 +3,10 @@ package frc.team1778.StateMachine;
 import java.util.ArrayList;
 
 import frc.team1778.Systems.FreezyPath;
+import frc.team1778.StateMachine.AutoChooser;
 
 public class AutoNetworkBuilder {
-		
-	public final static int DO_NOTHING = 0;
-	public final static int DRIVE_FORWARD = 1;
-	public final static int FOLLOW_PATH1 = 2;
-	public final static int FOLLOW_PATH2 = 3;
-	public final static int FOLLOW_PATH3 = 4;
-	
+			
 	// closed-loop position cruise velocity and acceleration (used for all closed-loop position control)
 	// units are RPM
 	
@@ -49,11 +44,16 @@ public class AutoNetworkBuilder {
 		autoNets = new ArrayList<AutoNetwork>();
 							
 		// create networks
-		autoNets.add(DO_NOTHING, createDoNothingNetwork());	
-		autoNets.add(DRIVE_FORWARD, createDriveForward());	
-		autoNets.add(FOLLOW_PATH1, createFollowPathNetwork1());	
-		autoNets.add(FOLLOW_PATH2, createFollowPathNetwork2());	
-		autoNets.add(FOLLOW_PATH3, createFollowPathNetwork3());	
+		autoNets.add(AutoChooser.DO_NOTHING, createDoNothingNetwork());	
+		autoNets.add(AutoChooser.DRIVE_FORWARD, createDriveForward());	
+		autoNets.add(AutoChooser.FOLLOW_STRAIGHT_PATH, createFollowPathNetwork(FreezyPath.STRAIGHT_PATH));	
+		autoNets.add(AutoChooser.FOLLOW_SWERVE_RIGHT_PATH, createFollowPathNetwork(FreezyPath.SWERVE_RIGHT_AND_CENTER));	
+		autoNets.add(AutoChooser.FOLLOW_SWERVE_LEFT_PATH, createFollowPathNetwork(FreezyPath.SWERVE_LEFT_AND_CENTER));	
+		autoNets.add(AutoChooser.FOLLOW_TURN_LEFT_PATH, createFollowPathNetwork(FreezyPath.SWERVE_RIGHT_TURN_LEFT));	
+		autoNets.add(AutoChooser.FOLLOW_TURN_RIGHT_PATH, createFollowPathNetwork(FreezyPath.SWERVE_LEFT_TURN_RIGHT));	
+		autoNets.add(AutoChooser.FOLLOW_UTURN_LEFT_PATH, createFollowPathNetwork(FreezyPath.SWERVE_RIGHT_UTURN_LEFT));	
+		autoNets.add(AutoChooser.FOLLOW_UTURN_RIGHT_PATH, createFollowPathNetwork(FreezyPath.SWERVE_LEFT_UTURN_RIGHT));	
+		autoNets.add(AutoChooser.FOLLOW_CIRCLE_PATH, createFollowPathNetwork(FreezyPath.CIRCLE_PATH));	
 
 		return autoNets;
 	}
@@ -138,69 +138,17 @@ public class AutoNetworkBuilder {
 				
 		return autoNet;
 	}
-	
-	// **** FOLLOW PATH Network 1 ***** 
+		
+	// **** FOLLOW PATH Network ***** 
 	// 1) follow a specified path until complete
 	// 2) go back to idle and stay there 
-	private static AutoNetwork createFollowPathNetwork1() {
-		
-		AutoNetwork autoNet = new AutoNetwork("<Follow Path Network 1>");
-	
-		// create states
-		AutoState followPathState = new AutoState("<Follow Path State>");
-		FollowPathAction follow = new FollowPathAction("<Follow Path 1>",FreezyPath.PATH1);
-		PathCompleteEvent pathComplete = new PathCompleteEvent();
-		followPathState.addAction(follow);
-		followPathState.addEvent(pathComplete);
-		
-		AutoState idleState = createIdleState("<Idle State>");
-
-		// connect the state sequence
-		followPathState.associateNextState(idleState);
-						
-		// add states to the network list
-		autoNet.addState(followPathState);
-		autoNet.addState(idleState);
-				
-		return autoNet;
-	}
-	
-	// **** FOLLOW PATH Network 2 ***** 
-	// 1) follow a specified path until complete
-	// 2) go back to idle and stay there 
-	private static AutoNetwork createFollowPathNetwork2() {
-		
-		AutoNetwork autoNet = new AutoNetwork("<Follow Path Network 2>");
-	
-		// create states
-		AutoState followPathState = new AutoState("<Follow Path State>");
-		FollowPathAction follow = new FollowPathAction("<Follow Path 2>",FreezyPath.PATH2);
-		PathCompleteEvent pathComplete = new PathCompleteEvent();
-		followPathState.addAction(follow);
-		followPathState.addEvent(pathComplete);
-		
-		AutoState idleState = createIdleState("<Idle State>");
-
-		// connect the state sequence
-		followPathState.associateNextState(idleState);
-						
-		// add states to the network list
-		autoNet.addState(followPathState);
-		autoNet.addState(idleState);
-				
-		return autoNet;
-	}
-	
-	// **** FOLLOW PATH Network 1 ***** 
-	// 1) follow a specified path until complete
-	// 2) go back to idle and stay there 
-	private static AutoNetwork createFollowPathNetwork3() {
+	private static AutoNetwork createFollowPathNetwork(int pathToFollow) {
 		
 		AutoNetwork autoNet = new AutoNetwork("<Follow Path Network 3>");
 	
 		// create states
 		AutoState followPathState = new AutoState("<Follow Path State>");
-		FollowPathAction follow = new FollowPathAction("<Follow Path 3>",FreezyPath.PATH3);
+		FollowPathAction follow = new FollowPathAction("<Follow Path 3>", pathToFollow);
 		PathCompleteEvent pathComplete = new PathCompleteEvent();
 		followPathState.addAction(follow);
 		followPathState.addEvent(pathComplete);
