@@ -84,8 +84,8 @@ public class Drive extends Subsystem {
     driveConfiguration.PID_KF = 0.0;
     driveConfiguration.MOTION_CRUISE_VELOCITY = 1000;
     driveConfiguration.MOTION_ACCELERATION = 300;
-    driveConfiguration.CONTINUOUS_CURRENT_LIMIT = 10;
-    driveConfiguration.PEAK_CURRENT_LIMIT = 15;
+    driveConfiguration.CONTINUOUS_CURRENT_LIMIT = 25;
+    driveConfiguration.PEAK_CURRENT_LIMIT = 35;
     driveConfiguration.PEAK_CURRENT_LIMIT_DURATION = 100;
     driveConfiguration.ENABLE_CURRENT_LIMIT = true;
     driveConfiguration.OPEN_LOOP_RAMP_TIME_SECONDS = 0.25;
@@ -129,6 +129,8 @@ public class Drive extends Subsystem {
 
     networkTable.putNumber("Left Current", leftMaster.getOutputCurrent());
     networkTable.putNumber("Right Current", rightMaster.getOutputCurrent());
+    networkTable.putNumber("Left2 Current", leftSlave.getOutputCurrent());
+    networkTable.putNumber("Right2 Current", rightSlave.getOutputCurrent());
   }
 
   @Override
