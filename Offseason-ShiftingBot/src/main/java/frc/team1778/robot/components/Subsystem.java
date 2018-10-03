@@ -10,18 +10,9 @@ import frc.team1778.lib.NetworkTableWrapper;
  * @author FRC 1778 Chill Out
  */
 public abstract class Subsystem {
-  private NetworkTableWrapper networkTable = new NetworkTableWrapper(getSubsystemName());
+  public NetworkTableWrapper debugTable = new NetworkTableWrapper("debug/" + getSubsystemName());
 
-  /**
-   * Returns this subsystem's NetworkTable.
-   *
-   * @return this subsystem's NetworkTable
-   */
-  public NetworkTableWrapper getNetworkTable() {
-    return networkTable;
-  }
-
-  /** Print telemetry associated with this subsystem to the NetworkTable. */
+  /** Print telemetry associated with this subsystem to the NetworkTables. */
   public abstract void sendTelemetry();
 
   /** Reset all encoders associated with the subsystem. */
@@ -30,6 +21,6 @@ public abstract class Subsystem {
   /** Zero all sensors associated with the subsystem. */
   public abstract void zeroSensors();
 
-  /** Zero all sensors associated with the subsystem. */
+  /** Returns the name of the subsystem. */
   public abstract String getSubsystemName();
 }

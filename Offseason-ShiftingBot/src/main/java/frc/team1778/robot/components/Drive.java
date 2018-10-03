@@ -37,7 +37,7 @@ public class Drive extends Subsystem {
   private DoubleSolenoid leftShifter;
   private DoubleSolenoid rightShifter;
 
-  private NetworkTableWrapper networkTable = new NetworkTableWrapper("Drive");
+  private NetworkTableWrapper networkTable = new NetworkTableWrapper(getSubsystemName());
 
   private SimplePID gyroPathPID;
 
@@ -120,17 +120,17 @@ public class Drive extends Subsystem {
   public void sendTelemetry() {
     networkTable.putBoolean("High Gear", isHighGear());
     networkTable.putBoolean("Brake Mode", isBraking());
-    networkTable.putString("Drive Mode", currentMode.toString());
     networkTable.putNumber("Left Encoder", convertEncoderTicksToInches(getLeftEncoderPosition()));
     networkTable.putNumber("Right Encoder", convertEncoderTicksToInches(getRightEncoderPosition()));
     networkTable.putNumber("Yaw", navX.getYaw());
     networkTable.putBoolean("Path Done", isPathDone());
     networkTable.putBoolean("Path Running", pathRunning);
 
-    networkTable.putNumber("Left Current", leftMaster.getOutputCurrent());
-    networkTable.putNumber("Right Current", rightMaster.getOutputCurrent());
-    networkTable.putNumber("Left2 Current", leftSlave.getOutputCurrent());
-    networkTable.putNumber("Right2 Current", rightSlave.getOutputCurrent());
+    debugTable.putString("Drive Mode", currentMode.toString());
+    debugTable.putNumber("Left Current", leftMaster.getOutputCurrent());
+    debugTable.putNumber("Right Current", rightMaster.getOutputCurrent());
+    debugTable.putNumber("Left2 Current", leftSlave.getOutputCurrent());
+    debugTable.putNumber("Right2 Current", rightSlave.getOutputCurrent());
   }
 
   @Override
@@ -390,13 +390,6 @@ public class Drive extends Subsystem {
     double heading = reversePath ? -navX.getYaw() : navX.getYaw();
 
     double turn = gyroPathPID.calculate(heading, headingSetpoint);
-
-    networkTable.putNumber("Turn", turn);
-    networkTable.putNumber("Heading", heading);
-    networkTable.putNumber("Setpoint", headingSetpoint);
-
-    networkTable.putNumber("Left Power", left);
-    networkTable.putNumber("Right Power", right);
 
     if (reversePath) {
       setPowers(-left - turn, -right + turn);
