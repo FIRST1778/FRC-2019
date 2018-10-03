@@ -7,10 +7,10 @@ import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 /**
- * This creates and sets most of the convenient settings for a {@link TalonSRX}. This includes
- * feedback devices, voltage limits, control modes, inversion, etc.
+ * This creates and sets most of the convenient settings for a TalonSRX. This includes feedback
+ * devices, voltage limits, control modes, inversion, etc.
  *
- * <p>This is adapted from 254's code, but is updated to work with the newer {@link TalonSRX} API.
+ * <p>This is adapted from 254's code, but is updated to work with the newer TalonSRX API.
  *
  * @author FRC 1778 Chill Out
  * @see <a
@@ -20,7 +20,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 public class TalonSRXFactory {
 
   /**
-   * Contains the configuration parameters for the {@link TalonSRX}.
+   * Contains the configuration parameters for the TalonSRX.
    *
    * @author FRC 1778 Chill Out
    */
@@ -60,22 +60,21 @@ public class TalonSRXFactory {
   private static final Configuration DEFAULT_CONFIGURATION = new Configuration();
 
   /**
-   * Create a basic {@link TalonSRX}.
+   * Create a basic TalonSRX.
    *
-   * @param id the CAN ID in which the {@link TalonSRX} is configured with
-   * @return a {@link TalonSRX", configured with the default parameters
+   * @param id the CAN ID in which the TalonSRX is configured with
+   * @return a TalonSRX, configured with the default parameters
    */
   public static TalonSRX createDefaultTalon(int id) {
     return createTalon(id, DEFAULT_CONFIGURATION);
   }
 
   /**
-   * Create a slave {@link TalonSRX}.
+   * Create a slave TalonSRX.
    *
-   * @param id the CAN ID in which the {@link TalonSRX} is configured with
-   * @param masterId the {@link TalonSRX} for this slave {@link TalonSRX} to follow
-   * @return a {@link TalonSRX}, configured with the default parameters to follow the master {@link
-   *     TalonSRX}.
+   * @param id the CAN ID in which the TalonSRX is configured with
+   * @param masterId the TalonSRX for this slave TalonSRX to follow
+   * @return a TalonSRX, configured with the default parameters to follow the master TalonSRX.
    */
   public static TalonSRX createSlaveTalon(int slaveId, TalonSRX master) {
     TalonSRX talon = createDefaultTalon(slaveId);
@@ -84,12 +83,11 @@ public class TalonSRXFactory {
   }
 
   /**
-   * Configure a full fledged {@link TalonSRX}, this sets all of the configuration paramters set in
-   * the config.
+   * Configure a full fledged TalonSRX, this sets all of the configuration paramters set in the
+   * config.
    *
-   * @param talon the {@link TalonSRX} to apply the new {@link Configuration}
-   * @param config the {@link Configuration} that stores all of the settings for the {@link
-   *     TalonSRX}
+   * @param talon the TalonSRX to apply the new Configuration
+   * @param config the Configuration that stores all of the settings for the TalonSRX}
    */
   public static TalonSRX createTalon(int id, Configuration config) {
     TalonSRX talon = new TalonSRX(id);
