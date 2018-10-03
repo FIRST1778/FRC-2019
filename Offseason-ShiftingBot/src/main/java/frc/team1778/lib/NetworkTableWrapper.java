@@ -33,9 +33,7 @@ public class NetworkTableWrapper {
     final SendableBuilderImpl m_builder = new SendableBuilderImpl();
   }
 
-  /**
-   * A table linking tables in the SmartDashboard to the {@link Sendable} objects they came from.
-   */
+  /** A table linking tables in the SmartDashboard to the Sendable objects they came from. */
   private static final Map<String, Data> tablesToData = new HashMap<>();
 
   static {
@@ -68,9 +66,9 @@ public class NetworkTableWrapper {
   }
 
   /**
-   * Maps the specified key (where the key is the name of the {@link NamedSendable} to the specified
-   * value in this table. The value can be retrieved by calling the get method with a key that is
-   * equal to the original key.
+   * Maps the specified key (where the key is the name of the NamedSendable to the specified value
+   * in this table. The value can be retrieved by calling the get method with a key that is equal to
+   * the original key.
    *
    * @param value the value
    * @throws IllegalArgumentException If key is null

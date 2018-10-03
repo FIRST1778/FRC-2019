@@ -41,7 +41,7 @@ public class Drive extends Subsystem {
 
   private SimplePID gyroPathPID;
 
-  private SimplePID turnAnglePID = new SimplePID(Constants.Drive.TURN_PID);
+  private SimplePID turnAnglePID = new SimplePID(Constants.DRIVE_TURN_PID);
 
   private NavX navX;
 
@@ -179,7 +179,7 @@ public class Drive extends Subsystem {
    * @return the converted inches from the encoder ticks
    */
   public double convertEncoderTicksToInches(int encoderTicks) {
-    return ((Math.PI * Constants.Drive.WHEEL_DIAMETER) / Constants.Drive.ENCODER_TICKS_PER_ROTATION)
+    return ((Math.PI * Constants.DRIVE_WHEEL_DIAMETER) / Constants.DRIVE_ENCODER_TICKS_PER_ROTATION)
         * encoderTicks;
   }
 
@@ -324,45 +324,45 @@ public class Drive extends Subsystem {
         new Trajectory.Config(
             Trajectory.FitMethod.HERMITE_QUINTIC,
             Trajectory.Config.SAMPLES_FAST,
-            Constants.Path.DELTA_TIME,
-            Constants.Path.MAX_VELOCITY,
-            Constants.Path.MAX_ACCELERATION,
-            Constants.Path.MAX_JERK);
+            Constants.PATH_DELTA_TIME,
+            Constants.PATH_MAX_VELOCITY,
+            Constants.PATH_MAX_ACCELERATION,
+            Constants.PATH_MAX_JERK);
 
     Trajectory trajectory = Pathfinder.generate(path, config);
 
     reversePath = reverse;
-    gyroPathPID = new SimplePID(Constants.Path.GYRO_PID);
+    gyroPathPID = new SimplePID(Constants.PATH_GYRO_PID);
     if (reverse) {
       gyroPathPID.invertGains();
     }
 
-    TankModifier modifier = new TankModifier(trajectory).modify(Constants.Path.TRACK_WIDTH);
+    TankModifier modifier = new TankModifier(trajectory).modify(Constants.DRIVE_TRACK_WIDTH);
 
     EncoderFollower leftFollower = new EncoderFollower(modifier.getLeftTrajectory());
     EncoderFollower rightFollower = new EncoderFollower(modifier.getRightTrajectory());
 
     leftFollower.configureEncoder(
         leftMaster.getSelectedSensorPosition(0),
-        Constants.Drive.ENCODER_TICKS_PER_ROTATION,
-        Constants.Drive.WHEEL_DIAMETER);
+        Constants.DRIVE_ENCODER_TICKS_PER_ROTATION,
+        Constants.DRIVE_WHEEL_DIAMETER);
     rightFollower.configureEncoder(
         rightMaster.getSelectedSensorPosition(0),
-        Constants.Drive.ENCODER_TICKS_PER_ROTATION,
-        Constants.Drive.WHEEL_DIAMETER);
+        Constants.DRIVE_ENCODER_TICKS_PER_ROTATION,
+        Constants.DRIVE_WHEEL_DIAMETER);
 
     leftFollower.configurePIDVA(
-        Constants.Path.PRIMARY_PID.getkP(),
-        Constants.Path.PRIMARY_PID.getkI(),
-        Constants.Path.PRIMARY_PID.getkD(),
-        Constants.Path.KV,
-        Constants.Path.KA);
+        Constants.PATH_PRIMARY_PID.getkP(),
+        Constants.PATH_PRIMARY_PID.getkI(),
+        Constants.PATH_PRIMARY_PID.getkD(),
+        Constants.PATH_KV,
+        Constants.PATH_KA);
     rightFollower.configurePIDVA(
-        Constants.Path.PRIMARY_PID.getkP(),
-        Constants.Path.PRIMARY_PID.getkI(),
-        Constants.Path.PRIMARY_PID.getkD(),
-        Constants.Path.KV,
-        Constants.Path.KA);
+        Constants.PATH_PRIMARY_PID.getkP(),
+        Constants.PATH_PRIMARY_PID.getkI(),
+        Constants.PATH_PRIMARY_PID.getkD(),
+        Constants.PATH_KV,
+        Constants.PATH_KA);
 
     return new EncoderFollower[] {leftFollower, rightFollower};
   }
