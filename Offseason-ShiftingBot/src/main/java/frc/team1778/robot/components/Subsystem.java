@@ -1,6 +1,6 @@
 package frc.team1778.robot.components;
 
-import frc.team1778.lib.NetworkTableWrapper;
+import frc.team1778.lib.util.NetworkTableWrapper;
 
 /**
  * This is the base class which all subsystems/components inherit. This requires that each subsystem

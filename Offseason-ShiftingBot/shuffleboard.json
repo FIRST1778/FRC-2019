@@ -84,19 +84,6 @@
               "_source0": "network_table:///custom/Drive/Left Encoder",
               "_title": "Left Encoder"
             }
-          },
-          "1,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///custom/Drive/Path Running",
-              "_title": "Path Running",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
           }
         }
       }

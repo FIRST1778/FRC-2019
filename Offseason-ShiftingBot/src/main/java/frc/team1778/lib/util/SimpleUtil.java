@@ -1,4 +1,4 @@
-package frc.team1778.lib;
+package frc.team1778.lib.util;
 
 /**
  * Contains simple methods to handle basic utility operations.
