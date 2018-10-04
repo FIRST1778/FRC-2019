@@ -1,4 +1,4 @@
-package frc.team1778.lib;
+package frc.team1778.lib.util;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;

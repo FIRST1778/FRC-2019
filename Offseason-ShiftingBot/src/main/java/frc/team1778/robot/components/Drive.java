@@ -7,10 +7,10 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import frc.team1778.lib.DriveSignal;
-import frc.team1778.lib.NetworkTableWrapper;
 import frc.team1778.lib.driver.NavX;
 import frc.team1778.lib.driver.TalonSRXFactory;
+import frc.team1778.lib.util.DriveSignal;
+import frc.team1778.lib.util.NetworkTableWrapper;
 import frc.team1778.robot.Constants;
 import frc.team1778.robot.Ports;
 import frc.team1778.robot.common.SimplePID;
@@ -57,7 +57,6 @@ public class Drive extends Subsystem {
   private boolean isInHighGear;
   private boolean isInBrakeMode;
   private boolean pathDone;
-  private boolean pathRunning;
   private boolean reversePath;
 
   /**
@@ -124,7 +123,6 @@ public class Drive extends Subsystem {
     networkTable.putNumber("Right Encoder", convertEncoderTicksToInches(getRightEncoderPosition()));
     networkTable.putNumber("Yaw", navX.getYaw());
     networkTable.putBoolean("Path Done", isPathDone());
-    networkTable.putBoolean("Path Running", pathRunning);
 
     debugTable.putString("Drive Mode", currentMode.toString());
     debugTable.putNumber("Left Current", leftMaster.getOutputCurrent());
@@ -307,7 +305,6 @@ public class Drive extends Subsystem {
   /** Prepares the drivebase by resetting encoders and sensors. */
   public void prepareForPath() {
     pathDone = false;
-    pathRunning = false;
     resetEncoders();
     zeroSensors();
   }
@@ -373,8 +370,6 @@ public class Drive extends Subsystem {
    * @param followers an array of EncoderFollowers for the left and right motors to follow
    */
   public void followPath(EncoderFollower[] followers) {
-    pathRunning = true;
-
     double left;
     double right;
 
@@ -399,7 +394,6 @@ public class Drive extends Subsystem {
 
     if (followers[0].isFinished() && followers[1].isFinished()) {
       pathDone = true;
-      pathRunning = false;
     }
   }
 
