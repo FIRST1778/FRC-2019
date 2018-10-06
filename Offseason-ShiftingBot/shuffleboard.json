@@ -152,6 +152,17 @@
               "_source0": "network_table:///custom/debug/Drive/Right Current",
               "_title": "Drive/Right Current"
             }
+          },
+          "3,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///custom/debug/Drive/Auto",
+              "_title": "Drive/Auto"
+            }
           }
         }
       }

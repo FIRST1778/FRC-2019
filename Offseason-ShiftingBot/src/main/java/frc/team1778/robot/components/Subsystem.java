@@ -22,5 +22,7 @@ public abstract class Subsystem {
   public abstract void zeroSensors();
 
   /** Returns the name of the subsystem. */
-  public abstract String getSubsystemName();
+  public String getSubsystemName() {
+    return this.getClass().getSimpleName();
+  }
 }
