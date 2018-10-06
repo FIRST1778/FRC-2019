@@ -68,11 +68,6 @@ public class Drive extends Subsystem {
     return instance;
   }
 
-  @Override
-  public String getSubsystemName() {
-    return "Drive";
-  }
-
   private Drive() {
     driveConfiguration = new TalonSRXFactory.Configuration();
     driveConfiguration.FEEDBACK_DEVICE = FeedbackDevice.QuadEncoder;

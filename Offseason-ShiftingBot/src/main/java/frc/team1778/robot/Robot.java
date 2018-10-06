@@ -1,6 +1,9 @@
 package frc.team1778.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import frc.team1778.lib.util.CrashTracker;
+import frc.team1778.robot.auto.AutoModeExecutor;
+import frc.team1778.robot.auto.modes.DoNothingMode;
 import frc.team1778.robot.common.FreezyDrive;
 import frc.team1778.robot.components.Drive;
 
@@ -16,6 +19,8 @@ public class Robot extends IterativeRobot {
   private FreezyDrive freezyDriver = new FreezyDrive();
   private Controls controlInterpreter = Controls.getInstance();
 
+  private AutoModeExecutor autoModeExecutor = null;
+
   // EncoderFollower[] testPathFollowers;
 
   @Override
@@ -29,7 +34,15 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void autonomousInit() {
-    drive.setGear(true);
+    try {
+      if (autoModeExecutor != null) autoModeExecutor.stop();
+
+      autoModeExecutor = new AutoModeExecutor();
+      autoModeExecutor.setAutoMode(new DoNothingMode());
+      autoModeExecutor.start();
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+    }
     // drive.prepareForPath(testPathFollowers);
   }
 
