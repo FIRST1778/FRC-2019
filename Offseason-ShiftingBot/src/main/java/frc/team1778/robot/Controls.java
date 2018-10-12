@@ -55,7 +55,7 @@ public class Controls {
     }
   };
 
-  private static final ControllerType DRIVER_CONTROLLER_TYPE = ControllerType.FREEZY_CONTROLLER;
+  private static final ControllerType DRIVER_CONTROLLER_TYPE = ControllerType.LOGITECH_F310;
   private static final ControllerType OPERATOR_CONTROLLER_TYPE = ControllerType.LOGITECH_F310;
 
   private static final int PORT_DRIVER_CONTROLLER = 0;

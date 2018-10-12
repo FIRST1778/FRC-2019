@@ -16,11 +16,13 @@ tmp/
 .project
 /.idea
 .classpath
+.vscode/
 
 # Toast/GradleRIO
 run/
 .gradle/
 gradle/.launch/
+gradle.properties
 
 # OS Files
 .DS_Store
