@@ -3,6 +3,7 @@ package frc.team1778.Systems;
 import java.util.ArrayList;
 
 import frc.team1778.Utility.HardwareIDs;
+import frc.team1778.NetworkComm.InputOutputComm;
 
 import edu.wpi.first.wpilibj.Notifier;
 
@@ -64,30 +65,30 @@ public class FreezyPath {
 	};
 
 	// path 2 - swerve to the right and back to center
-	private static Waypoint[] path3 = new Waypoint[] {
+	private static Waypoint[] path2 = new Waypoint[] {
 		new Waypoint(0, 0, Pathfinder.d2r(0)),
-		new Waypoint(5.0, -3.0, Pathfinder.d2r(0)),
+		new Waypoint(5.0, -2.0, Pathfinder.d2r(0)),
 		new Waypoint(10.0, 0.0, Pathfinder.d2r(0))
 	};
 
 	// path 3 - swerve to the left and back to center
-	private static Waypoint[] path2 = new Waypoint[] {
+	private static Waypoint[] path3 = new Waypoint[] {
 		new Waypoint(0, 0, Pathfinder.d2r(0)),
-		new Waypoint(5.0, 3.0, Pathfinder.d2r(0)),
+		new Waypoint(5.0, 2.0, Pathfinder.d2r(0)),
 		new Waypoint(10.0, 0.0, Pathfinder.d2r(0))
 	};
 
 	// path 4 - swerve to the right and turn left
 	private static Waypoint[] path4 = new Waypoint[] {
 		new Waypoint(0, 0, Pathfinder.d2r(0)),
-		new Waypoint(5.0, -3.0, Pathfinder.d2r(0)),
+		new Waypoint(5.0, -2.0, Pathfinder.d2r(0)),
 		new Waypoint(10.0, 0.0, Pathfinder.d2r(90))
 	};
 
 	// path 5 - swerve to the left and turn right
 	private static Waypoint[] path5 = new Waypoint[] {
 		new Waypoint(0, 0, Pathfinder.d2r(0)),
-		new Waypoint(5.0, 3.0, Pathfinder.d2r(0)),
+		new Waypoint(5.0, 2.0, Pathfinder.d2r(0)),
 		new Waypoint(10.0, 0.0, Pathfinder.d2r(-90))
 	};
 
@@ -107,6 +108,7 @@ public class FreezyPath {
 		new Waypoint(7.5, 0.0, Pathfinder.d2r(180))
 	};
 
+	/*
 	// path 8 - drive in a big circle and level out straight
 	private static Waypoint[] path8 = new Waypoint[] {
 		new Waypoint(0, 0, Pathfinder.d2r(0)),
@@ -116,7 +118,8 @@ public class FreezyPath {
 		new Waypoint(0, 0, Pathfinder.d2r(270.0)),
 		new Waypoint(10.0, 0, Pathfinder.d2r(360.0))
 	};
-	
+	*/
+
 	// trajectory creation method
 	private static Trajectory setupPathfinder_Path(Waypoint[] points) {
 						
@@ -152,7 +155,7 @@ public class FreezyPath {
 	}
 
 	private static void setupFollowers(Trajectory trajectory) {
-    	TankModifier tankModifier = new TankModifier(trajectory).modify(WHEELBASE_WIDTH_INCHES);
+    	TankModifier tankModifier = new TankModifier(trajectory).modify(WHEELBASE_WIDTH_FT);
     	
     	leftEncoderFollower = new EncoderFollower(tankModifier.getLeftTrajectory());
     	rightEncoderFollower = new EncoderFollower(tankModifier.getRightTrajectory());		
@@ -185,10 +188,12 @@ public class FreezyPath {
 		trajectoryList.add(setupPathfinder_Path(path3));
 		trajectoryList.add(setupPathfinder_Path(path4));
 		trajectoryList.add(setupPathfinder_Path(path5));
+		/*
 		trajectoryList.add(setupPathfinder_Path(path6));
 		trajectoryList.add(setupPathfinder_Path(path7));
 		trajectoryList.add(setupPathfinder_Path(path8));
-		
+		*/
+
 		// create notifier
 		m_notifier = new Notifier(m_handler);
 				
@@ -229,10 +234,10 @@ public class FreezyPath {
         double turn = 0.8 * (-1.0 / 80.0) * angleDifference;
 
 		// debug out
-		InputOutputComm.putDouble("FreezyPath_Left_ft",left);
-		InputOutputComm.putDouble("FreezyPath_Right_ft",right);
-		InputOutputComm.putDouble("Desired_Heading_deg",desired_heading);
-		InputOutputComm.putDouble("Actual_Heading_deg",gyroValueDeg);
+		//InputOutputComm.putDouble("FreezyPath_Left_ft",left);
+		//InputOutputComm.putDouble("FreezyPath_Right_ft",right);
+		//InputOutputComm.putDouble("Desired_Heading_deg",desired_heading);
+		//InputOutputComm.putDouble("Actual_Heading_deg",gyroValueDeg);
 
         // send updated command to DriveAssembly
         DriveAssembly.drive(left + turn, right - turn);			

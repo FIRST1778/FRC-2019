@@ -48,13 +48,14 @@ public class AutoNetworkBuilder {
 		autoNets.add(AutoChooser.DRIVE_FORWARD, createDriveForward());	
 		autoNets.add(AutoChooser.FOLLOW_STRAIGHT_PATH, createFollowPathNetwork(FreezyPath.STRAIGHT_PATH));	
 		autoNets.add(AutoChooser.FOLLOW_SWERVE_RIGHT_PATH, createFollowPathNetwork(FreezyPath.SWERVE_RIGHT_AND_CENTER));	
-		autoNets.add(AutoChooser.FOLLOW_SWERVE_LEFT_PATH, createFollowPathNetwork(FreezyPath.SWERVE_LEFT_AND_CENTER));	
+		autoNets.add(AutoChooser.FOLLOW_SWERVE_LEFT_PATH, createFollowPathNetwork(FreezyPath.SWERVE_LEFT_AND_CENTER));
 		autoNets.add(AutoChooser.FOLLOW_TURN_LEFT_PATH, createFollowPathNetwork(FreezyPath.SWERVE_RIGHT_TURN_LEFT));	
-		autoNets.add(AutoChooser.FOLLOW_TURN_RIGHT_PATH, createFollowPathNetwork(FreezyPath.SWERVE_LEFT_TURN_RIGHT));	
+		autoNets.add(AutoChooser.FOLLOW_TURN_RIGHT_PATH, createFollowPathNetwork(FreezyPath.SWERVE_LEFT_TURN_RIGHT));
+		/*
 		autoNets.add(AutoChooser.FOLLOW_UTURN_LEFT_PATH, createFollowPathNetwork(FreezyPath.SWERVE_RIGHT_UTURN_LEFT));	
 		autoNets.add(AutoChooser.FOLLOW_UTURN_RIGHT_PATH, createFollowPathNetwork(FreezyPath.SWERVE_LEFT_UTURN_RIGHT));	
 		autoNets.add(AutoChooser.FOLLOW_CIRCLE_PATH, createFollowPathNetwork(FreezyPath.CIRCLE_PATH));	
-
+		*/
 		return autoNets;
 	}
 	

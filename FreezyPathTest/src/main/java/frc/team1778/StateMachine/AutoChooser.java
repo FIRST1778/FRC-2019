@@ -36,14 +36,16 @@ public class AutoChooser {
 		chooser_action = new SendableChooser<ModeSelection>();
 		chooser_action.addDefault("DO_NOTHING", new ModeSelection(DO_NOTHING));
 		chooser_action.addObject("DRIVE_FORWARD", new ModeSelection(DRIVE_FORWARD));
-		chooser_action.addObject("FOLLOW_STRAIGHT_PATH", new ModeSelection(FOLLOW_STRAIGHT_PATH));		
+		chooser_action.addObject("FOLLOW_STRAIGHT_PATH", new ModeSelection(FOLLOW_STRAIGHT_PATH));	
 		chooser_action.addObject("FOLLOW_SWERVE_RIGHT_PATH", new ModeSelection(FOLLOW_SWERVE_RIGHT_PATH));		
-		chooser_action.addObject("FOLLOW_SWERVE_LEFT_PATH", new ModeSelection(FOLLOW_SWERVE_LEFT_PATH));		
+		chooser_action.addObject("FOLLOW_SWERVE_LEFT_PATH", new ModeSelection(FOLLOW_SWERVE_LEFT_PATH));	
 		chooser_action.addObject("FOLLOW_TURN_LEFT_PATH", new ModeSelection(FOLLOW_TURN_LEFT_PATH));		
-		chooser_action.addObject("FOLLOW_TURN_RIGHT_PATH", new ModeSelection(FOLLOW_TURN_RIGHT_PATH));		
+		chooser_action.addObject("FOLLOW_TURN_RIGHT_PATH", new ModeSelection(FOLLOW_TURN_RIGHT_PATH));	
+		/*	
 		chooser_action.addObject("FOLLOW_UTURN_LEFT_PATH", new ModeSelection(FOLLOW_UTURN_LEFT_PATH));		
-		chooser_action.addObject("FOLLOW_UTURN_RIGHT_PATH", new ModeSelection(FOLLOW_UTURN_RIGHT_PATH));		
-		chooser_action.addObject("FOLLOW_CIRCLE_PATH", new ModeSelection(FOLLOW_CIRCLE_PATH));		
+		chooser_action.addObject("FOLLOW_UTURN_RIGHT_PATH", new ModeSelection(FOLLOW_UTURN_RIGHT_PATH));	
+		chooser_action.addObject("FOLLOW_CIRCLE_PATH", new ModeSelection(FOLLOW_CIRCLE_PATH));	
+		*/	
 		SmartDashboard.putData("AutoChooser_Action", chooser_action);
 		
 	}
