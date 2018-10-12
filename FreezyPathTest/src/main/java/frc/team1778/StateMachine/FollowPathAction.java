@@ -19,7 +19,6 @@ public class FollowPathAction extends Action {
 		NavXSensor.initialize();
 		InputOutputComm.initialize();
 		FreezyPath.initialize();
-		FreezyPath.reset(pathToFollow);
 	}
 	
 	public FollowPathAction(String name, int pathToFollow)
@@ -31,7 +30,6 @@ public class FollowPathAction extends Action {
 		NavXSensor.initialize();
 		InputOutputComm.initialize();
 		FreezyPath.initialize();
-		FreezyPath.reset(pathToFollow);
 	}
 	
 	
@@ -40,6 +38,11 @@ public class FollowPathAction extends Action {
 		// do some drivey initialization
 		
 		DriveAssembly.autoInit(true, 0.0, false);
+
+		// set up path and followers
+		FreezyPath.reset(pathToFollow);
+
+		// start the pathfinder thread
 		FreezyPath.start();
 		
 		super.initialize();
@@ -48,7 +51,7 @@ public class FollowPathAction extends Action {
 	// called periodically
 	public void process()  {
 		
-		// no action needed (Path Following is self-running)
+		// no action needed (Path Following thread is self-running)
 				
 		super.process();
 	}
@@ -57,7 +60,9 @@ public class FollowPathAction extends Action {
 	public void cleanup() {
 		// do some drivey cleanup
 					
+		// stop the pathfinder thread
 		FreezyPath.stop();
+		
 		DriveAssembly.autoStop();
 		
 		// cleanup base class

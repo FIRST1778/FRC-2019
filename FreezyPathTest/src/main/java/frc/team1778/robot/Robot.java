@@ -82,6 +82,8 @@ public class Robot extends IterativeRobot {
 	
     public void disabledInit() {
 
+		autoSM.stop();
+		
     	DriveAssembly.disabledInit();
     }
 

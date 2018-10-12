@@ -234,10 +234,10 @@ public class FreezyPath {
         double turn = 0.8 * (-1.0 / 80.0) * angleDifference;
 
 		// debug out
-		//InputOutputComm.putDouble("FreezyPath_Left_ft",left);
-		//InputOutputComm.putDouble("FreezyPath_Right_ft",right);
-		//InputOutputComm.putDouble("Desired_Heading_deg",desired_heading);
-		//InputOutputComm.putDouble("Actual_Heading_deg",gyroValueDeg);
+		InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"Auto/FreezyPath_Left_ft",left);
+		InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"Auto/FreezyPath_Right_ft",right);
+		InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"Auto/Desired_Heading_deg",desired_heading);
+		InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"Auto/Actual_Heading_deg",gyroValueDeg);
 
         // send updated command to DriveAssembly
         DriveAssembly.drive(left + turn, right - turn);			
