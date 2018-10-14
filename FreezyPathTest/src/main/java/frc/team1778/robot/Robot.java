@@ -82,8 +82,11 @@ public class Robot extends IterativeRobot {
 	
     public void disabledInit() {
 
+		// stop state machine
 		autoSM.stop();
-		
+
+		// stop all systems
+		FreezyPath.stop();
     	DriveAssembly.disabledInit();
     }
 
