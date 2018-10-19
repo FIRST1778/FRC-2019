@@ -47,22 +47,22 @@ public class AutoNetworkBuilder {
 		autoNets.add(AutoChooser.DO_NOTHING, createDoNothingNetwork());	
 		autoNets.add(AutoChooser.DRIVE_FORWARD, createDriveForward());	
 
-		autoNets.add(AutoChooser.FORWARD_STRAIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.FORWARD_STRAIGHT_PATH));	
-		autoNets.add(AutoChooser.FORWARD_SWERVE_RIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.FORWARD_SWERVE_RIGHT_AND_CENTER));	
-		autoNets.add(AutoChooser.FORWARD_SWERVE_LEFT_PATH, createFollowSinglePathNetwork(FreezyPath.FORWARD_SWERVE_LEFT_AND_CENTER));
-		autoNets.add(AutoChooser.FORWARD_TURN_LEFT_PATH, createFollowSinglePathNetwork(FreezyPath.FORWARD_SWERVE_RIGHT_TURN_LEFT));	
-		autoNets.add(AutoChooser.FORWARD_TURN_RIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.FORWARD_SWERVE_LEFT_TURN_RIGHT));
+		autoNets.add(AutoChooser.FORWARD_STRAIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.STRAIGHT_PATH, true));	
+		autoNets.add(AutoChooser.FORWARD_SWERVE_RIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_RIGHT_AND_CENTER, true));	
+		autoNets.add(AutoChooser.FORWARD_SWERVE_LEFT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_LEFT_AND_CENTER, true));
+		autoNets.add(AutoChooser.FORWARD_TURN_LEFT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_RIGHT_TURN_LEFT, true));	
+		autoNets.add(AutoChooser.FORWARD_TURN_RIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_LEFT_TURN_RIGHT, true));
 
-		autoNets.add(AutoChooser.REVERSE_STRAIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.REVERSE_STRAIGHT_PATH));	
-		autoNets.add(AutoChooser.REVERSE_SWERVE_RIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.REVERSE_SWERVE_RIGHT_AND_CENTER));	
-		autoNets.add(AutoChooser.REVERSE_SWERVE_LEFT_PATH, createFollowSinglePathNetwork(FreezyPath.REVERSE_SWERVE_LEFT_AND_CENTER));
-		autoNets.add(AutoChooser.REVERSE_TURN_LEFT_PATH, createFollowSinglePathNetwork(FreezyPath.REVERSE_SWERVE_RIGHT_TURN_LEFT));	
-		autoNets.add(AutoChooser.REVERSE_TURN_RIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.REVERSE_SWERVE_LEFT_TURN_RIGHT));
+		autoNets.add(AutoChooser.REVERSE_STRAIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.STRAIGHT_PATH, false));	
+		autoNets.add(AutoChooser.REVERSE_SWERVE_RIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_RIGHT_AND_CENTER, false));	
+		autoNets.add(AutoChooser.REVERSE_SWERVE_LEFT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_LEFT_AND_CENTER, false));
+		autoNets.add(AutoChooser.REVERSE_TURN_LEFT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_RIGHT_TURN_LEFT, false));	
+		autoNets.add(AutoChooser.REVERSE_TURN_RIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_LEFT_TURN_RIGHT, false));
 
-		autoNets.add(AutoChooser.DOUBLE_PATH_1, createFollowDoublePathNetwork(FreezyPath.FORWARD_STRAIGHT_PATH,
-																						FreezyPath.REVERSE_STRAIGHT_PATH));
-		autoNets.add(AutoChooser.DOUBLE_PATH_2, createFollowDoublePathNetwork(FreezyPath.FORWARD_SWERVE_RIGHT_AND_CENTER,
-																						FreezyPath.REVERSE_SWERVE_RIGHT_AND_CENTER));
+		autoNets.add(AutoChooser.DOUBLE_PATH_1, createFollowDoublePathNetwork(FreezyPath.STRAIGHT_PATH, true,
+																						FreezyPath.STRAIGHT_PATH, false));
+		autoNets.add(AutoChooser.DOUBLE_PATH_2, createFollowDoublePathNetwork(FreezyPath.SWERVE_RIGHT_AND_CENTER, true,
+																						FreezyPath.SWERVE_RIGHT_AND_CENTER, false));
 
 		return autoNets;
 	}
@@ -151,13 +151,13 @@ public class AutoNetworkBuilder {
 	// **** FOLLOW SINGLE PATH Network ***** 
 	// 1) follow a specified path until complete
 	// 2) go back to idle and stay there 
-	private static AutoNetwork createFollowSinglePathNetwork(int pathToFollow) {
+	private static AutoNetwork createFollowSinglePathNetwork(int pathToFollow, boolean fwdPolarity) {
 		
 		AutoNetwork autoNet = new AutoNetwork("<Follow Single Path Network>");
 	
 		// create states
 		AutoState followPathState = new AutoState("<Follow Path State>");
-		FollowPathAction follow = new FollowPathAction("<Follow Path Action>", pathToFollow);
+		FollowPathAction follow = new FollowPathAction("<Follow Path Action>", pathToFollow, fwdPolarity);
 		PathCompleteEvent pathComplete = new PathCompleteEvent();
 		followPathState.addAction(follow);
 		followPathState.addEvent(pathComplete);
@@ -178,19 +178,19 @@ public class AutoNetworkBuilder {
 	// 1) follow a specified path until complete
 	// 2) follow a specified path until complete
 	// 3) go back to idle and stay there 
-	private static AutoNetwork createFollowDoublePathNetwork(int pathToFollow1, int pathToFollow2) {
+	private static AutoNetwork createFollowDoublePathNetwork(int path1, boolean path1FwdPolarity, int path2, boolean path2FwdPolarity) {
 		
 		AutoNetwork autoNet = new AutoNetwork("<Follow Double Path Network>");
 	
 		// create states
 		AutoState followPathState1 = new AutoState("<Follow Path State 1>");
-		FollowPathAction follow1 = new FollowPathAction("<Follow Path 1 Action>", pathToFollow1);
+		FollowPathAction follow1 = new FollowPathAction("<Follow Path 1 Action>", path1, path1FwdPolarity);
 		PathCompleteEvent pathComplete1 = new PathCompleteEvent();
 		followPathState1.addAction(follow1);
 		followPathState1.addEvent(pathComplete1);
 
 		AutoState followPathState2 = new AutoState("<Follow Path State 2>");
-		FollowPathAction follow2 = new FollowPathAction("<Follow Path 2 Action>", pathToFollow2);
+		FollowPathAction follow2 = new FollowPathAction("<Follow Path 2 Action>", path2, path2FwdPolarity);
 		PathCompleteEvent pathComplete2 = new PathCompleteEvent();
 		followPathState2.addAction(follow2);
 		followPathState2.addEvent(pathComplete2);

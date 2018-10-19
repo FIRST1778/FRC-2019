@@ -66,6 +66,9 @@ public class DriveAssembly {
 		// turn all motors to zero power (rear motors follow front motors)
 		mFrontLeft.set(ControlMode.PercentOutput,0.0);
 		mFrontRight.set(ControlMode.PercentOutput,0.0);		
+
+		// ensure all motors set to regular polarity
+		setMotorPolarity(true);
 	}
 	
 	public static void resetPos()
@@ -75,6 +78,29 @@ public class DriveAssembly {
 		mFrontRight.setSelectedSensorPosition(0, PIDLOOP_IDX, TIMEOUT_MS);
 	}	 	        
 		
+	public static void setMotorPolarity(boolean forward)
+	{
+		if (!initialized)
+			initialize();
+
+		if (forward == true)
+		{
+			// set all motors normal polarity (forward)
+			mFrontLeft.setInverted(LEFT_REVERSE_MOTOR);
+			mFrontRight.setInverted(RIGHT_REVERSE_MOTOR);
+			mBackLeft.setInverted(LEFT_REVERSE_MOTOR);
+			mBackRight.setInverted(RIGHT_REVERSE_MOTOR);
+		}
+		else
+		{
+			// set all motors inverted polarity (backward)
+			mFrontLeft.setInverted(!LEFT_REVERSE_MOTOR);
+			mFrontRight.setInverted(!RIGHT_REVERSE_MOTOR);
+			mBackLeft.setInverted(!LEFT_REVERSE_MOTOR);
+			mBackRight.setInverted(!RIGHT_REVERSE_MOTOR);
+		}
+	}
+
     // closed-loop motor configuration
     private static TalonSRX configureMotor(int talonID, boolean revMotor, boolean alignSensor,
     									double pCoeff, double iCoeff, double dCoeff, double fCoeff)
@@ -219,6 +245,7 @@ public class DriveAssembly {
 	
 	public static void disabledInit( )  {
 		resetMotors();
+
 	}
 	
 	// CORE DRIVE METHOD
