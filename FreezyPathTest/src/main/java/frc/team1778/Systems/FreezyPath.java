@@ -25,20 +25,20 @@ public class FreezyPath {
 
 	private static int m_pathToFollow = STRAIGHT_PATH;
 
-	// Time Step:           0.05 Seconds
-	// Max Velocity:        1.5 ft/s
-	// Max Acceleration:    1.5 ft/s/s
-	// Max Jerk:            15 ft/s/s/s
+	// Time Step:           0.02 Seconds (50 Hz)
+	// Max Velocity:        6.0 ft/s
+	// Max Acceleration:    2.0 ft/s/s
+	// Max Jerk:            60 ft/s/s/s
 
 	private static final double WHEELBASE_WIDTH_FT = 29.5/12;
-	private static final double PERIOD_SEC = 0.05;
-	private static final double MAX_VEL = 4.0;
-	private static final double MAX_ACCEL = 3.5;
-	private static final double MAX_JERK = 15.0;
+	private static final double PERIOD_SEC = 0.02;
+	private static final double MAX_VEL = 6.0;
+	private static final double MAX_ACCEL = 2.0;
+	private static final double MAX_JERK = 60.0;
 	
-	private static final double kP = 2.5;
-	private static final double kI = 0.0001;
-	private static final double kD = 0.25;
+	private static final double kP = 1.0;
+	private static final double kI = 0.0;
+	private static final double kD = 0.0;
 	private static final double kV = 1.0 / MAX_VEL;
 	private static final double kA = 0.0;
 	
