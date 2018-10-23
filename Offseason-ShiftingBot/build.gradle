@@ -21,6 +21,11 @@ deploy {
       // Debug can be overridden by command line, for use with VSCode
       debug = getDebugOrDefault(false)
     }
+    artifact('resources', jaci.gradle.deploy.artifact.FileTreeArtifact) {
+      files = fileTree(dir: 'src/main/resources')
+      directory = '/home/lvuser/resources'
+      targets << "roborio"
+    }
   }
 }
 
@@ -32,6 +37,8 @@ dependencies {
   compile navx()
   compile pathfinder()
 }
+
+compileJava { dependsOn 'spotlessApply' }
 
 spotless {
   java { googleJavaFormat("1.6") }
@@ -48,4 +55,4 @@ jar {
   manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_CLASS)
 }
 
-wrapper { gradleVersion = '4.9' }
+wrapper { gradleVersion = '4.10.2' }
