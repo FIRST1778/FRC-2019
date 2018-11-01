@@ -1,6 +1,6 @@
 package frc.team1778.lib.util;
 
-/** Runnable class with reports all uncaught throws to CrashTracker */
+/** Runnable class with reports all uncaught throws to CrashTracker. */
 public abstract class CrashTrackingRunnable implements Runnable {
 
   @Override

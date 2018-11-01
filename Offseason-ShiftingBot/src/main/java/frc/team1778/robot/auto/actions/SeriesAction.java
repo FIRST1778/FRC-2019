@@ -3,20 +3,20 @@ package frc.team1778.robot.auto.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Executes one action at a time. Useful as a member of {@link ParallelAction} */
+/** Executes one action at a time. Useful as a member of ParallelAction */
 public class SeriesAction implements Action {
 
-  private Action mCurAction;
-  private final ArrayList<Action> mRemainingActions;
+  private Action currentAction;
+  private final ArrayList<Action> remainingActions;
 
   public SeriesAction(List<Action> actions) {
-    mRemainingActions = new ArrayList<>(actions);
-    mCurAction = null;
+    remainingActions = new ArrayList<>(actions);
+    currentAction = null;
   }
 
   @Override
   public boolean isFinished() {
-    return mRemainingActions.isEmpty() && mCurAction == null;
+    return remainingActions.isEmpty() && currentAction == null;
   }
 
   @Override
@@ -24,20 +24,20 @@ public class SeriesAction implements Action {
 
   @Override
   public void update() {
-    if (mCurAction == null) {
-      if (mRemainingActions.isEmpty()) {
+    if (currentAction == null) {
+      if (remainingActions.isEmpty()) {
         return;
       }
 
-      mCurAction = mRemainingActions.remove(0);
-      mCurAction.start();
+      currentAction = remainingActions.remove(0);
+      currentAction.start();
     }
 
-    mCurAction.update();
+    currentAction.update();
 
-    if (mCurAction.isFinished()) {
-      mCurAction.done();
-      mCurAction = null;
+    if (currentAction.isFinished()) {
+      currentAction.done();
+      currentAction = null;
     }
   }
 

@@ -21,9 +21,9 @@ public interface Action {
    */
   void update();
 
-  /** Run code once when the action finishes, usually for clean up */
+  /** Run code once when the action finishes, usually for clean up. */
   void done();
 
-  /** Run code once when the action is started, for set up */
+  /** Run code once when the action is started, for set up. */
   void start();
 }

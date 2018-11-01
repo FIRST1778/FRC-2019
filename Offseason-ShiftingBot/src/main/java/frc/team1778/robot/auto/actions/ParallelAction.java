@@ -9,15 +9,15 @@ import java.util.List;
  */
 public class ParallelAction implements Action {
 
-  private final ArrayList<Action> mActions;
+  private final ArrayList<Action> actions;
 
   public ParallelAction(List<Action> actions) {
-    mActions = new ArrayList<>(actions);
+    this.actions = new ArrayList<>(actions);
   }
 
   @Override
   public boolean isFinished() {
-    for (Action action : mActions) {
+    for (Action action : actions) {
       if (!action.isFinished()) {
         return false;
       }
@@ -27,21 +27,21 @@ public class ParallelAction implements Action {
 
   @Override
   public void update() {
-    for (Action action : mActions) {
+    for (Action action : actions) {
       action.update();
     }
   }
 
   @Override
   public void done() {
-    for (Action action : mActions) {
+    for (Action action : actions) {
       action.done();
     }
   }
 
   @Override
   public void start() {
-    for (Action action : mActions) {
+    for (Action action : actions) {
       action.start();
     }
   }

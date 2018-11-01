@@ -8,12 +8,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.team1778.lib.driver.NavX;
-import frc.team1778.lib.driver.TalonSRXFactory;
+import frc.team1778.lib.driver.TalonSrxFactory;
 import frc.team1778.lib.util.DriveSignal;
 import frc.team1778.lib.util.NetworkTableWrapper;
 import frc.team1778.robot.Constants;
 import frc.team1778.robot.Ports;
-import frc.team1778.robot.common.SimplePID;
+import frc.team1778.robot.common.SimplePid;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
@@ -32,16 +32,17 @@ import jaci.pathfinder.modifiers.TankModifier;
 public class Drive extends Subsystem {
   private static Drive instance = new Drive();
 
-  private TalonSRX leftMaster, rightMaster, leftSlave, rightSlave;
+  private TalonSRX leftMaster;
+  private TalonSRX rightMaster;
+  private TalonSRX leftSlave;
+  private TalonSRX rightSlave;
 
   private DoubleSolenoid leftShifter;
   private DoubleSolenoid rightShifter;
 
   private NetworkTableWrapper networkTable = new NetworkTableWrapper(getSubsystemName());
 
-  private SimplePID gyroPathPID;
-
-  private SimplePID turnAnglePID = new SimplePID(Constants.DRIVE_TURN_PID);
+  private SimplePid gyroPathPid;
 
   private NavX navX;
 
@@ -49,9 +50,9 @@ public class Drive extends Subsystem {
     OPEN_LOOP_PERCENTAGE,
     OPEN_LOOP_CURRENT,
     CLOSED_LOOP_POSITION
-  };
+  }
 
-  private static TalonSRXFactory.Configuration driveConfiguration;
+  private static TalonSrxFactory.Configuration driveConfiguration;
 
   private SystemMode currentMode;
   private boolean isInHighGear;
@@ -69,27 +70,27 @@ public class Drive extends Subsystem {
   }
 
   private Drive() {
-    driveConfiguration = new TalonSRXFactory.Configuration();
-    driveConfiguration.FEEDBACK_DEVICE = FeedbackDevice.QuadEncoder;
-    driveConfiguration.STATUS_FRAME = StatusFrameEnhanced.Status_13_Base_PIDF0;
-    driveConfiguration.PID_KP = 1.0;
-    driveConfiguration.PID_KI = 0.0;
-    driveConfiguration.PID_KD = 0.0;
-    driveConfiguration.PID_KF = 0.0;
-    driveConfiguration.MOTION_CRUISE_VELOCITY = 1000;
-    driveConfiguration.MOTION_ACCELERATION = 300;
-    driveConfiguration.CONTINUOUS_CURRENT_LIMIT = 25;
-    driveConfiguration.PEAK_CURRENT_LIMIT = 35;
-    driveConfiguration.PEAK_CURRENT_LIMIT_DURATION = 100;
-    driveConfiguration.ENABLE_CURRENT_LIMIT = true;
-    driveConfiguration.OPEN_LOOP_RAMP_TIME_SECONDS = 0.25;
-    driveConfiguration.CLOSED_LOOP_RAMP_TIME_SECONDS = 0.25;
+    driveConfiguration = new TalonSrxFactory.Configuration();
+    driveConfiguration.feedbackDevice = FeedbackDevice.QuadEncoder;
+    driveConfiguration.statusFrame = StatusFrameEnhanced.Status_13_Base_PIDF0;
+    driveConfiguration.pidKp = 1.0;
+    driveConfiguration.pidKi = 0.0;
+    driveConfiguration.pidKd = 0.0;
+    driveConfiguration.pidKf = 0.0;
+    driveConfiguration.motionCruiseVelocity = 1000;
+    driveConfiguration.motionAcceleration = 300;
+    driveConfiguration.continuousCurrentLimit = 25;
+    driveConfiguration.peakCurrentLimit = 35;
+    driveConfiguration.peakCurrentLimitDuration = 100;
+    driveConfiguration.enableCurrentLimit = true;
+    driveConfiguration.openLoopRampTimeSeconds = 0.25;
+    driveConfiguration.closedLoopRampTimeSeconds = 0.25;
 
-    leftMaster = TalonSRXFactory.createTalon(Ports.LEFT_DRIVE_MASTER_ID, driveConfiguration);
-    rightMaster = TalonSRXFactory.createTalon(Ports.RIGHT_DRIVE_MASTER_ID, driveConfiguration);
+    leftMaster = TalonSrxFactory.createTalon(Ports.LEFT_DRIVE_MASTER_ID, driveConfiguration);
+    rightMaster = TalonSrxFactory.createTalon(Ports.RIGHT_DRIVE_MASTER_ID, driveConfiguration);
 
-    leftSlave = TalonSRXFactory.createSlaveTalon(Ports.LEFT_DRIVE_SLAVE_ID, leftMaster);
-    rightSlave = TalonSRXFactory.createSlaveTalon(Ports.RIGHT_DRIVE_SLAVE_ID, rightMaster);
+    leftSlave = TalonSrxFactory.createSlaveTalon(Ports.LEFT_DRIVE_SLAVE_ID, leftMaster);
+    rightSlave = TalonSrxFactory.createSlaveTalon(Ports.RIGHT_DRIVE_SLAVE_ID, rightMaster);
 
     leftShifter =
         new DoubleSolenoid(Ports.PCM_ID, Ports.LEFT_SHIFTER_FORWARD, Ports.LEFT_SHIFTER_REVERSE);
@@ -128,8 +129,8 @@ public class Drive extends Subsystem {
 
   @Override
   public void resetEncoders() {
-    leftMaster.setSelectedSensorPosition(0, 0, driveConfiguration.TIMEOUT_IN_MS);
-    rightMaster.setSelectedSensorPosition(0, 0, driveConfiguration.TIMEOUT_IN_MS);
+    leftMaster.setSelectedSensorPosition(0, 0, driveConfiguration.timeoutInMs);
+    rightMaster.setSelectedSensorPosition(0, 0, driveConfiguration.timeoutInMs);
   }
 
   @Override
@@ -153,7 +154,7 @@ public class Drive extends Subsystem {
    * @return the current encoder position of the left motor
    */
   public int getLeftEncoderPosition() {
-    return leftMaster.getSelectedSensorPosition(driveConfiguration.PROFILE_SLOT_ID);
+    return leftMaster.getSelectedSensorPosition(driveConfiguration.profileSlotId);
   }
 
   /**
@@ -162,7 +163,7 @@ public class Drive extends Subsystem {
    * @return the current encoder position of the right motor
    */
   public int getRightEncoderPosition() {
-    return rightMaster.getSelectedSensorPosition(driveConfiguration.PROFILE_SLOT_ID);
+    return rightMaster.getSelectedSensorPosition(driveConfiguration.profileSlotId);
   }
 
   /**
@@ -221,7 +222,7 @@ public class Drive extends Subsystem {
   /**
    * Sets the drive control mode/state to operate the TalonSRX's with.
    *
-   * @param newState the wanted state to set the system to use
+   * @param mode the wanted mode to set the system to use
    */
   public void setDriveMode(SystemMode mode) {
     currentMode = mode;
@@ -273,12 +274,6 @@ public class Drive extends Subsystem {
     }
   }
 
-  public void turnToHeading(double heading) {
-    double output = turnAnglePID.calculate(navX.getYaw(), heading);
-
-    setPowers(-output, output);
-  }
-
   /**
    * Prepares the drivebase by resetting encoders and sensors. This also resets the EncoderFollowers
    * to the beginning of their trajectories.
@@ -322,13 +317,6 @@ public class Drive extends Subsystem {
             Constants.PATH_MAX_JERK);
 
     Trajectory trajectory = Pathfinder.generate(path, config);
-
-    reversePath = reverse;
-    gyroPathPID = new SimplePID(Constants.PATH_GYRO_PID);
-    if (reverse) {
-      gyroPathPID.invertGains();
-    }
-
     TankModifier modifier = new TankModifier(trajectory).modify(Constants.DRIVE_TRACK_WIDTH);
 
     EncoderFollower leftFollower = new EncoderFollower(modifier.getLeftTrajectory());
@@ -344,18 +332,23 @@ public class Drive extends Subsystem {
         Constants.DRIVE_WHEEL_DIAMETER);
 
     leftFollower.configurePIDVA(
-        Constants.PATH_PRIMARY_PID.getkP(),
-        Constants.PATH_PRIMARY_PID.getkI(),
-        Constants.PATH_PRIMARY_PID.getkD(),
+        Constants.PATH_PRIMARY_PID.getKp(),
+        Constants.PATH_PRIMARY_PID.getKi(),
+        Constants.PATH_PRIMARY_PID.getKd(),
         Constants.PATH_KV,
         Constants.PATH_KA);
     rightFollower.configurePIDVA(
-        Constants.PATH_PRIMARY_PID.getkP(),
-        Constants.PATH_PRIMARY_PID.getkI(),
-        Constants.PATH_PRIMARY_PID.getkD(),
+        Constants.PATH_PRIMARY_PID.getKp(),
+        Constants.PATH_PRIMARY_PID.getKi(),
+        Constants.PATH_PRIMARY_PID.getKd(),
         Constants.PATH_KV,
         Constants.PATH_KA);
 
+    reversePath = reverse;
+    gyroPathPid = new SimplePid(Constants.PATH_GYRO_PID);
+    if (reverse) {
+      gyroPathPid.invertGains();
+    }
     return new EncoderFollower[] {leftFollower, rightFollower};
   }
 
@@ -379,7 +372,7 @@ public class Drive extends Subsystem {
     double headingSetpoint = Pathfinder.r2d(followers[0].getHeading());
     double heading = reversePath ? -navX.getYaw() : navX.getYaw();
 
-    double turn = gyroPathPID.calculate(heading, headingSetpoint);
+    double turn = gyroPathPid.calculate(heading, headingSetpoint);
 
     if (reversePath) {
       setPowers(-left - turn, -right + turn);

@@ -19,7 +19,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  *     href="https://github.com/Team254/FRC-2017-Public/blob/master/src/com/team254/lib/util/drivers/LazyCANTalon.java">254's
  *     Code</a>
  */
-public class TalonSRXFactory {
+public class TalonSrxFactory {
 
   /**
    * Contains the configuration parameters for the TalonSRX.
@@ -27,56 +27,56 @@ public class TalonSRXFactory {
    * @author FRC 1778 Chill Out
    */
   public static class Configuration {
-    public int TIMEOUT_IN_MS = 100;
-    public int PROFILE_SLOT_ID = 0;
+    public final int timeoutInMs = 100;
+    public int profileSlotId = 0;
 
-    public double OPEN_LOOP_RAMP_TIME_SECONDS = 0.0;
-    public double CLOSED_LOOP_RAMP_TIME_SECONDS = 0.0;
-    public double FORWARD_PEAK_OUTPUT = 1.0;
-    public double REVERSE_PEAK_OUTPUT = -1.0;
-    public double FORWARD_NOMINAL_OUTPUT = 0.0;
-    public double REVERSE_NOMINAL_OUTPUT = 0.0;
-    public double NEUTRAL_DEADBAND = 0.04;
-    public double VOLTAGE_COMPENSATION_SATURATION = 0.0;
-    public int VOLTAGE_MEASUREMENT_WINDOW_FILTER = 32;
-    public FeedbackDevice FEEDBACK_DEVICE = FeedbackDevice.QuadEncoder;
-    public double FEEDBACK_COEFFICIENT = 1.0;
-    public VelocityMeasPeriod VELOCITY_MEASUREMENT_PERIOD = VelocityMeasPeriod.Period_100Ms;
-    public int VELOCITY_MEASUREMENT_WINDOW = 64;
-    public LimitSwitchSource FORWARD_LIMIT_SWITCH = LimitSwitchSource.Deactivated;
-    public LimitSwitchNormal FORWARD_LIMIT_SWITCH_NORMAL = LimitSwitchNormal.NormallyOpen;
-    public LimitSwitchSource REVERSE_LIMIT_SWITCH = LimitSwitchSource.Deactivated;
-    public LimitSwitchNormal REVERSE_LIMIT_SWITCH_NORMAL = LimitSwitchNormal.NormallyOpen;
-    public int FORWARD_SOFT_LIMIT_THRESHOLD = 0;
-    public int REVERSE_SOFT_LIMIT_THRESHOLD = 0;
-    public boolean ENABLE_FORWARD_SOFT_LIMIT = false;
-    public boolean ENABLE_REVERSE_SOFT_LIMIT = false;
-    public double PID_KP = 0.0;
-    public double PID_KI = 0.0;
-    public double PID_KD = 0.0;
-    public double PID_KF = 0.0;
-    public int PID_INTEGRAL_ZONE = 0;
-    public int ALLOWABLE_CLOSED_LOOP_ERROR = 0;
-    public double PID_MAX_INTEGRAL_ACCUMULATOR = 0;
-    public double CLOSED_LOOP_PEAK_OUTPUT = 1.0;
-    public int CLOSED_LOOP_PERIOD = 1;
-    public boolean PID_INVERT_POLARITY = false;
-    public int MOTION_CRUISE_VELOCITY = 0;
-    public int MOTION_ACCELERATION = 0;
-    public int MOTION_PROFILE_TRAJECTORY_PERIOD = 0;
-    public int PEAK_CURRENT_LIMIT = 0;
-    public int PEAK_CURRENT_LIMIT_DURATION = 0;
-    public int CONTINUOUS_CURRENT_LIMIT = 0;
+    public double openLoopRampTimeSeconds = 0.0;
+    public double closedLoopRampTimeSeconds = 0.0;
+    public double forwardPeakOutput = 1.0;
+    public double reversePeakOutput = -1.0;
+    public double forwardNominalOutput = 0.0;
+    public double reverseNominalOutput = 0.0;
+    public double neutralDeadband = 0.04;
+    public double voltageCompensationSaturation = 0.0;
+    public int voltageMeasurementWindowFilter = 32;
+    public FeedbackDevice feedbackDevice = FeedbackDevice.QuadEncoder;
+    public double feedbackCoefficient = 1.0;
+    public VelocityMeasPeriod velocityMeasurementPeriod = VelocityMeasPeriod.Period_100Ms;
+    public int velocityMeasurementWindow = 64;
+    public LimitSwitchSource forwardLimitSwitch = LimitSwitchSource.Deactivated;
+    public LimitSwitchNormal forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
+    public LimitSwitchSource reverseLimitSwitch = LimitSwitchSource.Deactivated;
+    public LimitSwitchNormal reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
+    public int forwardSoftLimitThreshold = 0;
+    public int reverseSoftLimitThreshold = 0;
+    public boolean enableForwardSoftLimit = false;
+    public boolean enableReverseSoftLimit = false;
+    public double pidKp = 0.0;
+    public double pidKi = 0.0;
+    public double pidKd = 0.0;
+    public double pidKf = 0.0;
+    public int pidIntegralZone = 0;
+    public int allowableClosedLoopError = 0;
+    public double pidMaxIntegralAccumulator = 0;
+    public double closedLoopPeakOutput = 1.0;
+    public int closedLoopPeriod = 1;
+    public boolean pidInvertPolarity = false;
+    public int motionCruiseVelocity = 0;
+    public int motionAcceleration = 0;
+    public int motionProfileTrajectoryPeriod = 0;
+    public int peakCurrentLimit = 0;
+    public int peakCurrentLimitDuration = 0;
+    public int continuousCurrentLimit = 0;
 
-    public StatusFrameEnhanced STATUS_FRAME = StatusFrameEnhanced.Status_1_General;
-    public int STATUS_FRAME_PERIOD = 10;
+    public StatusFrameEnhanced statusFrame = StatusFrameEnhanced.Status_1_General;
+    public int statusFramePeriod = 10;
 
-    public boolean ENABLE_VOLTAGE_COMPENSATION = false;
-    public boolean ENABLE_CURRENT_LIMIT = false;
+    public boolean enableVoltageCompensation = false;
+    public boolean enableCurrentLimit = false;
 
-    public boolean INVERT_SENSOR_PHASE = false;
-    public boolean INVERT = false;
-    public NeutralMode NEUTRAL_POWER_MODE = NeutralMode.Brake;
+    public boolean invertSensorPhase = false;
+    public boolean invert = false;
+    public NeutralMode neutralPowerMode = NeutralMode.Brake;
   }
 
   private static final Configuration DEFAULT_CONFIGURATION = new Configuration();
@@ -95,11 +95,11 @@ public class TalonSRXFactory {
    * Create a slave TalonSRX.
    *
    * @param id the CAN ID in which the TalonSRX is configured with
-   * @param masterId the TalonSRX for this slave TalonSRX to follow
+   * @param master the TalonSRX for this slave TalonSRX to follow
    * @return a TalonSRX, configured with the default parameters to follow the master TalonSRX.
    */
-  public static TalonSRX createSlaveTalon(int slaveId, TalonSRX master) {
-    TalonSRX talon = createDefaultTalon(slaveId);
+  public static TalonSRX createSlaveTalon(int id, TalonSRX master) {
+    TalonSRX talon = createDefaultTalon(id);
     talon.follow(master);
     return talon;
   }
@@ -108,69 +108,63 @@ public class TalonSRXFactory {
    * Configure a full fledged TalonSRX, this sets all of the configuration paramters set in the
    * config.
    *
-   * @param talon the TalonSRX to apply the new Configuration
+   * @param id the TalonSRX id to apply the new Configuration
    * @param config the Configuration that stores all of the settings for the TalonSRX}
    */
   public static TalonSRX createTalon(int id, Configuration config) {
     TalonSRX talon = new TalonSRX(id);
 
-    talon.clearStickyFaults(config.TIMEOUT_IN_MS);
-    talon.configOpenloopRamp(config.OPEN_LOOP_RAMP_TIME_SECONDS, config.TIMEOUT_IN_MS);
-    talon.configClosedloopRamp(config.CLOSED_LOOP_RAMP_TIME_SECONDS, config.TIMEOUT_IN_MS);
-    talon.configPeakOutputForward(config.FORWARD_PEAK_OUTPUT, config.TIMEOUT_IN_MS);
-    talon.configPeakOutputReverse(config.REVERSE_PEAK_OUTPUT, config.TIMEOUT_IN_MS);
-    talon.configNominalOutputForward(config.FORWARD_NOMINAL_OUTPUT, config.TIMEOUT_IN_MS);
-    talon.configNominalOutputReverse(config.REVERSE_NOMINAL_OUTPUT, config.TIMEOUT_IN_MS);
-    talon.configNeutralDeadband(config.NEUTRAL_DEADBAND, config.TIMEOUT_IN_MS);
-    talon.configVoltageCompSaturation(config.VOLTAGE_COMPENSATION_SATURATION, config.TIMEOUT_IN_MS);
-    talon.configVoltageMeasurementFilter(
-        config.VOLTAGE_MEASUREMENT_WINDOW_FILTER, config.TIMEOUT_IN_MS);
-    talon.configSelectedFeedbackSensor(config.FEEDBACK_DEVICE, 0, config.TIMEOUT_IN_MS);
-    talon.configSelectedFeedbackCoefficient(config.FEEDBACK_COEFFICIENT, 0, config.TIMEOUT_IN_MS);
-    talon.configVelocityMeasurementPeriod(config.VELOCITY_MEASUREMENT_PERIOD, config.TIMEOUT_IN_MS);
-    talon.configVelocityMeasurementWindow(config.VELOCITY_MEASUREMENT_WINDOW, config.TIMEOUT_IN_MS);
+    talon.clearStickyFaults(config.timeoutInMs);
+    talon.configOpenloopRamp(config.openLoopRampTimeSeconds, config.timeoutInMs);
+    talon.configClosedloopRamp(config.closedLoopRampTimeSeconds, config.timeoutInMs);
+    talon.configPeakOutputForward(config.forwardPeakOutput, config.timeoutInMs);
+    talon.configPeakOutputReverse(config.reversePeakOutput, config.timeoutInMs);
+    talon.configNominalOutputForward(config.forwardNominalOutput, config.timeoutInMs);
+    talon.configNominalOutputReverse(config.reverseNominalOutput, config.timeoutInMs);
+    talon.configNeutralDeadband(config.neutralDeadband, config.timeoutInMs);
+    talon.configVoltageCompSaturation(config.voltageCompensationSaturation, config.timeoutInMs);
+    talon.configVoltageMeasurementFilter(config.voltageMeasurementWindowFilter, config.timeoutInMs);
+    talon.configSelectedFeedbackSensor(config.feedbackDevice, 0, config.timeoutInMs);
+    talon.configSelectedFeedbackCoefficient(config.feedbackCoefficient, 0, config.timeoutInMs);
+    talon.configVelocityMeasurementPeriod(config.velocityMeasurementPeriod, config.timeoutInMs);
+    talon.configVelocityMeasurementWindow(config.velocityMeasurementWindow, config.timeoutInMs);
     talon.configForwardLimitSwitchSource(
-        config.FORWARD_LIMIT_SWITCH, config.FORWARD_LIMIT_SWITCH_NORMAL, config.TIMEOUT_IN_MS);
+        config.forwardLimitSwitch, config.forwardLimitSwitchNormal, config.timeoutInMs);
     talon.configReverseLimitSwitchSource(
-        config.REVERSE_LIMIT_SWITCH, config.REVERSE_LIMIT_SWITCH_NORMAL, config.TIMEOUT_IN_MS);
-    talon.configForwardSoftLimitThreshold(
-        config.FORWARD_SOFT_LIMIT_THRESHOLD, config.TIMEOUT_IN_MS);
-    talon.configReverseSoftLimitThreshold(
-        config.REVERSE_SOFT_LIMIT_THRESHOLD, config.TIMEOUT_IN_MS);
-    talon.configForwardSoftLimitEnable(config.ENABLE_FORWARD_SOFT_LIMIT, config.TIMEOUT_IN_MS);
-    talon.configReverseSoftLimitEnable(config.ENABLE_REVERSE_SOFT_LIMIT, config.TIMEOUT_IN_MS);
-    talon.config_kP(config.PROFILE_SLOT_ID, config.PID_KP, config.TIMEOUT_IN_MS);
-    talon.config_kI(config.PROFILE_SLOT_ID, config.PID_KI, config.TIMEOUT_IN_MS);
-    talon.config_kD(config.PROFILE_SLOT_ID, config.PID_KD, config.TIMEOUT_IN_MS);
-    talon.config_kF(config.PROFILE_SLOT_ID, config.PID_KF, config.TIMEOUT_IN_MS);
-    talon.config_IntegralZone(
-        config.PROFILE_SLOT_ID, config.PID_INTEGRAL_ZONE, config.TIMEOUT_IN_MS);
+        config.reverseLimitSwitch, config.reverseLimitSwitchNormal, config.timeoutInMs);
+    talon.configForwardSoftLimitThreshold(config.forwardSoftLimitThreshold, config.timeoutInMs);
+    talon.configReverseSoftLimitThreshold(config.reverseSoftLimitThreshold, config.timeoutInMs);
+    talon.configForwardSoftLimitEnable(config.enableForwardSoftLimit, config.timeoutInMs);
+    talon.configReverseSoftLimitEnable(config.enableReverseSoftLimit, config.timeoutInMs);
+    talon.config_kP(config.profileSlotId, config.pidKp, config.timeoutInMs);
+    talon.config_kI(config.profileSlotId, config.pidKi, config.timeoutInMs);
+    talon.config_kD(config.profileSlotId, config.pidKd, config.timeoutInMs);
+    talon.config_kF(config.profileSlotId, config.pidKf, config.timeoutInMs);
+    talon.config_IntegralZone(config.profileSlotId, config.pidIntegralZone, config.timeoutInMs);
     talon.configAllowableClosedloopError(
-        config.PROFILE_SLOT_ID, config.ALLOWABLE_CLOSED_LOOP_ERROR, config.TIMEOUT_IN_MS);
+        config.profileSlotId, config.allowableClosedLoopError, config.timeoutInMs);
     talon.configMaxIntegralAccumulator(
-        config.PROFILE_SLOT_ID, config.PID_MAX_INTEGRAL_ACCUMULATOR, config.TIMEOUT_IN_MS);
+        config.profileSlotId, config.pidMaxIntegralAccumulator, config.timeoutInMs);
     talon.configClosedLoopPeakOutput(
-        config.PROFILE_SLOT_ID, config.CLOSED_LOOP_PEAK_OUTPUT, config.TIMEOUT_IN_MS);
-    talon.configClosedLoopPeriod(
-        config.PROFILE_SLOT_ID, config.CLOSED_LOOP_PERIOD, config.TIMEOUT_IN_MS);
-    talon.configAuxPIDPolarity(config.PID_INVERT_POLARITY, config.TIMEOUT_IN_MS);
-    talon.configMotionCruiseVelocity(config.MOTION_CRUISE_VELOCITY, config.TIMEOUT_IN_MS);
-    talon.configMotionAcceleration(config.MOTION_ACCELERATION, config.TIMEOUT_IN_MS);
+        config.profileSlotId, config.closedLoopPeakOutput, config.timeoutInMs);
+    talon.configClosedLoopPeriod(config.profileSlotId, config.closedLoopPeriod, config.timeoutInMs);
+    talon.configAuxPIDPolarity(config.pidInvertPolarity, config.timeoutInMs);
+    talon.configMotionCruiseVelocity(config.motionCruiseVelocity, config.timeoutInMs);
+    talon.configMotionAcceleration(config.motionAcceleration, config.timeoutInMs);
     talon.configMotionProfileTrajectoryPeriod(
-        config.MOTION_PROFILE_TRAJECTORY_PERIOD, config.TIMEOUT_IN_MS);
-    talon.configPeakCurrentLimit(config.PEAK_CURRENT_LIMIT, config.TIMEOUT_IN_MS);
-    talon.configPeakCurrentDuration(config.PEAK_CURRENT_LIMIT_DURATION, config.TIMEOUT_IN_MS);
-    talon.configContinuousCurrentLimit(config.CONTINUOUS_CURRENT_LIMIT, config.TIMEOUT_IN_MS);
+        config.motionProfileTrajectoryPeriod, config.timeoutInMs);
+    talon.configPeakCurrentLimit(config.peakCurrentLimit, config.timeoutInMs);
+    talon.configPeakCurrentDuration(config.peakCurrentLimitDuration, config.timeoutInMs);
+    talon.configContinuousCurrentLimit(config.continuousCurrentLimit, config.timeoutInMs);
 
-    talon.setSelectedSensorPosition(0, 0, config.TIMEOUT_IN_MS);
-    talon.setStatusFramePeriod(
-        config.STATUS_FRAME, config.STATUS_FRAME_PERIOD, config.TIMEOUT_IN_MS);
-    talon.enableVoltageCompensation(config.ENABLE_VOLTAGE_COMPENSATION);
-    talon.enableCurrentLimit(config.ENABLE_CURRENT_LIMIT);
-    talon.setSensorPhase(config.INVERT_SENSOR_PHASE);
-    talon.setNeutralMode(config.NEUTRAL_POWER_MODE);
-    talon.selectProfileSlot(config.PROFILE_SLOT_ID, 0);
-    talon.setInverted(config.INVERT);
+    talon.setSelectedSensorPosition(0, 0, config.timeoutInMs);
+    talon.setStatusFramePeriod(config.statusFrame, config.statusFramePeriod, config.timeoutInMs);
+    talon.enableVoltageCompensation(config.enableVoltageCompensation);
+    talon.enableCurrentLimit(config.enableCurrentLimit);
+    talon.setSensorPhase(config.invertSensorPhase);
+    talon.setNeutralMode(config.neutralPowerMode);
+    talon.selectProfileSlot(config.profileSlotId, 0);
+    talon.setInverted(config.invert);
 
     return talon;
   }

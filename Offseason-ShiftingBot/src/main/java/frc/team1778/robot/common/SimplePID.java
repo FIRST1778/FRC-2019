@@ -5,35 +5,37 @@ package frc.team1778.robot.common;
  *
  * @author FRC 1778 Chill Out
  */
-public class SimplePID {
-  private double kP, kI, kD;
+public class SimplePid {
+  private double kp;
+  private double ki;
+  private double kd;
   private double integral;
   private double lastError;
   private long lastTime;
 
   /**
-   * Initializes the system by setting the kP, kI, and kD gains for the system to use in the future.
+   * Initializes the system by setting the kp, ki, and kd gains for the system to use in the future.
    *
-   * @param kP the kP gain
-   * @param kI the kP gain
-   * @param kD the kP gain
+   * @param kp the kp gain
+   * @param ki the kp gain
+   * @param kd the kp gain
    */
-  public SimplePID(double kP, double kI, double kD) {
-    this.kP = kP;
-    this.kI = kI;
-    this.kD = kD;
+  public SimplePid(double kp, double ki, double kd) {
+    this.kp = kp;
+    this.ki = ki;
+    this.kd = kd;
     lastTime = System.currentTimeMillis();
   }
 
   /**
-   * Initializes the system by setting the kP, kI, and kD gains for the system to use in the future.
+   * Initializes the system by setting the kp, ki, and kd gains for the system to use in the future.
    *
    * @param pid the pid gains to use
    */
-  public SimplePID(PIDConstants pid) {
-    this.kP = pid.getkP();
-    this.kI = pid.getkI();
-    this.kD = pid.getkD();
+  public SimplePid(PidConstants pid) {
+    this.kp = pid.getKp();
+    this.ki = pid.getKi();
+    this.kd = pid.getKd();
     lastTime = System.currentTimeMillis();
   }
 
@@ -58,90 +60,90 @@ public class SimplePID {
     integral += error * deltaTime;
     double derivative = (error - lastError) / deltaTime;
 
-    double output = kP * error + kI * integral + kD * derivative;
+    double output = kp * error + ki * integral + kd * derivative;
     lastError = error;
     lastTime = System.currentTimeMillis();
 
     return output;
   }
 
-  /** Inverts all of the PID gains, so if kP is set to 0.8, it will change to -0.8. */
+  /** Inverts all of the PID gains, so if kp is set to 0.8, it will change to -0.8. */
   public void invertGains() {
-    kP = -kP;
-    kI = -kI;
-    kD = -kD;
+    kp = -kp;
+    ki = -ki;
+    kd = -kd;
   }
 
-  public static class PIDConstants {
-    private double kP;
-    private double kI;
-    private double kD;
+  public static class PidConstants {
+    private double kp;
+    private double ki;
+    private double kd;
 
     /**
      * Holds the three PID gain constants requred for a PID loop.
      *
-     * @param kP the kP to set
-     * @param kI the kI to set
-     * @param kD the kD to set
+     * @param kp the kp to set
+     * @param ki the ki to set
+     * @param kd the kd to set
      */
-    public PIDConstants(double kP, double kI, double kD) {
-      this.kP = kP;
-      this.kI = kI;
-      this.kD = kD;
+    public PidConstants(double kp, double ki, double kd) {
+      this.kp = kp;
+      this.ki = ki;
+      this.kd = kd;
     }
 
     /**
-     * Sets the new kP.
+     * Sets the new kp.
      *
-     * @param kP the kP to set
+     * @param kp the kp to set
      */
-    public void setkP(double kP) {
-      this.kP = kP;
+    public void setKp(double kp) {
+      this.kp = kp;
     }
 
     /**
-     * Sets the new kI.
+     * Sets the new ki.
      *
-     * @param kI the kI to set
+     * @param ki the ki to set
      */
-    public void setkI(double kI) {
-      this.kI = kI;
+    public void setKi(double ki) {
+      this.ki = ki;
     }
 
     /**
-     * Sets the new kD.
+     * Sets the new kd.
      *
-     * @param kD the kD to set
+     * @param kd the kd to set
      */
-    public void setkD(double kD) {
-      this.kD = kD;
+    public void setKd(double kd) {
+      this.kd = kd;
     }
 
     /**
-     * Returns the current kP gain
+     * Returns the current kp gain.
      *
-     * @return the kP gain
+     * @return the kp gain
      */
-    public double getkP() {
-      return kP;
+    public double getKp() {
+      return kp;
     }
 
     /**
-     * Returns the current kI gain
+     * Returns the current ki gain.
      *
-     * @return the kI gain
+     * @return the ki gain
      */
-    public double getkI() {
-      return kI;
+    public double getKi() {
+      return ki;
     }
 
     /**
-     * Returns the current kD gain
+     * Returns the current kd gain.
      *
-     * @return the kD gain
+     * @return the kd gain
      */
-    public double getkD() {
-      return kD;
+    public double getKd() {
+      return kd;
     }
   }
 }

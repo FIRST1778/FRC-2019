@@ -8,13 +8,14 @@ import frc.team1778.robot.auto.actions.Action;
  * auto modes (which are routines that do actions).
  */
 public abstract class AutoModeBase {
-  protected double mUpdateRate = 1.0 / 50.0;
-  protected boolean mActive = false;
+  protected double updateRate = 1.0 / 20.0;
+  protected boolean active = false;
 
   protected abstract void routine() throws AutoModeEndedException;
 
+  /** Runs the routine. */
   public void run() {
-    mActive = true;
+    active = true;
 
     try {
       routine();
@@ -31,13 +32,18 @@ public abstract class AutoModeBase {
   }
 
   public void stop() {
-    mActive = false;
+    active = false;
   }
 
   public boolean isActive() {
-    return mActive;
+    return active;
   }
 
+  /**
+   * Returns true if mode is active. This will throw AutoModeEndedException if not active.
+   *
+   * @return true if mode is active
+   */
   public boolean isActiveWithThrow() throws AutoModeEndedException {
     if (!isActive()) {
       throw new AutoModeEndedException();
@@ -46,13 +52,18 @@ public abstract class AutoModeBase {
     return isActive();
   }
 
+  /**
+   * Runs the specified action.
+   *
+   * @param action the action to run
+   */
   public void runAction(Action action) throws AutoModeEndedException {
     isActiveWithThrow();
     action.start();
 
     while (isActiveWithThrow() && !action.isFinished()) {
       action.update();
-      long waitTime = (long) (mUpdateRate * 1000.0);
+      long waitTime = (long) (updateRate * 1000.0);
 
       try {
         Thread.sleep(waitTime);

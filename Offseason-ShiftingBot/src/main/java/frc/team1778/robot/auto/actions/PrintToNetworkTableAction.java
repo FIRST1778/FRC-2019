@@ -4,7 +4,7 @@ import frc.team1778.lib.util.NetworkTableWrapper;
 
 /**
  * Action to wait for a given amount of time To use this Action, call runAction(new
- * WaitAction(your_time))
+ * WaitAction(your_time)).
  */
 public class PrintToNetworkTableAction implements Action {
 
@@ -12,6 +12,13 @@ public class PrintToNetworkTableAction implements Action {
   private String tableKey;
   private String tableText;
 
+  /**
+   * Constructor for this action.
+   *
+   * @param table the NetworkTable to send data to
+   * @param key the key on the NetworkTable to send text to
+   * @param text the String of data to send
+   */
   public PrintToNetworkTableAction(NetworkTableWrapper table, String key, String text) {
     networkTable = table;
     tableKey = key;

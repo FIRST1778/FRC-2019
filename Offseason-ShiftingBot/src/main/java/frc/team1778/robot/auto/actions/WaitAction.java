@@ -4,20 +4,20 @@ import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Action to wait for a given amount of time To use this Action, call runAction(new
- * WaitAction(your_time))
+ * WaitAction(your_time)).
  */
 public class WaitAction implements Action {
 
-  private double mTimeToWait;
-  private double mStartTime;
+  private double timeToWait;
+  private double startTime;
 
   public WaitAction(double timeToWait) {
-    mTimeToWait = timeToWait;
+    this.timeToWait = timeToWait;
   }
 
   @Override
   public boolean isFinished() {
-    return Timer.getFPGATimestamp() - mStartTime >= mTimeToWait;
+    return Timer.getFPGATimestamp() - this.startTime >= this.timeToWait;
   }
 
   @Override
@@ -28,6 +28,6 @@ public class WaitAction implements Action {
 
   @Override
   public void start() {
-    mStartTime = Timer.getFPGATimestamp();
+    this.startTime = Timer.getFPGATimestamp();
   }
 }

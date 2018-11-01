@@ -2,6 +2,7 @@ package frc.team1778.robot.auto.modes;
 
 import frc.team1778.robot.auto.AutoModeBase;
 import frc.team1778.robot.auto.AutoModeEndedException;
+import frc.team1778.robot.auto.actions.PrintLoopTimeAction;
 
 public class TestAutoMode extends AutoModeBase {
   boolean switchOnLeft;
@@ -14,11 +15,6 @@ public class TestAutoMode extends AutoModeBase {
 
   @Override
   protected void routine() throws AutoModeEndedException {
-    System.out.println(
-        "Running Auto for "
-            + (switchOnLeft ? "left" : "right")
-            + " switch, and "
-            + (scaleOnLeft ? "left" : "right")
-            + " scale permutation");
+    runAction(new PrintLoopTimeAction());
   }
 }

@@ -20,7 +20,7 @@ public class SimpleUtil {
    * Limits the input value to the specified min and max values.
    *
    * @param value the input value to limit
-   * @param max the minimum to limit the input value to
+   * @param min the minimum to limit the input value to
    * @param max the maximum to limit the input value to
    */
   public static double limit(double value, double min, double max) {

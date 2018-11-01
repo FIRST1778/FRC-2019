@@ -14,12 +14,22 @@ public class AutoFieldState {
     RIGHT
   }
 
-  private Side ourSwitchSide, scaleSide, opponentSwitchSide;
-  private Side overrideOurSwitchSide, overrideScaleSide, overrideOpponentSwitchSide;
+  private Side ourSwitchSide;
+  private Side scaleSide;
+  private Side opponentSwitchSide;
+  private Side overrideOurSwitchSide;
+  private Side overrideScaleSide;
+  private Side overrideOpponentSwitchSide;
   private boolean overrideGameData = false;
 
   private AutoFieldState() {}
 
+  /**
+   * Returns a static instance of AutoFieldState, to be used instead of instantiating new objects of
+   * AutoFiledState.
+   *
+   * @return an instance of AutoFieldState to avoid multiple objects of the FMS's data
+   */
   public static synchronized AutoFieldState getInstance() {
     if (mInstance == null) {
       mInstance = new AutoFieldState();
@@ -51,6 +61,7 @@ public class AutoFieldState {
     return true;
   }
 
+  /** Checks if the game data is valid and not null. */
   public synchronized boolean isValid() {
     if (overrideGameData) {
       return overrideScaleSide != null && overrideOurSwitchSide != null;
@@ -59,6 +70,12 @@ public class AutoFieldState {
     }
   }
 
+  /**
+   * Overrides the game data recieved from the FMS.
+   *
+   * @param gameData the data to use instead of the FMS's
+   * @return true if gameData is acceptable, false if not
+   */
   public synchronized boolean overrideSides(String gameData) {
     if (gameData == null) {
       return false;
@@ -120,6 +137,7 @@ public class AutoFieldState {
     }
   }
 
+  /** Outputs telemetry to SmartDashboard. */
   public void outputToSmartDashboard() {
     SmartDashboard.putString(
         "FieldState OurSwitch",

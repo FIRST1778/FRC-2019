@@ -4,38 +4,45 @@ import frc.team1778.lib.util.CrashTrackingRunnable;
 
 /** This class selects, runs, and stops (if necessary) a specified autonomous mode. */
 public class AutoModeExecutor {
-  private AutoModeBase m_auto_mode;
-  private Thread m_thread = null;
+  private AutoModeBase autoMode;
+  private Thread autoThread = null;
 
-  public void setAutoMode(AutoModeBase new_auto_mode) {
-    m_auto_mode = new_auto_mode;
-    m_thread =
+  /**
+   * Selects the auto mode to be run.
+   *
+   * @param newAutoMode the mode to be run.
+   */
+  public void setAutoMode(AutoModeBase newAutoMode) {
+    autoMode = newAutoMode;
+    autoThread =
         new Thread(
             new CrashTrackingRunnable() {
               @Override
               public void runCrashTracked() {
-                if (m_auto_mode != null) {
-                  m_auto_mode.run();
+                if (autoMode != null) {
+                  autoMode.run();
                 }
               }
             });
   }
 
+  /** Starts the auto mode's thread. */
   public void start() {
-    if (m_thread != null) {
-      m_thread.start();
+    if (autoThread != null) {
+      autoThread.start();
     }
   }
 
+  /** Stops the auto mode's thread. */
   public void stop() {
-    if (m_auto_mode != null) {
-      m_auto_mode.stop();
+    if (autoMode != null) {
+      autoMode.stop();
     }
 
-    m_thread = null;
+    autoThread = null;
   }
 
   public AutoModeBase getAutoMode() {
-    return m_auto_mode;
+    return autoMode;
   }
 }
