@@ -23,17 +23,6 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "1,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///custom/Drive/Drive Mode",
-              "_title": "Drive Mode"
-            }
-          },
           "2,0": {
             "size": [
               1,
@@ -51,34 +40,15 @@
               1
             ],
             "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///custom/Drive/Right Current",
-              "_title": "Right Current"
-            }
-          },
-          "4,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///custom/Drive/Left2 Current",
-              "_title": "Left2 Current"
-            }
-          },
-          "5,0": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
+              "_type": "Simple Dial",
               "_source0": "network_table:///custom/Drive/Yaw",
-              "_title": "Yaw"
+              "_title": "Yaw",
+              "Range/Min": -180.0,
+              "Range/Max": 180.0,
+              "Visuals/Show value": true
             }
           },
-          "6,0": {
+          "1,0": {
             "size": [
               1,
               1
@@ -91,7 +61,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "7,0": {
+          "0,1": {
             "size": [
               1,
               1
@@ -104,7 +74,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "0,1": {
+          "2,1": {
             "size": [
               1,
               1
@@ -114,6 +84,30 @@
               "_source0": "network_table:///custom/Drive/Left Encoder",
               "_title": "Left Encoder"
             }
+          }
+        }
+      }
+    },
+    {
+      "title": "Debug",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "custom/debug/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///custom/debug/Drive/Left Current",
+              "_title": "Drive/Left Current"
+            }
           },
           "1,1": {
             "size": [
@@ -121,88 +115,53 @@
               1
             ],
             "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///custom/Drive/Path Running",
-              "_title": "Path Running",
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
+              "_type": "Text View",
+              "_source0": "network_table:///custom/debug/Drive/Right2 Current",
+              "_title": "Drive/Right2 Current"
             }
           },
-          "2,1": {
+          "2,0": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///custom/Drive/Right2 Current",
-              "_title": "Right2 Current"
+              "_source0": "network_table:///custom/debug/Drive/Drive Mode",
+              "_title": "Drive/Drive Mode"
             }
           },
-          "3,1": {
+          "1,0": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///custom/Drive/Left Current",
-              "_title": "Left Current"
+              "_source0": "network_table:///custom/debug/Drive/Left2 Current",
+              "_title": "Drive/Left2 Current"
             }
           },
-          "4,1": {
+          "0,1": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///custom/Drive/Turn",
-              "_title": "Turn"
+              "_source0": "network_table:///custom/debug/Drive/Right Current",
+              "_title": "Drive/Right Current"
             }
           },
-          "5,1": {
+          "3,0": {
             "size": [
               1,
               1
             ],
             "content": {
               "_type": "Text View",
-              "_source0": "network_table:///custom/Drive/Heading",
-              "_title": "Heading"
-            }
-          },
-          "6,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///custom/Drive/Setpoint",
-              "_title": "Setpoint"
-            }
-          },
-          "7,1": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///custom/Drive/Left Power",
-              "_title": "Left Power"
-            }
-          },
-          "0,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///custom/Drive/Right Power",
-              "_title": "Right Power"
+              "_source0": "network_table:///custom/debug/Drive/Auto",
+              "_title": "Drive/Auto"
             }
           }
         }

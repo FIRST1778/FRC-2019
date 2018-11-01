@@ -1,4 +1,4 @@
-package frc.team1778.lib;
+package frc.team1778.lib.util;
 
 /**
  * A drivetrain command consisting of the left and right motor signals.
@@ -21,7 +21,7 @@ public class DriveSignal {
   }
 
   /**
-   * Returns the left signal level of the signal
+   * Returns the left signal level of the signal.
    *
    * @return the left signal
    */
@@ -30,7 +30,7 @@ public class DriveSignal {
   }
 
   /**
-   * Returns the right signal level of the signal
+   * Returns the right signal level of the signal.
    *
    * @return the right signal
    */

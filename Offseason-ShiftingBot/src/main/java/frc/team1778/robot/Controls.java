@@ -53,7 +53,7 @@ public class Controls {
         return "Xbox One Elite Controller";
       }
     }
-  };
+  }
 
   private static final ControllerType DRIVER_CONTROLLER_TYPE = ControllerType.LOGITECH_F310;
   private static final ControllerType OPERATOR_CONTROLLER_TYPE = ControllerType.LOGITECH_F310;

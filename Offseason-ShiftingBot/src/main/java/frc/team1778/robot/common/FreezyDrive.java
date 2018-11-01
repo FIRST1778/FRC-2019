@@ -1,7 +1,7 @@
 package frc.team1778.robot.common;
 
-import frc.team1778.lib.DriveSignal;
-import frc.team1778.lib.SimpleUtil;
+import frc.team1778.lib.util.DriveSignal;
+import frc.team1778.lib.util.SimpleUtil;
 
 /**
  * Implements something similar to "Cheesy Drive", courtesy of 254, and "Culver Drive", courtesy of
@@ -41,7 +41,7 @@ public class FreezyDrive {
    * @param throttle the throttle value of the input, which is the primary longitudinal force
    * @param wheelX the wheel's horizontal axis, which will most likely be a joystick axis when
    *     trying to simulate a steering wheel
-   * @param wheelX the wheel's vertical axis, which will most likely be a joystick axis when trying
+   * @param wheelY the wheel's vertical axis, which will most likely be a joystick axis when trying
    *     to simulate a steering wheel
    * @param isQuickTurn whether or not to use the quickturn feature, which allows the robot to spin
    *     more quickly
@@ -50,7 +50,6 @@ public class FreezyDrive {
    */
   public DriveSignal freezyDrive(
       double throttle, double wheelX, double wheelY, boolean isQuickTurn, boolean isHighGear) {
-    double angle = Math.toDegrees(Math.atan2(wheelX, wheelY));
     double magnitude =
         Math.sqrt(
                 Math.pow(Math.abs(wheelX * Math.sqrt(2 - Math.pow(wheelY, 2))), 2)
@@ -61,6 +60,8 @@ public class FreezyDrive {
     throttle = SimpleUtil.handleDeadband(throttle, THROTTLE_DEADBAND);
 
     throttle = Math.pow(throttle, 3);
+
+    double angle = Math.toDegrees(Math.atan2(wheelX, wheelY));
 
     double culverWheel = magnitude * (angle / 180.0);
 
@@ -83,11 +84,8 @@ public class FreezyDrive {
       culverWheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * culverWheel) / denominator;
     }
 
-    double leftPwm, rightPwm, overPower;
     double sensitivity;
-
     double angularPower;
-    double linearPower;
 
     // Negative inertia!
     double negInertiaScalar;
@@ -119,7 +117,11 @@ public class FreezyDrive {
     } else {
       negativeInertiaAccumulator = 0;
     }
-    linearPower = throttle;
+    double linearPower = throttle;
+
+    double leftPwm;
+    double rightPwm;
+    double overPower;
 
     // Quickturn!
     if (isQuickTurn) {
@@ -199,11 +201,8 @@ public class FreezyDrive {
       culverWheel = Math.sin(Math.PI / 2.0 * wheelNonLinearity * culverWheel) / denominator;
     }
 
-    double leftPwm, rightPwm, overPower;
     double sensitivity;
-
     double angularPower;
-    double linearPower;
 
     // Negative inertia!
     double negInertiaScalar;
@@ -235,7 +234,11 @@ public class FreezyDrive {
     } else {
       negativeInertiaAccumulator = 0;
     }
-    linearPower = throttle;
+    double linearPower = throttle;
+
+    double leftPwm;
+    double rightPwm;
+    double overPower;
 
     // Quickturn!
     if (isQuickTurn) {
