@@ -195,7 +195,7 @@ public class FreezyPath {
 	
 	public static void start(boolean motorPolarity) {
 
-		DriveAssembly.setMotorPolarity(motorPolarity);
+		DriveAssembly.setMotorForward(motorPolarity);
 
 		m_notifier.startPeriodic(PERIOD_SEC);
 	}

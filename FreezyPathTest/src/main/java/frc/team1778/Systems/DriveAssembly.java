@@ -26,6 +26,9 @@ public class DriveAssembly {
 	// used as angle baseline (if we don't reset gyro)
 	private static double initialAngle = 0.0;
 	
+	// drive assembly forward
+	private static boolean motorForward = true;
+
 	// motor polarity
 	public static final boolean RIGHT_REVERSE_MOTOR = true;    // comp-bot motor polarity - right
 	public static final boolean LEFT_REVERSE_MOTOR = false;		// comp-bot motor polarity - left
@@ -68,7 +71,7 @@ public class DriveAssembly {
 		mFrontRight.set(ControlMode.PercentOutput,0.0);		
 
 		// ensure all motors set to regular polarity
-		setMotorPolarity(true);
+		setMotorForward(true);
 	}
 	
 	public static void resetPos()
@@ -78,10 +81,13 @@ public class DriveAssembly {
 		mFrontRight.setSelectedSensorPosition(0, PIDLOOP_IDX, TIMEOUT_MS);
 	}	 	        
 		
-	public static void setMotorPolarity(boolean forward)
+	public static void setMotorForward(boolean forward)
 	{
 		if (!initialized)
 			initialize();
+
+		// set motor forward setting variable
+		motorForward = forward;
 
 		if (forward == true)
 		{
@@ -90,14 +96,24 @@ public class DriveAssembly {
 			mFrontRight.setInverted(RIGHT_REVERSE_MOTOR);
 			mBackLeft.setInverted(LEFT_REVERSE_MOTOR);
 			mBackRight.setInverted(RIGHT_REVERSE_MOTOR);
+
+			// set sensor polarity (front motors only)
+			mFrontLeft.setSensorPhase(ALIGNED_LEFT_SENSOR); 
+			mFrontRight.setSensorPhase(ALIGNED_RIGHT_SENSOR); 
+
 		}
 		else
 		{
-			// set all motors inverted polarity (backward)
+			// invert all motors polarity (backward)
 			mFrontLeft.setInverted(!LEFT_REVERSE_MOTOR);
 			mFrontRight.setInverted(!RIGHT_REVERSE_MOTOR);
 			mBackLeft.setInverted(!LEFT_REVERSE_MOTOR);
 			mBackRight.setInverted(!RIGHT_REVERSE_MOTOR);
+
+			// invert sensor polarity (front motors only)
+			mFrontLeft.setSensorPhase(!ALIGNED_LEFT_SENSOR); 
+			mFrontRight.setSensorPhase(!ALIGNED_RIGHT_SENSOR); 
+
 		}
 	}
 
@@ -262,8 +278,18 @@ public class DriveAssembly {
 		//ioComm.putString(InputOutputComm.LogTable.kMainLog,"Auto/AutoDrive", myString2);
 
 		// set front motor values directly
-		mFrontLeft.set(ControlMode.PercentOutput, adjLeftVal);
-		mFrontRight.set(ControlMode.PercentOutput, adjRightVal);
+		if (motorForward)
+		{
+			// forward, left cmd -> left motors and right cmd -> right motors
+			mFrontLeft.set(ControlMode.PercentOutput, adjLeftVal);
+			mFrontRight.set(ControlMode.PercentOutput, adjRightVal);	
+		}
+		else
+		{
+			// going reverse, so right cmd -> left motors and left cmd -> right motors
+			mFrontLeft.set(ControlMode.PercentOutput, adjRightVal);
+			mFrontRight.set(ControlMode.PercentOutput, adjLeftVal);	
+		}
 		
 		// back motors now follow front motors
 		//mBackLeft.set(ControlMode.PercentOutput, leftValue);
