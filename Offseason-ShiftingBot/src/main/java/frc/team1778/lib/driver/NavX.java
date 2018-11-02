@@ -10,49 +10,53 @@ public class NavX {
   protected class Callback implements ITimestampedDataSubscriber {
     @Override
     public void timestampedDataReceived(
-        long system_timestamp, long sensor_timestamp, AHRSUpdateBase update, Object context) {
+        long systemTimestamp, long sensorTimestamp, AHRSUpdateBase update, Object context) {
       synchronized (NavX.this) {
         // This handles the fact that the sensor is inverted from our coordinate
         // conventions.
-        if (lastSensorTimestampMs != INVALID_TIMESTAMP
-            && lastSensorTimestampMs < sensor_timestamp) {
+        if (lastSensorTimestampMs != invalidTimestamp && lastSensorTimestampMs < sensorTimestamp) {
           yawRateDegreesPerSecond =
               1000.0
                   * (-yawDegrees - update.yaw)
-                  / (double) (sensor_timestamp - lastSensorTimestampMs);
+                  / (double) (sensorTimestamp - lastSensorTimestampMs);
         }
-        lastSensorTimestampMs = sensor_timestamp;
+        lastSensorTimestampMs = sensorTimestamp;
         yawDegrees = -update.yaw;
       }
     }
   }
 
-  protected AHRS AHRS;
+  protected AHRS ahrs;
 
   protected double angleAdjustment;
   protected double yawDegrees;
   protected double yawRateDegreesPerSecond;
-  protected final long INVALID_TIMESTAMP = -1;
+  protected final long invalidTimestamp = -1;
   protected long lastSensorTimestampMs;
 
-  public NavX(SPI.Port spi_port_id) {
-    AHRS = new AHRS(spi_port_id, (byte) 200);
+  /**
+   * Yeet.
+   *
+   * @param spiPortId the port
+   */
+  public NavX(SPI.Port spiPortId) {
+    ahrs = new AHRS(spiPortId, (byte) 200);
     resetState();
-    AHRS.registerCallback(new Callback(), null);
+    ahrs.registerCallback(new Callback(), null);
   }
 
   public synchronized void reset() {
-    AHRS.reset();
+    ahrs.reset();
     resetState();
   }
 
   public synchronized void zeroYaw() {
-    AHRS.zeroYaw();
+    ahrs.zeroYaw();
     resetState();
   }
 
   private void resetState() {
-    lastSensorTimestampMs = INVALID_TIMESTAMP;
+    lastSensorTimestampMs = invalidTimestamp;
     yawDegrees = 0.0;
     yawRateDegreesPerSecond = 0.0;
   }
@@ -78,6 +82,6 @@ public class NavX {
   }
 
   public double getRawAccelX() {
-    return AHRS.getRawAccelX();
+    return ahrs.getRawAccelX();
   }
 }

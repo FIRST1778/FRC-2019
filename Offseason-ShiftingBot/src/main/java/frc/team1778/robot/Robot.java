@@ -1,10 +1,11 @@
 package frc.team1778.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import frc.team1778.robot.autonomous.AutoPaths;
-import frc.team1778.robot.common.FreezyDrive;
-import frc.team1778.robot.components.Drive;
-import jaci.pathfinder.followers.EncoderFollower;
+import frc.team1778.lib.util.CrashTracker;
+import frc.team1778.robot.auto.AutoFieldState;
+import frc.team1778.robot.auto.AutoModeExecutor;
+import frc.team1778.robot.auto.creators.TestAutoModeCreator;
 
 /**
  * This is the main hub for all other classes. Each of the overrided methods are synced with FMS and
@@ -14,29 +15,55 @@ import jaci.pathfinder.followers.EncoderFollower;
  * @author FRC 1778 Chill Out
  */
 public class Robot extends IterativeRobot {
-  private Drive drive = Drive.getinstance();
-  private FreezyDrive freezyDriver = new FreezyDrive();
-  private Controls controlInterpreter = Controls.getInstance();
+  // private Drive drive = Drive.getinstance();
+  // private FreezyDrive freezyDriver = new FreezyDrive();
+  // private Controls controlInterpreter = Controls.getInstance();
 
-  EncoderFollower[] testPathFollowers;
+  private AutoFieldState autoFieldState = AutoFieldState.getInstance();
+
+  private AutoModeExecutor autoModeExecutor = null;
+
+  // EncoderFollower[] testPathFollowers;
+
+  public Robot() {
+    CrashTracker.logRobotConstruction();
+  }
 
   @Override
   public void robotInit() {
-    testPathFollowers = drive.generatePath(AutoPaths.testPath, false);
-    drive.sendTelemetry();
+    CrashTracker.logRobotInit();
+    // testPathFollowers = drive.generatePath(AutoPaths.testPath, false);
+    autoFieldState.setSides(DriverStation.getInstance().getGameSpecificMessage());
+    // drive.sendTelemetry();
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    CrashTracker.logDisabledInit();
+  }
 
   @Override
   public void autonomousInit() {
-    drive.setGear(true);
-    drive.prepareForPath(testPathFollowers);
+    try {
+      CrashTracker.logAutoInit();
+      if (autoModeExecutor != null) {
+        autoModeExecutor.stop();
+      }
+
+      autoModeExecutor = new AutoModeExecutor();
+      autoModeExecutor.setAutoMode(
+          new TestAutoModeCreator().getStateDependentAutoMode(autoFieldState));
+      autoModeExecutor.start();
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+    }
+    // drive.prepareForPath(testPathFollowers);
   }
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    CrashTracker.logTeleopInit();
+  }
 
   @Override
   public void testInit() {}
@@ -46,14 +73,14 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void autonomousPeriodic() {
-    drive.followPath(testPathFollowers);
+    // drive.followPath(testPathFollowers);
 
-    drive.sendTelemetry();
+    // drive.sendTelemetry();
   }
 
   @Override
   public void teleopPeriodic() {
-    drive.setGear(
+    /*drive.setGear(
         controlInterpreter.getHighGearShift()
             ? true
             : (controlInterpreter.getLowGearShift() ? false : drive.isHighGear()));
@@ -65,7 +92,7 @@ public class Robot extends IterativeRobot {
             controlInterpreter.getQuickTurn(),
             drive.isHighGear()));
 
-    drive.sendTelemetry();
+    drive.sendTelemetry();*/
   }
 
   @Override

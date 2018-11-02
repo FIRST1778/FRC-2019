@@ -1,4 +1,4 @@
-package frc.team1778.lib;
+package frc.team1778.lib.util;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -25,17 +25,15 @@ public class NetworkTableWrapper {
   }
 
   private static class Data {
-    Data(Sendable sendable) {
-      m_sendable = sendable;
+    Data(Sendable dataSendable) {
+      sendable = dataSendable;
     }
 
-    final Sendable m_sendable;
-    final SendableBuilderImpl m_builder = new SendableBuilderImpl();
+    final Sendable sendable;
+    final SendableBuilderImpl builder = new SendableBuilderImpl();
   }
 
-  /**
-   * A table linking tables in the SmartDashboard to the {@link Sendable} objects they came from.
-   */
+  /** A table linking tables in the SmartDashboard to the Sendable objects they came from. */
   private static final Map<String, Data> tablesToData = new HashMap<>();
 
   static {
@@ -52,25 +50,25 @@ public class NetworkTableWrapper {
    */
   public synchronized void putData(String key, Sendable data) {
     Data sddata = tablesToData.get(key);
-    if (sddata == null || sddata.m_sendable != data) {
+    if (sddata == null || sddata.sendable != data) {
       if (sddata != null) {
-        sddata.m_builder.stopListeners();
+        sddata.builder.stopListeners();
       }
       sddata = new Data(data);
       tablesToData.put(key, sddata);
       NetworkTable dataTable = table.getSubTable(key);
-      sddata.m_builder.setTable(dataTable);
-      data.initSendable(sddata.m_builder);
-      sddata.m_builder.updateTable();
-      sddata.m_builder.startListeners();
+      sddata.builder.setTable(dataTable);
+      data.initSendable(sddata.builder);
+      sddata.builder.updateTable();
+      sddata.builder.startListeners();
       dataTable.getEntry(".name").setString(key);
     }
   }
 
   /**
-   * Maps the specified key (where the key is the name of the {@link NamedSendable} to the specified
-   * value in this table. The value can be retrieved by calling the get method with a key that is
-   * equal to the original key.
+   * Maps the specified key (where the key is the name of the NamedSendable to the specified value
+   * in this table. The value can be retrieved by calling the get method with a key that is equal to
+   * the original key.
    *
    * @param value the value
    * @throws IllegalArgumentException If key is null
@@ -91,7 +89,7 @@ public class NetworkTableWrapper {
     if (data == null) {
       throw new IllegalArgumentException("SmartDashboard data does not exist: " + key);
     } else {
-      return data.m_sendable;
+      return data.sendable;
     }
   }
 
@@ -531,7 +529,7 @@ public class NetworkTableWrapper {
   /** Puts all sendable data to the dashboard. */
   public synchronized void updateValues() {
     for (Data data : tablesToData.values()) {
-      data.m_builder.updateTable();
+      data.builder.updateTable();
     }
   }
 }
