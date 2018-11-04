@@ -17,18 +17,24 @@ public class FreezyPath {
   public static final int PATH1 = 0;
   public static final int PATH2 = 1;
   public static final int PATH3 = 2;
-  public static final int PATH4 = 4;
   private static int m_pathToFollow = PATH1;
 
-  private static final double MAX_VEL_INCHES_PER_SEC = 60.0;
-  private static final double WHEELBASE_WIDTH_INCHES = 29.5;
-  private static final double WHEELBASE_DEPTH_INCHES = 29.5;
-  private static final double PERIOD_SEC = 0.05;
+	// Time Step:           0.02 Seconds (50 Hz)
+	// Max Velocity:        6.0 ft/s
+	// Max Acceleration:    2.0 ft/s/s
+	// Max Jerk:            60 ft/s/s/s
 
-  private static final double kP = 0.0;
+	private static final double WHEELBASE_WIDTH_FT = 29.5/12;
+	private static final double WHEELBASE_DEPTH_FT = 29.5/12;
+	private static final double PERIOD_SEC = 0.02;
+	private static final double MAX_VEL = 6.0;
+	private static final double MAX_ACCEL = 2.0;
+	private static final double MAX_JERK = 60.0;
+
+  private static final double kP = 1.0;
   private static final double kI = 0.0;
   private static final double kD = 0.0;
-  private static final double kV = 1.0 / MAX_VEL_INCHES_PER_SEC;
+  private static final double kV = 1.0 / MAX_VEL;
   private static final double kA = 0.0;
 
   private static ArrayList<Trajectory> trajectoryList;
@@ -47,31 +53,27 @@ public class FreezyPath {
   // path 1 - drive straight 5 ft
   private static Waypoint[] path1 =
       new Waypoint[] {
-        new Waypoint(0, 0, 0), new Waypoint(60.0, 30.0, 0), new Waypoint(90.0, 0.0, 0)
+        new Waypoint(0, 0, Pathfinder.d2r(0)), 
+        new Waypoint(4.0, 2.0, Pathfinder.d2r(0)), 
+        new Waypoint(8.0, 0.0, Pathfinder.d2r(0))
       };
 
   // path 2 - swerve to the left and back to center
   private static Waypoint[] path2 =
       new Waypoint[] {
-        new Waypoint(0, 0, 0), new Waypoint(60.0, -30.0, 0), new Waypoint(90.0, 0.0, 0)
+        new Waypoint(0, 0, Pathfinder.d2r(0)), 
+        new Waypoint(4.0, -2.0, Pathfinder.d2r(0)), 
+        new Waypoint(8.0, 0.0, Pathfinder.d2r(0))
       };
 
   // path 3 - swerve to the right and back to center
   private static Waypoint[] path3 =
       new Waypoint[] {
-        new Waypoint(0, 0, 0), new Waypoint(60.0, 30.0, 0), new Waypoint(90.0, 0.0, 0)
+        new Waypoint(0, 0, Pathfinder.d2r(0)), 
+        new Waypoint(4.0, 2.0, Pathfinder.d2r(0)), 
+        new Waypoint(8.0, 0.0, Pathfinder.d2r(0))
       };
 
-  // path 4 - drive in a big circle and level out straight
-  private static Waypoint[] path4 =
-      new Waypoint[] {
-        new Waypoint(0, 0, 0),
-        new Waypoint(60.0, -60.0, 0),
-        new Waypoint(120.0, 0, Pathfinder.d2r(-90.0)),
-        new Waypoint(60.0, 60.0, Pathfinder.d2r(-180.0)),
-        new Waypoint(0, 0, Pathfinder.d2r(-270.0)),
-        new Waypoint(60.0, 0, Pathfinder.d2r(-360.0))
-      };
 
   // trajectory creation method
   private static Trajectory setupPathfinder_Path(Waypoint[] points) {
@@ -91,10 +93,7 @@ public class FreezyPath {
         new Trajectory.Config(
             Trajectory.FitMethod.HERMITE_CUBIC,
             Trajectory.Config.SAMPLES_HIGH,
-            PERIOD_SEC,
-            30.0,
-            30.0,
-            300.0);
+            PERIOD_SEC, MAX_VEL, MAX_ACCEL, MAX_JERK);
 
     // Generate the trajectories
     Trajectory trajectory = Pathfinder.generate(points, config);
@@ -110,7 +109,7 @@ public class FreezyPath {
     SwerveModifier modifier =
         new SwerveModifier(trajectory)
             .modify(
-                WHEELBASE_WIDTH_INCHES, WHEELBASE_DEPTH_INCHES, SwerveModifier.Mode.SWERVE_DEFAULT);
+              WHEELBASE_WIDTH_FT, WHEELBASE_DEPTH_FT, SwerveModifier.Mode.SWERVE_DEFAULT);
     Trajectory fl = modifier.getFrontLeftTrajectory();
     Trajectory fr = modifier.getFrontRightTrajectory();
     Trajectory bl = modifier.getBackLeftTrajectory();
@@ -153,7 +152,6 @@ public class FreezyPath {
     trajectoryList.add(setupPathfinder_Path(path1));
     trajectoryList.add(setupPathfinder_Path(path2));
     trajectoryList.add(setupPathfinder_Path(path3));
-    trajectoryList.add(setupPathfinder_Path(path4));
 
     // create notifier
     m_notifier = new Notifier(m_handler);
