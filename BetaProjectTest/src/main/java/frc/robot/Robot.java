@@ -17,7 +17,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
-//import com.kauailabs.navx.frc.AHRS;
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,7 +35,7 @@ public class Robot extends TimedRobot {
   private final Timer m_timer = new Timer();
 
   private TalonSRX myTalon;   // test ctre object
-  //private AHRS ahrs;   // test navx object
+  private AHRS ahrs;   // test navx object
 
   /**
    * This function is run when the robot is first started up and should be
@@ -43,7 +44,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     myTalon = new TalonSRX(3);
-    //ahrs = new AHRS(SPI.Port.kMXP);     
+    ahrs = new AHRS(SPI.Port.kMXP);     
   }
 
   /**
