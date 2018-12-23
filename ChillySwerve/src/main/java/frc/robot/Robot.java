@@ -83,8 +83,7 @@ public class Robot extends IterativeRobot {
   public void testPeriodic() {}
 
   private double getGyroAngle() {
-    // double gyroAngle = 0.0;
-    // double gyroAngle = NavXSensor.getYaw();  // -180 deg to +180 deg
+    //double gyroAngle = 0.0;
     double gyroAngle = NavXSensor.getAngle(); // continuous angle (can be larger than 360 deg)
 
     // System.out.println("getGyroAngle:  Gyro angle = " + gyroAngle);
