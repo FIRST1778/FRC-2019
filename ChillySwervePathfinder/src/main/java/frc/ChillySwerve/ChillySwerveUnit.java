@@ -19,16 +19,21 @@ public class ChillySwerveUnit {
   private TalonSRX driveMotor;
   private int driveTalonID = 1;
 
+  // turn sensor constants
+  private final double FULL_ROTATION = 1024d;
+
+  public boolean rev_drive_motor = false;
+  public boolean aligned_drive_sensor = true;
+
+  private boolean rev_turn_motor = false;
+  private boolean aligned_turn_sensor = true;
+
+  private double zero_offset = 0.0;
+
   // talon constants
   private static final int TIMEOUT_MS = 0; // set to zero if skipping confirmation
   private static final int PIDLOOP_IDX = 0; // set to zero if primary loop
   private static final int PROFILE_SLOT = 0;
-
-  public static final boolean REVERSE_DRIVE_MOTOR = false; // motor polarity
-  public static final boolean ALIGNED_DRIVE_SENSOR = true; // encoder polarity
-
-  public static final boolean REVERSE_TURN_MOTOR = false; // motor polarity
-  public static final boolean ALIGNED_TURN_SENSOR = true; // encoder polarity
 
   // encoder variables
   private final double ENCODER_PULSES_PER_REV = 20 * 4; // am-3314a encoders
@@ -42,25 +47,33 @@ public class ChillySwerveUnit {
   private static final int drive_kIZone = 18;
 
   // PIDF values - turn
-  private static final double turn_kP = 1.0;
-  private static final double turn_kI = 0.0;
+  private static final double turn_kP = 4.2;
+  private static final double turn_kI = 0.01;
   private static final double turn_kD = 0.0;
   private static final double turn_kF = 0.0;
-  private static final int turn_kIZone = 18;
+  private static final int turn_kIZone = 200;
 
-  public ChillySwerveUnit(int driveTalonID, int turnTalonID) {
+  public ChillySwerveUnit(int driveTalonID, int turnTalonID, 
+                          boolean rev_drive_motor, boolean aligned_drive_sensor,
+                          boolean rev_turn_motor, boolean aligned_turn_sensor) {
     this.driveTalonID = driveTalonID;
     this.turnTalonID = turnTalonID;
 
+    this.rev_drive_motor = rev_drive_motor;
+    this.aligned_drive_sensor = aligned_drive_sensor;
+
+    this.rev_turn_motor = rev_turn_motor;
+    this.aligned_turn_sensor = aligned_turn_sensor;
+
     // debug - run drive motor as open loop (temporarily)
     driveMotor = new TalonSRX(driveTalonID);
-    driveMotor.setInverted(REVERSE_DRIVE_MOTOR);
+    driveMotor.setInverted(rev_drive_motor);
 
     /*
     driveMotor =
         configureMotor(
             driveTalonID,
-            REVERSE_DRIVE_MOTOR,
+            rev_drive_motor,
             drive_kP,
             drive_kI,
             drive_kD,
@@ -68,16 +81,26 @@ public class ChillySwerveUnit {
             drive_kIZone);
     driveMotor.configSelectedFeedbackSensor(
         FeedbackDevice.QuadEncoder, PIDLOOP_IDX, TIMEOUT_MS); // am-3314a quad encoder
-    driveMotor.setSensorPhase(ALIGNED_DRIVE_SENSOR);
+    driveMotor.setSensorPhase(aligned_drive_sensor);
     driveMotor.setSelectedSensorPosition(0, PIDLOOP_IDX, TIMEOUT_MS);
     */
 
     turnMotor =
         configureMotor(
-            turnTalonID, REVERSE_TURN_MOTOR, turn_kP, turn_kI, turn_kD, turn_kF, turn_kIZone);
+            turnTalonID, rev_turn_motor, turn_kP, turn_kI, turn_kD, turn_kF, turn_kIZone);
+    
+    // configure turn sensor as analog input
     turnMotor.configSelectedFeedbackSensor(
         FeedbackDevice.Analog, PIDLOOP_IDX, TIMEOUT_MS); // MA3 Absolute encoder
-    turnMotor.setSensorPhase(ALIGNED_TURN_SENSOR);
+
+    // ensures overflow data is not read along with raw analog encoder data
+    turnMotor.setSelectedSensorPosition(turnMotor.getSensorCollection().getAnalogInRaw(), PIDLOOP_IDX, TIMEOUT_MS);
+
+    // set polarity of the analog input sensor
+    turnMotor.setSensorPhase(aligned_turn_sensor);
+
+    // record absolute zero position at start - assumes wheel is straight forward
+    zero_offset = getInitialTurnEncPos();
 
     initialize();
   }
@@ -117,8 +140,23 @@ public class ChillySwerveUnit {
     stopMotors();
   }
 
+  public double getInitialTurnEncPos()
+  {
+    // returns raw absolute encoder value
+    // WARNING: only use for initializing zero offset of encoder
+
+    //return (double) (turnMotor.getSensorCollection().getAnalogIn());
+    return (double) (turnMotor.getSensorCollection().getAnalogInRaw());
+  }
+
+  public double getTurnZeroOffset() {
+    return zero_offset;
+  }
+
   public double getTurnEncPos() {
-    return turnMotor.getSelectedSensorPosition(0);
+    // returns absolute encoder value, adjusted with offset
+    //return (double) (turnMotor.getSensorCollection().getAnalogIn() - zero_offset);
+    return (double) (turnMotor.getSensorCollection().getAnalogInRaw() - zero_offset);
   }
 
   public double getAbsAngle() {
@@ -147,6 +185,7 @@ public class ChillySwerveUnit {
     turnMotor.set(ControlMode.PercentOutput, percentVal);
   }
 
+  /*
   public void setTargetAngle(double targetAngle) {
 
     targetAngle %= 360;
@@ -177,6 +216,42 @@ public class ChillySwerveUnit {
     targetAngle *= 1024.0 / 360.0;
     turnMotor.set(ControlMode.Position, targetAngle);
   }
+*/
+
+  public void setTurnLocation(double loc) {
+
+    turnMotor.set(ControlMode.Position, (loc * FULL_ROTATION) - zero_offset);	
+
+    /*
+    double base = getTurnRotations() * FULL_ROTATION;
+    if (getTurnEncPos() >= 0) {
+      if ((base + (loc * FULL_ROTATION)) - getTurnEncPos() < -FULL_ROTATION/2) {
+        base += FULL_ROTATION;
+      } 
+      else if ((base + (loc * FULL_ROTATION)) - getTurnEncPos() > FULL_ROTATION/2) {
+        base -= FULL_ROTATION;
+      }      
+      turnMotor.set(ControlMode.Position,(((loc * FULL_ROTATION) + (base))));
+    } 
+    else {
+      if ((base - ((1-loc) * FULL_ROTATION)) - getTurnEncPos() < -FULL_ROTATION/2) {
+        base += FULL_ROTATION;
+      } 
+      else if ((base -((1-loc) * FULL_ROTATION)) - getTurnEncPos() > FULL_ROTATION/2) {
+        base -= FULL_ROTATION;
+      }
+      turnMotor.set(ControlMode.Position,(base - (((1-loc) * FULL_ROTATION))));	
+    }
+    */
+  }
+
+  private static double angleToLoc(double angle) {
+    if (angle < 0) {
+      return .5d + ((180d - Math.abs(angle)) / 360d);
+    } else {
+      return angle / 360d;
+    }
+  }
 
   public void drivePath(EncoderFollower follower) {
 
@@ -194,7 +269,10 @@ public class ChillySwerveUnit {
       double gyroAngle = NavXSensor.getAngle();
       gyroAngle = Math.IEEEremainder(gyroAngle, 360);
 
-      setTargetAngle(Pathfinder.r2d(heading) + gyroAngle);
+      double new_heading = (Pathfinder.r2d(heading) + gyroAngle);
+      setTurnLocation(angleToLoc(new_heading));
+      
+      //setTargetAngle(Pathfinder.r2d(heading) + gyroAngle);
     }
   }
 

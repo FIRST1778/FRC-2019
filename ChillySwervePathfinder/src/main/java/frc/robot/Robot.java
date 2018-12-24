@@ -68,6 +68,8 @@ public class Robot extends IterativeRobot {
 
     ChillySwerve.disabledInit();
 
+    NavXSensor.reset();
+    
     autoSM.stop();
   }
 

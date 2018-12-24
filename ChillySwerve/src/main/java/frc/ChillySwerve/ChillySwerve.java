@@ -172,15 +172,6 @@ public class ChillySwerve {
         InputOutputComm.LogTable.kMainLog, "ChillySwerve/Encoders/BL_absEnc", backLeft.getTurnEncPos());
     InputOutputComm.putDouble(
         InputOutputComm.LogTable.kMainLog, "ChillySwerve/Encoders/BR_absEnc", backRight.getTurnEncPos());
-
-    InputOutputComm.putDouble(
-          InputOutputComm.LogTable.kMainLog, "ChillySwerve/RawEncoders/FL_rawEnc", frontLeft.getRawTurnEncPos());
-    InputOutputComm.putDouble(
-          InputOutputComm.LogTable.kMainLog, "ChillySwerve/RawEncoders/FR_rawEnc", frontRight.getRawTurnEncPos());
-    InputOutputComm.putDouble(
-          InputOutputComm.LogTable.kMainLog, "ChillySwerve/RawEncoders/BL_rawEnc", backLeft.getRawTurnEncPos());
-    InputOutputComm.putDouble(
-          InputOutputComm.LogTable.kMainLog, "ChillySwerve/RawEncoders/BR_rawEnc", backRight.getRawTurnEncPos());
   
     InputOutputComm.putDouble(
           InputOutputComm.LogTable.kMainLog, "ChillySwerve/ZeroOffsets/FL_TurnZeroOffset", frontLeft.getTurnZeroOffset());
@@ -260,8 +251,6 @@ public class ChillySwerve {
     InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/TurnAngles/FR_angle", wa1);
     InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/TurnAngles/BL_angle", wa3);
     InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/TurnAngles/BR_angle", wa4);
-
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/gyro_angle", NavXSensor.getAngle());
 
     setDrivePower(fl, fr, bl, br);
     setLocation(angleToLoc(wa2), angleToLoc(wa1), angleToLoc(wa3), angleToLoc(wa4));

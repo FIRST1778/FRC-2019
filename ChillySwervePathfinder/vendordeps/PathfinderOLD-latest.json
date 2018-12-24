@@ -6,7 +6,7 @@
     "mavenUrls": [
         "https://dev.imjac.in/maven"
     ],
-    "jsonUrl": "",
+    "jsonUrl": "https://dev.imjac.in/maven/jaci/pathfinder/PathfinderOLD-latest.json",
     "cppDependencies": [
         {
             "groupId": "jaci.pathfinder",
@@ -32,7 +32,9 @@
             "libName": "pathfinder_frc",
             "configuration": "native_pathfinder_old",
             "headerClassifier": "headers",
-            "binaryPlatforms": []
+            "binaryPlatforms": [
+                
+            ]
         }
     ],
     "javaDependencies": [
@@ -48,7 +50,7 @@
         },
         {
             "groupId": "jaci.pathfinder",
-            "artifactId": "FRCSupport",
+            "artifactId": "Pathfinder-FRCSupport",
             "version": "2019.1.10"
         }
     ],

@@ -1,10 +1,23 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2019.1.1-beta-2a"
+    id "edu.wpi.first.GradleRIO" version "2019.1.1-beta-4"
 }
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
 
+task getAllArtifacts() {
+    doLast {
+        project.configurations.each { Configuration conf ->
+            if(!conf.canBeResolved) {
+                return
+            }
+            println("Resolving: " + conf.getName())
+            conf.resolvedConfiguration.resolvedArtifacts.each { ResolvedArtifact art ->
+                art.file    // Needed to trigger download
+            }
+        }
+    }
+}
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
 deploy {
@@ -14,14 +27,14 @@ deploy {
             // or from command line. If not found an exception will be thrown.
             // You can use getTeamOrDefault(team) instead of getTeamNumber if you
             // want to store a team number in this file.
-            team = getTeamNumber()
+            team = frc.getTeamNumber()
         }
     }
     artifacts {
         frcJavaArtifact('frcJava') {
             targets << "roborio"
             // Debug can be overridden by command line, for use with VSCode
-            debug = getDebugOrDefault(false)
+            debug = frc.getDebugOrDefault(false)
         }
         // Built in artifact to deploy arbitrary files to the roboRIO.
         fileTreeArtifact('frcStaticFileDeploy') {
@@ -34,6 +47,9 @@ deploy {
     }
 }
 
+// Set this to true to enable desktop support.
+def includeDesktopSupport = false
+
 // Maven central needed for JUnit
 repositories {
     mavenCentral()
@@ -42,11 +58,10 @@ repositories {
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 4.
 dependencies {
-    compile wpilib()
-    compile pathfinder()
-    compile javaVendorLibraries()
-    nativeZip jniRoboRIOVendorLibraries()
-    nativeDesktopZip jniDesktopVendorLibraries()
+    compile wpi.deps.wpilib()
+    compile wpi.deps.vendor.java()
+    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
+    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
     testCompile 'junit:junit:4.12'
 }
 
@@ -56,8 +71,4 @@ dependencies {
 jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
-}
-
-wrapper {
-    gradleVersion = '4.9'
 }

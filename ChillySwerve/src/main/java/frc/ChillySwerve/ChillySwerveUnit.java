@@ -21,7 +21,6 @@ public class ChillySwerveUnit {
 
   // turn sensor constants
   private final double FULL_ROTATION = 1024d;
-  //private final double FULL_ROTATION = 1137d;  // good for BR & FL
 
   // talon constants
   private final int TIMEOUT_MS = 0; // set to zero if skipping confirmation
@@ -88,12 +87,19 @@ public class ChillySwerveUnit {
     turnMotor =
         configureMotor(
             turnTalonID, rev_turn_motor, turn_kP, turn_kI, turn_kD, turn_kF, turn_kIZone);
+    
+    // configure turn sensor as analog input
     turnMotor.configSelectedFeedbackSensor(
         FeedbackDevice.Analog, PIDLOOP_IDX, TIMEOUT_MS); // MA3 Absolute encoder
+
+    // ensures overflow data is not read along with raw analog encoder data
+    turnMotor.setSelectedSensorPosition(turnMotor.getSensorCollection().getAnalogInRaw(), PIDLOOP_IDX, TIMEOUT_MS);
+
+    // set polarity of the analog input sensor
     turnMotor.setSensorPhase(aligned_turn_sensor);
 
     // record absolute zero position at start - assumes wheel is straight forward
-    zero_offset = getRawTurnEncPos();
+    zero_offset = getInitialTurnEncPos();
 
     initialize();
   }
@@ -134,11 +140,13 @@ public class ChillySwerveUnit {
     stopMotors();
   }
 
-  public double getRawTurnEncPos()
+  public double getInitialTurnEncPos()
   {
     // returns raw absolute encoder value
     // WARNING: only use for initializing zero offset of encoder
-    return (double) (turnMotor.getSensorCollection().getAnalogIn());
+
+    //return (double) (turnMotor.getSensorCollection().getAnalogIn());
+    return (double) (turnMotor.getSensorCollection().getAnalogInRaw());
   }
 
   public double getTurnZeroOffset() {
@@ -147,7 +155,8 @@ public class ChillySwerveUnit {
 
   public double getTurnEncPos() {
     // returns absolute encoder value, adjusted with offset
-    return (double) (turnMotor.getSensorCollection().getAnalogIn() - zero_offset);
+    //return (double) (turnMotor.getSensorCollection().getAnalogIn() - zero_offset);
+    return (double) (turnMotor.getSensorCollection().getAnalogInRaw() - zero_offset);
   }
 
   public double getAbsAngle() {

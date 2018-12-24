@@ -61,6 +61,9 @@ public class Robot extends IterativeRobot {
   public void teleopPeriodic() {
     // ChillySwerve-Drive command for all controllers
     ChillySwerve.teleopPeriodic();
+
+    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "NavXSensor/gyro_angle", NavXSensor.getAngle());
+   
   }
 
   @Override
@@ -68,6 +71,8 @@ public class Robot extends IterativeRobot {
 
     ChillySwerve.disabledInit();
 
+    NavXSensor.reset();
+    
     //autoSM.stop();
   }
 
