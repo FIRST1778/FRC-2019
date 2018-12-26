@@ -109,5 +109,4 @@ public class NavXSensor {
 
     return yaw;
   }
-  
 }

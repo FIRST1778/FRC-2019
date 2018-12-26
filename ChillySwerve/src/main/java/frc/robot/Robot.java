@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import frc.ChillySwerve.ChillySwerve;
 import frc.NetworkComm.InputOutputComm;
 import frc.NetworkComm.RPIComm;
-//import frc.StateMachine.AutoStateMachine;
+import frc.StateMachine.AutoStateMachine;
 import frc.Systems.NavXSensor;
 
 public class Robot extends IterativeRobot {
 
   protected DriverStation ds;
-  //protected AutoStateMachine autoSM;
+  protected AutoStateMachine autoSM;
 
   @Override
   public void robotInit() {
@@ -24,7 +24,7 @@ public class Robot extends IterativeRobot {
     ChillySwerve.initialize();
 
     // Create Autonomous State Machine
-    //autoSM = new AutoStateMachine();
+    autoSM = new AutoStateMachine();
 
     // retrieve Driver Station instance
     ds = DriverStation.getInstance();
@@ -37,14 +37,14 @@ public class Robot extends IterativeRobot {
     InputOutputComm.putString(InputOutputComm.LogTable.kMainLog, "MainLog", "autonomous mode...");
 
     // start the auto state machine
-    //autoSM.start();
+    autoSM.start();
   }
 
   /** This function is called periodically during autonomous */
   @Override
   public void autonomousPeriodic() {
 
-    //autoSM.process();
+    autoSM.process();
 
     // debug only (read position sensors)
     getGyroAngle();
@@ -61,9 +61,6 @@ public class Robot extends IterativeRobot {
   public void teleopPeriodic() {
     // ChillySwerve-Drive command for all controllers
     ChillySwerve.teleopPeriodic();
-
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "NavXSensor/gyro_angle", NavXSensor.getAngle());
-   
   }
 
   @Override
@@ -73,7 +70,7 @@ public class Robot extends IterativeRobot {
 
     NavXSensor.reset();
     
-    //autoSM.stop();
+    autoSM.stop();
   }
 
   @Override
@@ -88,7 +85,8 @@ public class Robot extends IterativeRobot {
   public void testPeriodic() {}
 
   private double getGyroAngle() {
-    //double gyroAngle = 0.0;
+    // double gyroAngle = 0.0;
+    // double gyroAngle = NavXSensor.getYaw();  // -180 deg to +180 deg
     double gyroAngle = NavXSensor.getAngle(); // continuous angle (can be larger than 360 deg)
 
     // System.out.println("getGyroAngle:  Gyro angle = " + gyroAngle);
