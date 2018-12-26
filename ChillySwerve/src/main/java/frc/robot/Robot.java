@@ -7,6 +7,7 @@ import frc.NetworkComm.InputOutputComm;
 import frc.NetworkComm.RPIComm;
 import frc.StateMachine.AutoStateMachine;
 import frc.Systems.NavXSensor;
+import frc.Systems.FreezyPath;
 
 public class Robot extends IterativeRobot {
 
@@ -19,6 +20,7 @@ public class Robot extends IterativeRobot {
     InputOutputComm.initialize();
     RPIComm.initialize();
     NavXSensor.initialize();
+    FreezyPath.initialize();
 
     // Initialize ChillySwerve Drive controller classes
     ChillySwerve.initialize();
@@ -69,6 +71,7 @@ public class Robot extends IterativeRobot {
     ChillySwerve.disabledInit();
 
     NavXSensor.reset();
+    FreezyPath.stop();
     
     autoSM.stop();
   }

@@ -56,6 +56,10 @@ public class ChillySwerve {
     // zero out all drive & turn motors
     setAllDrivePower(0);
     setAllTurnPower(0);
+
+    // set all drive motor and sensor polarities, reset encoders
+    setDriveMotorForward(true);
+    resetAllDriveEnc();
   }
 
   public static void initialize() {
@@ -249,6 +253,15 @@ public class ChillySwerve {
     }
   }
 
+  public static void setDriveMotorForward(boolean motorPolarity)
+  {
+    frontLeft.setDriveMotorForward(motorPolarity);
+    frontRight.setDriveMotorForward(motorPolarity);
+    backLeft.setDriveMotorForward(motorPolarity);
+    backRight.setDriveMotorForward(motorPolarity);
+
+  }
+
   // mode used with Pathfinder
   public static void directDrive(
       EncoderFollower fl, EncoderFollower fr, EncoderFollower bl, EncoderFollower br) {
@@ -273,11 +286,11 @@ public class ChillySwerve {
     setDrivePower(left, right, left, right);
   }
 
-  public static void resetAllEnc() {
-    frontLeft.resetTurnEnc();
-    frontRight.resetTurnEnc();
-    backLeft.resetTurnEnc();
-    backRight.resetTurnEnc();
+  public static void resetAllDriveEnc() {
+    frontLeft.resetDriveEnc();
+    frontRight.resetDriveEnc();
+    backLeft.resetDriveEnc();
+    backRight.resetDriveEnc();
   }
 
   public static void stopDrive() {

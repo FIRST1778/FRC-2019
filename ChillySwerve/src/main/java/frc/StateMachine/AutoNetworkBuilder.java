@@ -16,16 +16,16 @@ public class AutoNetworkBuilder {
   // units are RPM
 
   // ~3 ft/s - FAST
-  private static final int CLOSED_LOOP_VEL_FAST = 900;
-  private static final int CLOSED_LOOP_ACCEL_FAST = 300;
+  //private static final int CLOSED_LOOP_VEL_FAST = 900;
+  //private static final int CLOSED_LOOP_ACCEL_FAST = 300;
 
   // ~2 ft/s - SLOW
   private static final int CLOSED_LOOP_VEL_SLOW = 850;
   private static final int CLOSED_LOOP_ACCEL_SLOW = 300;
 
   // ~1 ft/s - VERY SLOW
-  private static final int CLOSED_LOOP_VEL_VERY_SLOW = 400;
-  private static final int CLOSED_LOOP_ACCEL_VERY_SLOW = 200;
+  //private static final int CLOSED_LOOP_VEL_VERY_SLOW = 400;
+  //private static final int CLOSED_LOOP_ACCEL_VERY_SLOW = 200;
 
   private static ArrayList<AutoNetwork> autoNets;
 
@@ -47,11 +47,26 @@ public class AutoNetworkBuilder {
     autoNets = new ArrayList<AutoNetwork>();
 
     // create networks
-    autoNets.add(DO_NOTHING, createDoNothingNetwork());
-    autoNets.add(DRIVE_FORWARD, createDriveForward());
-    autoNets.add(FOLLOW_PATH1, createFollowPathNetwork1());
-    autoNets.add(FOLLOW_PATH2, createFollowPathNetwork2());
-    autoNets.add(FOLLOW_PATH3, createFollowPathNetwork3());
+		// create networks
+		autoNets.add(AutoChooser.DO_NOTHING, createDoNothingNetwork());	
+		autoNets.add(AutoChooser.DRIVE_FORWARD, createDriveForward());	
+
+		autoNets.add(AutoChooser.FORWARD_STRAIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.STRAIGHT_PATH, true));	
+		autoNets.add(AutoChooser.FORWARD_SWERVE_RIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_RIGHT_AND_CENTER, true));	
+		autoNets.add(AutoChooser.FORWARD_SWERVE_LEFT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_LEFT_AND_CENTER, true));
+		autoNets.add(AutoChooser.FORWARD_TURN_LEFT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_RIGHT_TURN_LEFT, true));	
+		autoNets.add(AutoChooser.FORWARD_TURN_RIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_LEFT_TURN_RIGHT, true));
+
+		autoNets.add(AutoChooser.REVERSE_STRAIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.STRAIGHT_PATH, false));	
+		autoNets.add(AutoChooser.REVERSE_SWERVE_RIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_RIGHT_AND_CENTER, false));	
+		autoNets.add(AutoChooser.REVERSE_SWERVE_LEFT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_LEFT_AND_CENTER, false));
+		autoNets.add(AutoChooser.REVERSE_TURN_LEFT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_RIGHT_TURN_LEFT, false));	
+		autoNets.add(AutoChooser.REVERSE_TURN_RIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_LEFT_TURN_RIGHT, false));
+
+		autoNets.add(AutoChooser.DOUBLE_PATH_1, createFollowDoublePathNetwork(FreezyPath.STRAIGHT_PATH, true,
+																						FreezyPath.STRAIGHT_PATH, false));
+		autoNets.add(AutoChooser.DOUBLE_PATH_2, createFollowDoublePathNetwork(FreezyPath.SWERVE_RIGHT_AND_CENTER, true,
+																						FreezyPath.SWERVE_RIGHT_AND_CENTER, false));
 
     return autoNets;
   }
@@ -145,83 +160,66 @@ public class AutoNetworkBuilder {
     return autoNet;
   }
 
-  // **** FOLLOW PATH Network 1 *****
-  // 1) follow a specified path until complete
-  // 2) go back to idle and stay there
-  private static AutoNetwork createFollowPathNetwork1() {
+	// **** FOLLOW SINGLE PATH Network ***** 
+	// 1) follow a specified path until complete
+	// 2) go back to idle and stay there 
+	private static AutoNetwork createFollowSinglePathNetwork(int pathToFollow, boolean fwdPolarity) {
+		
+		AutoNetwork autoNet = new AutoNetwork("<Follow Single Path Network>");
+	
+		// create states
+		AutoState followPathState = new AutoState("<Follow Path State>");
+		FollowPathAction follow = new FollowPathAction("<Follow Path Action>", pathToFollow, fwdPolarity);
+		PathCompleteEvent pathComplete = new PathCompleteEvent();
+		followPathState.addAction(follow);
+		followPathState.addEvent(pathComplete);
+		
+		AutoState idleState = createIdleState("<Idle State>");
 
-    AutoNetwork autoNet = new AutoNetwork("<Follow Path Network 1>");
+		// connect the state sequence
+		followPathState.associateNextState(idleState);
+						
+		// add states to the network list
+		autoNet.addState(followPathState);
+		autoNet.addState(idleState);
+				
+		return autoNet;
+	}
 
-    // create states
-    AutoState followPathState = new AutoState("<Follow Path State>");
-    FollowPathAction follow = new FollowPathAction("<Follow Path 1>", FreezyPath.PATH1);
-    PathCompleteEvent pathComplete = new PathCompleteEvent();
-    followPathState.addAction(follow);
-    followPathState.addEvent(pathComplete);
+	// **** FOLLOW DOUBLE PATH Network ***** 
+	// 1) follow a specified path until complete
+	// 2) follow a specified path until complete
+	// 3) go back to idle and stay there 
+	private static AutoNetwork createFollowDoublePathNetwork(int path1, boolean path1FwdPolarity, int path2, boolean path2FwdPolarity) {
+		
+		AutoNetwork autoNet = new AutoNetwork("<Follow Double Path Network>");
+	
+		// create states
+		AutoState followPathState1 = new AutoState("<Follow Path State 1>");
+		FollowPathAction follow1 = new FollowPathAction("<Follow Path 1 Action>", path1, path1FwdPolarity);
+		PathCompleteEvent pathComplete1 = new PathCompleteEvent();
+		followPathState1.addAction(follow1);
+		followPathState1.addEvent(pathComplete1);
 
-    AutoState idleState = createIdleState("<Idle State>");
+		AutoState followPathState2 = new AutoState("<Follow Path State 2>");
+		FollowPathAction follow2 = new FollowPathAction("<Follow Path 2 Action>", path2, path2FwdPolarity);
+		PathCompleteEvent pathComplete2 = new PathCompleteEvent();
+		followPathState2.addAction(follow2);
+		followPathState2.addEvent(pathComplete2);
 
-    // connect the state sequence
-    followPathState.associateNextState(idleState);
+		AutoState idleState = createIdleState("<Idle State>");
 
-    // add states to the network list
-    autoNet.addState(followPathState);
-    autoNet.addState(idleState);
-
-    return autoNet;
-  }
-
-  // **** FOLLOW PATH Network 2 *****
-  // 1) follow a specified path until complete
-  // 2) go back to idle and stay there
-  private static AutoNetwork createFollowPathNetwork2() {
-
-    AutoNetwork autoNet = new AutoNetwork("<Follow Path Network 2>");
-
-    // create states
-    AutoState followPathState = new AutoState("<Follow Path State>");
-    FollowPathAction follow = new FollowPathAction("<Follow Path 2>", FreezyPath.PATH2);
-    PathCompleteEvent pathComplete = new PathCompleteEvent();
-    followPathState.addAction(follow);
-    followPathState.addEvent(pathComplete);
-
-    AutoState idleState = createIdleState("<Idle State>");
-
-    // connect the state sequence
-    followPathState.associateNextState(idleState);
-
-    // add states to the network list
-    autoNet.addState(followPathState);
-    autoNet.addState(idleState);
-
-    return autoNet;
-  }
-
-  // **** FOLLOW PATH Network 1 *****
-  // 1) follow a specified path until complete
-  // 2) go back to idle and stay there
-  private static AutoNetwork createFollowPathNetwork3() {
-
-    AutoNetwork autoNet = new AutoNetwork("<Follow Path Network 3>");
-
-    // create states
-    AutoState followPathState = new AutoState("<Follow Path State>");
-    FollowPathAction follow = new FollowPathAction("<Follow Path 3>", FreezyPath.PATH3);
-    PathCompleteEvent pathComplete = new PathCompleteEvent();
-    followPathState.addAction(follow);
-    followPathState.addEvent(pathComplete);
-
-    AutoState idleState = createIdleState("<Idle State>");
-
-    // connect the state sequence
-    followPathState.associateNextState(idleState);
-
-    // add states to the network list
-    autoNet.addState(followPathState);
-    autoNet.addState(idleState);
-
-    return autoNet;
-  }
+		// connect the state sequence
+		followPathState1.associateNextState(followPathState2);
+		followPathState2.associateNextState(idleState);
+						
+		// add states to the network list
+		autoNet.addState(followPathState1);
+		autoNet.addState(followPathState2);
+		autoNet.addState(idleState);
+				
+		return autoNet;
+	}
 
   /**
    * **************************************************************************************************

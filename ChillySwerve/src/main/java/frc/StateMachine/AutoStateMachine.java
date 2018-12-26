@@ -84,31 +84,9 @@ public class AutoStateMachine {
     // grab the selected action and position from the driver station
     int action = autoChooser.getAction();
 
-    int netIndex = AutoNetworkBuilder.DO_NOTHING;
-
-    if (action == AutoChooser.DO_NOTHING) {
-      autoNetworkEnable = true;
-      netIndex = AutoNetworkBuilder.DO_NOTHING;
-    } else if (action == AutoChooser.DRIVE_FORWARD) {
-      // override simple drive forward network
-      autoNetworkEnable = true;
-      netIndex = AutoNetworkBuilder.DRIVE_FORWARD;
-    } else if (action == AutoChooser.FOLLOW_PATH1) {
-      // override simple drive forward network
-      autoNetworkEnable = true;
-      netIndex = AutoNetworkBuilder.FOLLOW_PATH1;
-    } else if (action == AutoChooser.FOLLOW_PATH2) {
-      // override simple drive forward network
-      autoNetworkEnable = true;
-      netIndex = AutoNetworkBuilder.FOLLOW_PATH2;
-    } else if (action == AutoChooser.FOLLOW_PATH3) {
-      // override simple drive forward network
-      autoNetworkEnable = true;
-      netIndex = AutoNetworkBuilder.FOLLOW_PATH3;
-    } else {
-      // auto state machine operation disabled
-      autoNetworkEnable = false;
-    }
+		// pick the network, enable auto network
+		int netIndex = action;
+		autoNetworkEnable = true;
 
     // return index value for network selected
     return netIndex;

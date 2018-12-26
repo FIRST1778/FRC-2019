@@ -9,10 +9,12 @@ public class FollowPathAction extends Action {
 
   private String name;
   private int pathToFollow;
+  private boolean fwdPolarity;
 
-  public FollowPathAction(int pathToFollow) {
+  public FollowPathAction(int pathToFollow, boolean polarity) {
     this.name = "<Follow Path Action>";
     this.pathToFollow = pathToFollow;
+    this.fwdPolarity = polarity;
 
     ChillySwerve.initialize();
     NavXSensor.initialize();
@@ -21,9 +23,10 @@ public class FollowPathAction extends Action {
     FreezyPath.reset(pathToFollow);
   }
 
-  public FollowPathAction(String name, int pathToFollow) {
+  public FollowPathAction(String name, int pathToFollow, boolean polarity) {
     this.name = name;
     this.pathToFollow = pathToFollow;
+    this.fwdPolarity = polarity;
 
     ChillySwerve.initialize();
     NavXSensor.initialize();
@@ -37,7 +40,12 @@ public class FollowPathAction extends Action {
     // do some drivey initialization
 
     ChillySwerve.autoInit(true, 0.0, false);
-    FreezyPath.start();
+
+		// set up path and followers
+		FreezyPath.reset(pathToFollow);
+
+		// start the pathfinder thread
+    FreezyPath.start(fwdPolarity);
 
     super.initialize();
   }

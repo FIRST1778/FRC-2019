@@ -89,8 +89,9 @@ public class ChillySwerveUnit {
     turnMotor.setSelectedSensorPosition(turnMotor.getSensorCollection().getAnalogInRaw(), PIDLOOP_IDX, TIMEOUT_MS);
 
     // set polarity of the motors and sensors
-    driveMotor.setSensorPhase(true);
-    driveMotor.setInverted(false);
+    setDriveMotorForward(true);
+    resetDriveEnc();
+
     turnMotor.setSensorPhase(true);
     turnMotor.setInverted(false);
 
@@ -152,14 +153,6 @@ public class ChillySwerveUnit {
   public double getAbsAngle() {
     // returns absolute angle of wheel in degrees (may wrap beyond 360 deg)
     return ((double) turnMotor.getSensorCollection().getAnalogInRaw() * (360.0 / 1024.0)) + zero_angle_offset;
-  }
-
-  public void resetTurnEnc() {
-    turnMotor.setSelectedSensorPosition(0, PIDLOOP_IDX, TIMEOUT_MS);
-  }
-
-  public void setEncPos(int d) {
-    turnMotor.setSelectedSensorPosition(d, PIDLOOP_IDX, TIMEOUT_MS);
   }
 
   public int getTurnRotations() {
@@ -226,6 +219,7 @@ public class ChillySwerveUnit {
 		turnMotor.set(ControlMode.Position,targetAngle);
 	}
 
+  // used with pathfinder
   public void drivePath(EncoderFollower follower) {
 
     if (!follower.isFinished()) {
@@ -259,4 +253,17 @@ public class ChillySwerveUnit {
     if (b == true) driveMotor.setNeutralMode(NeutralMode.Brake);
     else driveMotor.setNeutralMode(NeutralMode.Coast);
   }
+
+  public void setDriveMotorForward(boolean motorPolarity) {
+    boolean motorInverted = !motorPolarity;
+    boolean sensorPolarity = motorPolarity;
+
+    driveMotor.setInverted(motorInverted);
+    driveMotor.setSensorPhase(sensorPolarity);
+  }
+
+  public void resetDriveEnc() {
+    driveMotor.setSelectedSensorPosition(0, PIDLOOP_IDX, TIMEOUT_MS);
+  }
+
 }

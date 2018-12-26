@@ -8,9 +8,21 @@ public class AutoChooser {
   //  action type selection
   public static final int DO_NOTHING = 0;
   public static final int DRIVE_FORWARD = 1;
-  public static final int FOLLOW_PATH1 = 2;
-  public static final int FOLLOW_PATH2 = 3;
-  public static final int FOLLOW_PATH3 = 4;
+
+	public static final int FORWARD_STRAIGHT_PATH = 2;
+	public static final int FORWARD_SWERVE_RIGHT_PATH = 3;
+	public static final int FORWARD_SWERVE_LEFT_PATH = 4;
+	public static final int FORWARD_TURN_LEFT_PATH = 5;
+	public static final int FORWARD_TURN_RIGHT_PATH = 6;
+
+	public static final int REVERSE_STRAIGHT_PATH = 7;
+	public static final int REVERSE_SWERVE_RIGHT_PATH = 8;
+	public static final int REVERSE_SWERVE_LEFT_PATH = 9;
+	public static final int REVERSE_TURN_LEFT_PATH = 10;
+	public static final int REVERSE_TURN_RIGHT_PATH = 11;	
+
+	public static final int DOUBLE_PATH_1 = 12;
+	public static final int DOUBLE_PATH_2 = 13;	
 
   // internal selection class used for SendableChooser only
   public class ModeSelection {
@@ -29,12 +41,27 @@ public class AutoChooser {
 
     // action chooser setup
     chooser_action = new SendableChooser<ModeSelection>();
-    chooser_action.addDefault("DO_NOTHING", new ModeSelection(DO_NOTHING));
-    chooser_action.addObject("DRIVE_FORWARD", new ModeSelection(DRIVE_FORWARD));
-    chooser_action.addObject("FOLLOW_PATH1", new ModeSelection(FOLLOW_PATH1));
-    chooser_action.addObject("FOLLOW_PATH2", new ModeSelection(FOLLOW_PATH2));
-    chooser_action.addObject("FOLLOW_PATH3", new ModeSelection(FOLLOW_PATH3));
+
+    chooser_action.setDefaultOption("DO_NOTHING", new ModeSelection(DO_NOTHING));
+    chooser_action.addOption("DRIVE_FORWARD", new ModeSelection(DRIVE_FORWARD));
+
+		chooser_action.addOption("FORWARD_STRAIGHT_PATH", new ModeSelection(FORWARD_STRAIGHT_PATH));	
+		chooser_action.addOption("FORWARD_SWERVE_RIGHT_PATH", new ModeSelection(FORWARD_SWERVE_RIGHT_PATH));		
+		chooser_action.addOption("FORWARD_SWERVE_LEFT_PATH", new ModeSelection(FORWARD_SWERVE_LEFT_PATH));	
+		chooser_action.addOption("FORWARD_TURN_LEFT_PATH", new ModeSelection(FORWARD_TURN_LEFT_PATH));		
+		chooser_action.addOption("FORWARD_TURN_RIGHT_PATH", new ModeSelection(FORWARD_TURN_RIGHT_PATH));	
+
+		chooser_action.addOption("REVERSE_STRAIGHT_PATH", new ModeSelection(REVERSE_STRAIGHT_PATH));	
+		chooser_action.addOption("REVERSE_SWERVE_RIGHT_PATH", new ModeSelection(REVERSE_SWERVE_RIGHT_PATH));		
+		chooser_action.addOption("REVERSE_SWERVE_LEFT_PATH", new ModeSelection(REVERSE_SWERVE_LEFT_PATH));	
+		chooser_action.addOption("REVERSE_TURN_LEFT_PATH", new ModeSelection(REVERSE_TURN_LEFT_PATH));		
+		chooser_action.addOption("REVERSE_TURN_RIGHT_PATH", new ModeSelection(REVERSE_TURN_RIGHT_PATH));	
+
+		chooser_action.addOption("DOUBLE_PATH_1", new ModeSelection(DOUBLE_PATH_1));		
+    chooser_action.addOption("DOUBLE_PATH_2", new ModeSelection(DOUBLE_PATH_2));	
+    
     SmartDashboard.putData("AutoChooser_Action", chooser_action);
+
   }
 
   public int getAction() {
