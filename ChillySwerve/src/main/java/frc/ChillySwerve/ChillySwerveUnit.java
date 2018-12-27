@@ -56,6 +56,7 @@ public class ChillySwerveUnit {
     this.turnTalonID = turnTalonID;
 
     this.zero_angle_offset = zero_angle_offset;
+
     last_target_angle = 0.0;
 
     // debug - run drive motor as open loop (temporarily)
@@ -80,22 +81,19 @@ public class ChillySwerveUnit {
     turnMotor =
         configureMotor(
             turnTalonID, rev_turn_motor, turn_kP, turn_kI, turn_kD, turn_kF, turn_kIZone);
-    
+
     // configure turn sensor as analog input
     turnMotor.configSelectedFeedbackSensor(
         FeedbackDevice.Analog, PIDLOOP_IDX, TIMEOUT_MS); // MA3 Absolute encoder
+    turnMotor.setSensorPhase(true);  
 
     // ensures overflow data is not read along with raw analog encoder data
-    turnMotor.setSelectedSensorPosition(turnMotor.getSensorCollection().getAnalogInRaw(), PIDLOOP_IDX, TIMEOUT_MS);
+    turnMotor.setNeutralMode(NeutralMode.Brake);
+    turnMotor.set(ControlMode.Position, 0);
 
-    // set polarity of the motors and sensors
+    // set polarity of the drive motor and sensor
     setDriveMotorForward(true);
     resetDriveEnc();
-
-    turnMotor.setSensorPhase(true);
-    turnMotor.setInverted(false);
-
-    initialize();
   }
 
   // closed-loop motor configuration
@@ -130,7 +128,8 @@ public class ChillySwerveUnit {
   }
 
   public void initialize() {
-    stopMotors();
+    // move all swerve motors to zero angle
+    setTargetAngle(0);
   }
 
   public TalonSRX getDriveMotor() {
@@ -145,18 +144,23 @@ public class ChillySwerveUnit {
     return zero_angle_offset;
   }
 
+  public double getTargetAngle() {
+      return last_target_angle;
+  }
+
   public double getRawAbsAngle() {
     // returns absolute (raw) absolute angle value - no offset applied
-    return (double) turnMotor.getSensorCollection().getAnalogInRaw() * (360.0 / 1024.0);
+    return (double) turnMotor.getSelectedSensorPosition(0) * (360.0 / 1024.0);
+  }
+
+  public double getTurnEnc() {
+    // returns turn encoder value
+     return (double) turnMotor.getSelectedSensorPosition(0);
   }
 
   public double getAbsAngle() {
     // returns absolute angle of wheel in degrees (may wrap beyond 360 deg)
-    return ((double) turnMotor.getSensorCollection().getAnalogInRaw() * (360.0 / 1024.0)) + zero_angle_offset;
-  }
-
-  public int getTurnRotations() {
-    return (int) (turnMotor.getSelectedSensorPosition(0) / ENCODER_PULSES_PER_REV);
+    return ((double) turnMotor.getSelectedSensorPosition(0) * (360.0 / 1024.0)) - zero_angle_offset;
   }
 
   public void setDrivePower(double percentVal) {
@@ -167,13 +171,27 @@ public class ChillySwerveUnit {
     turnMotor.set(ControlMode.PercentOutput, percentVal);
   }
 
+      /**
+     * Get the current angle of the swerve module
+     *
+     * @return An angle in the range [0, 360)
+     */
+    public double getCurrentAngle() {
+      double angle = turnMotor.getSelectedSensorPosition(0) * (360.0 / 1024.0);
+      angle -= zero_angle_offset;
+      angle %= 360;
+      if (angle < 0) angle += 360;
+
+      return angle;
+  }
+
 	public void setTargetAngle(double targetAngle) {
 		last_target_angle = targetAngle;
 
 		targetAngle %= 360;
 		targetAngle += zero_angle_offset;
 
-		double currentAngle = getAbsAngle();
+		double currentAngle = getRawAbsAngle();
 		double currentAngleMod = currentAngle % 360;
 		if (currentAngleMod < 0) currentAngleMod += 360;
 
@@ -183,8 +201,8 @@ public class ChillySwerveUnit {
 			targetAngle += 360;
 		} else if (delta < -180) {
 			targetAngle -= 360;
-		}
-
+    }
+    
 		delta = currentAngleMod - targetAngle;
 		if (delta > 90 || delta < -90) {
 			if (delta > 90)
@@ -194,24 +212,9 @@ public class ChillySwerveUnit {
 			driveMotor.setInverted(false);
 		} else {
 			driveMotor.setInverted(true);
-		}
+    }
     
-		targetAngle += currentAngle - currentAngleMod;
-
-    /*
-		double currentError = mAngleMotor.getError();
-		if (Math.abs(currentError - mLastError) < 7.5 &&
-				Math.abs(currentAngle - targetAngle) > 5) {
-			if (mStallTimeBegin == Long.MAX_VALUE) mStallTimeBegin = System.currentTimeMillis();
-			if (System.currentTimeMillis() - mStallTimeBegin > STALL_TIMEOUT) {
-				throw new MotorStallException(String.format("Angle motor on swerve module '%d' has stalled.",
-						mModuleNumber));
-			}
-		} else {
-			mStallTimeBegin = Long.MAX_VALUE;
-		}
-		mLastError = currentError;
-    */
+    targetAngle += currentAngle - currentAngleMod;
 
     // convert to encoder ticks
     targetAngle *= 1024.0 / 360.0;
@@ -255,10 +258,10 @@ public class ChillySwerveUnit {
   }
 
   public void setDriveMotorForward(boolean motorPolarity) {
-    boolean motorInverted = !motorPolarity;
+    rev_drive_motor = !motorPolarity;
     boolean sensorPolarity = motorPolarity;
 
-    driveMotor.setInverted(motorInverted);
+    driveMotor.setInverted(rev_drive_motor);
     driveMotor.setSensorPhase(sensorPolarity);
   }
 

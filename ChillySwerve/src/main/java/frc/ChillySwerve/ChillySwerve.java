@@ -37,13 +37,12 @@ public class ChillySwerve {
   private static double angleDeg = 0.0;
 
   private static boolean initialized = false;
-  private static boolean offsetSet = false;
 
   // wheel angle offsets in deg
-  public static final double FL_ABS_ZERO_ANGLE_OFFSET = 0.0;
-  public static final double FR_ABS_ZERO_ANGLE_OFFSET = 0.0;
-  public static final double BL_ABS_ZERO_ANGLE_OFFSET = 0.0;
-  public static final double BR_ABS_ZERO_ANGLE_OFFSET = 0.0;
+  public static final double FL_ABS_ZERO_ANGLE_OFFSET = 5.0;
+  public static final double FR_ABS_ZERO_ANGLE_OFFSET = 80.0;
+  public static final double BL_ABS_ZERO_ANGLE_OFFSET = -110.0;
+  public static final double BR_ABS_ZERO_ANGLE_OFFSET = -140.0;
 
   public static void reset() {
 
@@ -53,9 +52,8 @@ public class ChillySwerve {
     // orient all wheels forward
     setAllTurnAngle(0);
 
-    // zero out all drive & turn motors
+    // zero out all drive motors
     setAllDrivePower(0);
-    setAllTurnPower(0);
 
     // set all drive motor and sensor polarities, reset encoders
     setDriveMotorForward(true);
@@ -121,10 +119,10 @@ public class ChillySwerve {
     double joyVal;
 
     // get joystick inputs
-    joyVal = driveGamepad.getRawAxis(HardwareIDs.LEFT_Y_AXIS);
+    joyVal = -1.0 * driveGamepad.getRawAxis(HardwareIDs.LEFT_Y_AXIS);
     fwd = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
 
-    joyVal = driveGamepad.getRawAxis(HardwareIDs.LEFT_X_AXIS);
+    joyVal = -1.0 * driveGamepad.getRawAxis(HardwareIDs.LEFT_X_AXIS);
     str = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
 
     joyVal = driveGamepad.getRawAxis(HardwareIDs.RIGHT_X_AXIS);
@@ -134,30 +132,39 @@ public class ChillySwerve {
 
     // debug only
     InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/fwd", fwd);
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AA_swerveCmd/fwd", fwd);
     InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/str", str);
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AA_swerveCmd/str", str);
     InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/rot", rot);
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AA_swerveCmd/rot", rot);
       
     // debug only
     InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Angles/FL_absAngle", frontLeft.getAbsAngle());
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AC_Angles/FL_absAngle", frontLeft.getAbsAngle());
     InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Angles/FR_absAngle", frontRight.getAbsAngle());
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AC_Angles/FR_absAngle", frontRight.getAbsAngle());
     InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Angles/BL_absAngle", backLeft.getAbsAngle());
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AC_Angles/BL_absAngle", backLeft.getAbsAngle());
     InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Angles/BR_absAngle", backRight.getAbsAngle());
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AC_Angles/BR_absAngle", backRight.getAbsAngle());
 
     InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Encoders/FL_rawAngle", frontLeft.getRawAbsAngle());
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AD_RawAngles/FL_rawAngle", frontLeft.getRawAbsAngle());
     InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Encoders/FR_rawAngle", frontRight.getRawAbsAngle());
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AD_RawAngles/FR_rawAngle", frontRight.getRawAbsAngle());
     InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Encoders/BL_rawAngle", backLeft.getRawAbsAngle());
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AD_RawAngles/BL_rawAngle", backLeft.getRawAbsAngle());
     InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Encoders/BR_rawAngle", backRight.getRawAbsAngle());
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AD_RawAngles/BR_rawAngle", backRight.getRawAbsAngle());
+ 
+    InputOutputComm.putDouble(
+          InputOutputComm.LogTable.kMainLog, "ChillySwerve/Encoders/FL_turnEnc", frontLeft.getTurnEnc());
+    InputOutputComm.putDouble(
+          InputOutputComm.LogTable.kMainLog, "ChillySwerve/Encoders/FR_turnEnc", frontRight.getTurnEnc());
+    InputOutputComm.putDouble(
+          InputOutputComm.LogTable.kMainLog, "ChillySwerve/Encoders/BL_turnEnc", backLeft.getTurnEnc());
+    InputOutputComm.putDouble(
+          InputOutputComm.LogTable.kMainLog, "ChillySwerve/Encoders/BR_turnEnc", backRight.getTurnEnc());
   
     InputOutputComm.putDouble(
           InputOutputComm.LogTable.kMainLog, "ChillySwerve/ZeroOffsets/FL_TurnZeroOffset", frontLeft.getTurnZeroOffset());
@@ -180,7 +187,8 @@ public class ChillySwerve {
   }
 
   public static void disabledInit() {
-    reset();
+     // zero out all drive motors
+     setAllDrivePower(0);
   }
 
   public static void disabledPeriodic() {
@@ -219,23 +227,23 @@ public class ChillySwerve {
     double bl_pwr = ws3;
     double br_pwr = ws4;
 
-    double fl_angle = wa2 * 180 / Math.PI;
-    double fr_angle = wa1 * 180 / Math.PI;
-    double bl_angle = wa3 * 180 / Math.PI;
-    double br_angle = wa4 * 180 / Math.PI;
+    double fl_angle = wa2;
+    double fr_angle = wa1;
+    double bl_angle = wa3;
+    double br_angle = wa4;
 
     // ws1..ws4 and wa1..wa4 are the wheel speeds and wheel angles for wheels 1 through 4
     // which are front_right, front_left, rear_left, and rear_right, respectively.
 
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/DrivePwr/FL_pwr", fl_pwr);
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/DrivePwr/FR_pwr", fr_pwr);
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/DrivePwr/BL_pwr", bl_pwr);
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/DrivePwr/BR_pwr", br_pwr);
+    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/AB_DrivePwr/FL_pwr", fl_pwr);
+    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/AB_DrivePwr/FR_pwr", fr_pwr);
+    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/AB_DrivePwr/BL_pwr", bl_pwr);
+    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/AB_DrivePwr/BR_pwr", br_pwr);
 
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/TurnAngles/FL_angle", fl_angle);
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/TurnAngles/FR_angle", fr_angle);
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/TurnAngles/BL_angle", bl_angle);
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/TurnAngles/BR_angle", br_angle);
+    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/AB_TurnAngles/FL_angle", fl_angle);
+    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/AB_TurnAngles/FR_angle", fr_angle);
+    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/AB_TurnAngles/BL_angle", bl_angle);
+    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/AB_TurnAngles/BR_angle", br_angle);
 
     setDrivePower(fl_pwr, fr_pwr, bl_pwr, br_pwr);
     setTargetAngle(fl_angle, fr_angle, bl_angle, br_angle);
@@ -273,7 +281,8 @@ public class ChillySwerve {
 
   public static void fieldCentricDrive(double fwd, double str, double rot) {
 
-    double angleRad = NavXSensor.getAngle() * (Math.PI / 180d);
+    //double angleRad = NavXSensor.getAngle() * (Math.PI / 180d);
+    double angleRad = 0.0;
 
     double temp = (fwd * Math.cos(angleRad)) + (str * Math.sin(angleRad));
     str = (-fwd * Math.sin(angleRad)) + (str * Math.cos(angleRad));
@@ -322,10 +331,21 @@ public class ChillySwerve {
   }
 
   public static void setTargetAngle(double fl_angle, double fr_angle, double bl_angle, double br_angle) {
-    frontLeft.setTargetAngle(fl_angle);
-    frontRight.setTargetAngle(fr_angle);
-    backLeft.setTargetAngle(bl_angle);
-    backRight.setTargetAngle(br_angle);
+
+    if (Math.abs(fwd) > 0.05 || Math.abs(str) > 0.05 || Math.abs(rot) > 0.05) 
+        {
+          frontLeft.setTargetAngle(fl_angle);
+          frontRight.setTargetAngle(fr_angle);
+          backLeft.setTargetAngle(bl_angle);
+          backRight.setTargetAngle(br_angle);
+        }
+        else 
+        {
+          frontLeft.setTargetAngle(frontLeft.getTargetAngle());
+          frontRight.setTargetAngle(frontRight.getTargetAngle());
+          backLeft.setTargetAngle(backLeft.getTargetAngle());
+          backRight.setTargetAngle(backRight.getTargetAngle());
+        }
   }
 
   public static void setAllDrivePower(double power) {
@@ -337,7 +357,10 @@ public class ChillySwerve {
   }
 
   public static void setAllTurnAngle(double angle) {
-    setTargetAngle(angle, angle, angle, angle);
+    frontLeft.setTargetAngle(angle);
+    frontRight.setTargetAngle(angle);
+    backLeft.setTargetAngle(angle);
+    backRight.setTargetAngle(angle);
   }
 
   // Sensor measurement methods
