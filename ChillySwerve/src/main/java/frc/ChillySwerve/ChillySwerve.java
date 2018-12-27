@@ -11,6 +11,9 @@ public class ChillySwerve {
   private static final double AUTO_DRIVE_ANGLE_CORRECT_COEFF = 0.02;
   private static final double GYRO_CORRECT_COEFF = 0.03;
 
+  // debug purposes - don't run full on
+  private static final double INPUT_GAIN_FACTOR = 0.35;
+
   // used as angle baseline (if we don't reset gyro)
   private static double initialAngle = 0.0;
   private static double headingDeg = 0.0;
@@ -119,13 +122,13 @@ public class ChillySwerve {
     double joyVal;
 
     // get joystick inputs
-    joyVal = -1.0 * driveGamepad.getRawAxis(HardwareIDs.LEFT_Y_AXIS);
+    joyVal = -1.0 * INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.LEFT_Y_AXIS);
     fwd = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
 
-    joyVal = -1.0 * driveGamepad.getRawAxis(HardwareIDs.LEFT_X_AXIS);
+    joyVal = -1.0 * INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.LEFT_X_AXIS);
     str = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
 
-    joyVal = driveGamepad.getRawAxis(HardwareIDs.RIGHT_X_AXIS);
+    joyVal = -1.0 * INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.RIGHT_X_AXIS);
     rot = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
 
     fieldCentricDrive(fwd, str, rot);
@@ -175,15 +178,6 @@ public class ChillySwerve {
     InputOutputComm.putDouble(
           InputOutputComm.LogTable.kMainLog, "ChillySwerve/ZeroOffsets/BR_TurnZeroOffset", backRight.getTurnZeroOffset());
 
-    /*
-    joyVal = driveGamepad.getRawAxis(HardwareIDs.LEFT_Y_AXIS);
-    double left = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
-
-    joyVal = driveGamepad.getRawAxis(HardwareIDs.RIGHT_Y_AXIS);
-    double right = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
-
-    tankDrive(-left, -right);
-    */
   }
 
   public static void disabledInit() {
@@ -196,10 +190,18 @@ public class ChillySwerve {
   }
 
   public static void swerveDrive(double fwd, double str, double rot) {
+
+    // theoretical trig calc - has rotation problem
+    //double a = str - (rot * (l / r));
+    //double b = str + (rot * (l / r));
+    //double c = fwd - (rot * (w / r));
+    //double d = fwd + (rot * (w / r));
+
+    // protobot trig calc - works correctly
     double a = str - (rot * (l / r));
     double b = str + (rot * (l / r));
-    double c = fwd - (rot * (w / r));
-    double d = fwd + (rot * (w / r));
+    double c = fwd + (rot * (w / r));
+    double d = fwd - (rot * (w / r));
 
     double ws1 = Math.sqrt((b * b) + (c * c));
     double ws2 = Math.sqrt((b * b) + (d * d));
@@ -222,13 +224,13 @@ public class ChillySwerve {
       ws4 /= max;
     }
 
-    double fl_pwr = ws2;
     double fr_pwr = ws1;
+    double fl_pwr = ws2;
     double bl_pwr = ws3;
     double br_pwr = ws4;
 
-    double fl_angle = wa2;
     double fr_angle = wa1;
+    double fl_angle = wa2;
     double bl_angle = wa3;
     double br_angle = wa4;
 
