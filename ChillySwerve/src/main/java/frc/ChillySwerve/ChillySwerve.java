@@ -12,7 +12,7 @@ public class ChillySwerve {
   private static final double GYRO_CORRECT_COEFF = 0.03;
 
   // debug purposes - don't run full on
-  private static final double INPUT_GAIN_FACTOR = 0.35;
+  private static final double INPUT_GAIN_FACTOR = 0.5;
 
   // used as angle baseline (if we don't reset gyro)
   private static double initialAngle = 0.0;
@@ -121,7 +121,7 @@ public class ChillySwerve {
     double joyVal;
 
     // get joystick inputs
-    joyVal = -1.0 * INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.LEFT_Y_AXIS);
+    joyVal = INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.LEFT_Y_AXIS);
     fwd = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
 
     joyVal = -1.0 * INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.LEFT_X_AXIS);
@@ -130,9 +130,9 @@ public class ChillySwerve {
     joyVal = -1.0 * INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.RIGHT_X_AXIS);
     rot = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
 
-    // mode toggle control
-    if (driveGamepad.getRawButton(1))   // A Button on gamepad
-        field_centric = !field_centric;
+    // swerve reference mode (toggle control)
+    // left toggle switch on freezy drive control unit
+    field_centric = driveGamepad.getRawButton(2);  
 
     if (field_centric)
     {
