@@ -31,6 +31,9 @@ public class ChillySwerve {
   private static double str = 0.0;
   private static double rot = 0.0;
 
+  // field-centric mode toggle
+  private static boolean field_centric = true;
+
   // robot dimension ratios (units don't matter, just be consistent with all three)
   private static final double l = 23.5; // drive base length
   private static final double w = 17.0; // drive base width
@@ -61,6 +64,9 @@ public class ChillySwerve {
     // set all drive motor and sensor polarities, reset encoders
     setDriveMotorForward(true);
     resetAllDriveEnc();
+
+    // reset gyro
+    NavXSensor.reset();
   }
 
   public static void initialize() {
@@ -86,8 +92,8 @@ public class ChillySwerve {
             HardwareIDs.BACK_RIGHT_DRIVE_TALON_ID, HardwareIDs.BACK_RIGHT_ROTATE_TALON_ID,
             BR_ABS_ZERO_ANGLE_OFFSET);
 
-    angleDeg = NavXSensor.getAngle();
-    //angleDeg = 0;
+    // gyro needed for field-centric drive
+    NavXSensor.initialize();
 
     // initialize the swerve modules
     frontLeft.initialize();
@@ -101,13 +107,6 @@ public class ChillySwerve {
   public static void autoInit(boolean resetGyro, double headingDeg, boolean magicMotion) {
     // set all wheels forward, motors off
     reset();
-
-    if (resetGyro) {
-      NavXSensor.reset();
-      initialAngle = 0.0;
-    } else
-      // initialAngle = NavXSensor.getAngle();
-      initialAngle = headingDeg; // target heading if not resetting gyro
   }
 
   public static void autoStop() {
@@ -131,7 +130,27 @@ public class ChillySwerve {
     joyVal = -1.0 * INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.RIGHT_X_AXIS);
     rot = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
 
-    fieldCentricDrive(fwd, str, rot);
+    // mode toggle control
+    if (driveGamepad.getRawButton(1))   // A Button on gamepad
+        field_centric = !field_centric;
+
+    if (field_centric)
+    {
+      // Use field coordinate system
+      fieldCentricDrive(fwd, str, rot);
+
+      InputOutputComm.putString(
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AA_mode", "field_centric");
+      }
+    else
+    {
+      // Use robot coordinate system
+      humanDrive(fwd, str, rot);
+
+      InputOutputComm.putString(
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AA_mode", "robot_centric");
+   }
+
 
     // debug only
     InputOutputComm.putDouble(
@@ -283,12 +302,12 @@ public class ChillySwerve {
 
   public static void fieldCentricDrive(double fwd, double str, double rot) {
 
-    //double angleRad = NavXSensor.getAngle() * (Math.PI / 180d);
-    double angleRad = 0.0;
+    double angleRad = -1.0 * NavXSensor.getAngle() * (Math.PI / 180d);
 
     double temp = (fwd * Math.cos(angleRad)) + (str * Math.sin(angleRad));
     str = (-fwd * Math.sin(angleRad)) + (str * Math.cos(angleRad));
     fwd = temp;
+
     humanDrive(fwd, str, rot);
   }
 
