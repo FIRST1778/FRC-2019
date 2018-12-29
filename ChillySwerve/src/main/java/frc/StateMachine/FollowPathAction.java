@@ -10,36 +10,39 @@ public class FollowPathAction extends Action {
   private String name;
   private int pathToFollow;
   private boolean fwdPolarity;
+  private boolean resetGyro;
 
-  public FollowPathAction(int pathToFollow, boolean polarity) {
+  public FollowPathAction(int pathToFollow, boolean polarity, boolean resetGyro) {
     this.name = "<Follow Path Action>";
     this.pathToFollow = pathToFollow;
     this.fwdPolarity = polarity;
+    this.resetGyro = resetGyro;
 
     ChillySwerve.initialize();
     NavXSensor.initialize();
     InputOutputComm.initialize();
     FreezyPath.initialize();
-    FreezyPath.reset(pathToFollow);
   }
 
-  public FollowPathAction(String name, int pathToFollow, boolean polarity) {
+  public FollowPathAction(String name, int pathToFollow, boolean polarity, boolean resetGyro) {
     this.name = name;
     this.pathToFollow = pathToFollow;
     this.fwdPolarity = polarity;
+    this.resetGyro = resetGyro;
 
     ChillySwerve.initialize();
     NavXSensor.initialize();
     InputOutputComm.initialize();
     FreezyPath.initialize();
-    FreezyPath.reset(pathToFollow);
   }
 
   // action entry
   public void initialize() {
-    // do some drivey initialization
+    if (resetGyro)
+      NavXSensor.reset();
 
-    ChillySwerve.autoInit(true, 0.0, false);
+    // reset the drive encoders
+    ChillySwerve.resetAllDriveEnc();
 
 		// set up path and followers
 		FreezyPath.reset(pathToFollow);
@@ -63,7 +66,7 @@ public class FollowPathAction extends Action {
     // do some drivey cleanup
 
     FreezyPath.stop();
-    ChillySwerve.autoStop();
+    ChillySwerve.stopDrive();
 
     // cleanup base class
     super.cleanup();

@@ -1,6 +1,6 @@
 package frc.StateMachine;
 
-import edu.wpi.first.wpilibj.Utility;
+import edu.wpi.first.wpilibj.RobotController;
 import frc.NetworkComm.InputOutputComm;
 import frc.Systems.NavXSensor;
 import java.util.prefs.Preferences;
@@ -34,7 +34,7 @@ public class ClosedLoopAngleEvent extends Event {
   public void initialize() {
     // System.out.println("GyroAngleEvent initialized!");
 
-    startTimeUs = Utility.getFPGATime();
+    startTimeUs = RobotController.getFPGATime();
 
     super.initialize();
   }
@@ -63,11 +63,11 @@ public class ClosedLoopAngleEvent extends Event {
 
       // outside error range...
       // reset timer and return false
-      startTimeUs = Utility.getFPGATime();
+      startTimeUs = RobotController.getFPGATime();
       return false;
     }
 
-    long currentTimeUs = Utility.getFPGATime();
+    long currentTimeUs = RobotController.getFPGATime();
     double delta = (currentTimeUs - startTimeUs) / 1e6;
     // System.out.println("delta = " + delta + " duration = " + durationSec);
 

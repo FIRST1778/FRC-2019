@@ -38,6 +38,8 @@ public class Robot extends IterativeRobot {
   public void autonomousInit() {
     InputOutputComm.putString(InputOutputComm.LogTable.kMainLog, "MainLog", "autonomous mode...");
 
+    ChillySwerve.autoInit();
+    
     // start the auto state machine
     autoSM.start();
   }

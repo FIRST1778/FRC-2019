@@ -23,7 +23,7 @@ public class ChillySwerveUnit {
   public boolean aligned_drive_sensor = true;
 
   private boolean rev_turn_motor = false;
-  private boolean aligned_turn_sensor = true;
+  //private boolean aligned_turn_sensor = true;
 
   private double zero_angle_offset = 0.0;
   private double last_target_angle = 0.0;
@@ -33,13 +33,17 @@ public class ChillySwerveUnit {
   private static final int PIDLOOP_IDX = 0; // set to zero if primary loop
   private static final int PROFILE_SLOT = 0;
 
-  // encoder variables
-  private final double ENCODER_PULSES_PER_REV = 20 * 4; // am-3314a encoders
-  private final double INCHES_PER_REV = (5.9 * 3.14159); // 5.9-in diameter wheel (worn)
+	// drive encoder Constants
+	//private static final double ENCODER_PULSES_PER_REV = 256*4;  // 63R  - on 2018 competition bot motors
+  private static final double ENCODER_PULSES_PER_REV = 20 * 4; // am-3314a (CIM)encoders
+	private static final double INCHES_PER_REV = (5.9 * 3.14159);   // 5.9-in diameter wheel (worn)
+			
+	public static final double INCHES_PER_ENCODER_PULSE = INCHES_PER_REV/ENCODER_PULSES_PER_REV;
+	public static final double RPM_TO_UNIT_PER_100MS = ENCODER_PULSES_PER_REV/(60*10);
 
   // PIDF values - drive
   private static final double drive_kP = 1.0;
-  private static final double drive_kI = 0.0005;
+  private static final double drive_kI = 0.001;
   private static final double drive_kD = 0.0;
   private static final double drive_kF = 0.0;
   private static final int drive_kIZone = 18;
@@ -52,32 +56,29 @@ public class ChillySwerveUnit {
   private static final int turn_kIZone = 200;
 
   public ChillySwerveUnit(int driveTalonID, int turnTalonID, double zero_angle_offset) {
+
     this.driveTalonID = driveTalonID;
     this.turnTalonID = turnTalonID;
-
     this.zero_angle_offset = zero_angle_offset;
-
     last_target_angle = 0.0;
 
-    // debug - run drive motor as open loop (temporarily)
-    driveMotor = new TalonSRX(driveTalonID);
+    /***************** DRIVE MOTOR SETUP *****************/
+    
+    // debug only (when no drive encoders present) - run drive motor as open loop (temporarily)
+    //driveMotor = new TalonSRX(driveTalonID);
+    //setDriveMotorForward(true);
 
-    /*
     driveMotor =
         configureMotor(
-            driveTalonID,
-            rev_drive_motor,
-            drive_kP,
-            drive_kI,
-            drive_kD,
-            drive_kF,
-            drive_kIZone);
+            driveTalonID, rev_drive_motor, drive_kP, drive_kI, drive_kD, drive_kF, drive_kIZone);
+
     driveMotor.configSelectedFeedbackSensor(
         FeedbackDevice.QuadEncoder, PIDLOOP_IDX, TIMEOUT_MS); // am-3314a quad encoder
     driveMotor.setSensorPhase(aligned_drive_sensor);
     driveMotor.setSelectedSensorPosition(0, PIDLOOP_IDX, TIMEOUT_MS);
-    */
+    /***************** DRIVE MOTOR SETUP *****************/
 
+    /***************** TURN MOTOR SETUP *****************/
     turnMotor =
         configureMotor(
             turnTalonID, rev_turn_motor, turn_kP, turn_kI, turn_kD, turn_kF, turn_kIZone);
@@ -90,10 +91,8 @@ public class ChillySwerveUnit {
     // ensures overflow data is not read along with raw analog encoder data
     turnMotor.setNeutralMode(NeutralMode.Brake);
     turnMotor.set(ControlMode.Position, 0);
+    /***************** TURN MOTOR SETUP *****************/
 
-    // set polarity of the drive motor and sensor
-    setDriveMotorForward(true);
-    resetDriveEnc();
   }
 
   // closed-loop motor configuration
@@ -161,6 +160,10 @@ public class ChillySwerveUnit {
   public double getAbsAngle() {
     // returns absolute angle of wheel in degrees (may wrap beyond 360 deg)
     return ((double) turnMotor.getSelectedSensorPosition(0) * (360.0 / 1024.0)) - zero_angle_offset;
+  }
+
+  public double getDistanceInches() {
+    return (double) (driveMotor.getSelectedSensorPosition(0)) * INCHES_PER_ENCODER_PULSE;
   }
 
   public void setDrivePower(double percentVal) {
@@ -267,6 +270,18 @@ public class ChillySwerveUnit {
 
   public void resetDriveEnc() {
     driveMotor.setSelectedSensorPosition(0, PIDLOOP_IDX, TIMEOUT_MS);
+  }
+
+  // used in auto (assumes angle is already set)
+  public void driveDistance(double targetPosInches, double speedRpm, double accelRpm) 
+  {
+		int nativeUnitsPer100ms = (int) ((double)speedRpm * RPM_TO_UNIT_PER_100MS);
+		int accelNativeUnits = (int) ((double)accelRpm * RPM_TO_UNIT_PER_100MS);
+
+    // uses CTRE Talon SRX motion magic
+    driveMotor.configMotionCruiseVelocity(nativeUnitsPer100ms, TIMEOUT_MS);
+    driveMotor.configMotionAcceleration(accelNativeUnits, TIMEOUT_MS);
+    driveMotor.set(ControlMode.MotionMagic, targetPosInches/INCHES_PER_ENCODER_PULSE);
   }
 
 }

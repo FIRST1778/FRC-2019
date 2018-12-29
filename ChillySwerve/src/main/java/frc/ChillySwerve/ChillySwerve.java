@@ -14,10 +14,6 @@ public class ChillySwerve {
   // debug purposes - don't run full on
   private static final double INPUT_GAIN_FACTOR = 0.5;
 
-  // used as angle baseline (if we don't reset gyro)
-  private static double initialAngle = 0.0;
-  private static double headingDeg = 0.0;
-
   // swerve units
   private static ChillySwerveUnit frontLeft, frontRight;
   private static ChillySwerveUnit backLeft, backRight;
@@ -104,12 +100,7 @@ public class ChillySwerve {
     initialized = true;
   }
 
-  public static void autoInit(boolean resetGyro, double headingDeg, boolean magicMotion) {
-    // set all wheels forward, motors off
-    reset();
-  }
-
-  public static void autoStop() {
+  public static void autoInit() {
     reset();
   }
 
@@ -311,11 +302,6 @@ public class ChillySwerve {
     humanDrive(fwd, str, rot);
   }
 
-  public static void tankDrive(double left, double right) {
-    setAllTurnAngle(0);
-    setDrivePower(left, right, left, right);
-  }
-
   public static void resetAllDriveEnc() {
     frontLeft.resetDriveEnc();
     frontRight.resetDriveEnc();
@@ -384,19 +370,38 @@ public class ChillySwerve {
     backRight.setTargetAngle(angle);
   }
 
+  // Orient all swerve motors to an angle and command them to drive a fixed distance
+  public static void autoStraight(double targetPosInches, double angleDeg, int speedRpm, int accelRpm) 
+  {    
+    setAllTurnAngle(angleDeg);  
+
+    frontLeft.driveDistance(targetPosInches, speedRpm, accelRpm);
+    frontRight.driveDistance(targetPosInches, speedRpm, accelRpm);
+    backLeft.driveDistance(targetPosInches, speedRpm, accelRpm);
+    backRight.driveDistance(targetPosInches, speedRpm, accelRpm);
+  }
+
+    // Turn method
+    // rot = [-1..1] to rotate at full CCW to full CW
+  // ===================================================
+  public static void rotate(double rot) {
+
+    // bound rotation input
+    rot = Math.min(rot,1.0);
+    rot = Math.max(rot,-1.0);
+
+    humanDrive(0, 0, rot);
+  }
+
   // Sensor measurement methods
   // ==========================================================
   public static double getDistanceInches() {
-    // TODO: calculate and return measured distance in inches
-    return 0;
+    
+    // use one of the swerve unit encoders
+    return frontLeft.getDistanceInches();
   }
 
-  // Classic drive methods
-  // =============================================================
-  public static void drive(double left, double right) {
-    // Deprecated - Tank drive no longer used
-  }
-
+  /*
   public static void autoGyroStraight(double speed, double angleDeg) {
     // autonomous operation of drive straight in a direction relative to field POV - uses gyro
 
@@ -419,19 +424,6 @@ public class ChillySwerve {
 
     fieldCentricDrive(fwd, str, rot);
   }
+  */
 
-  public static void autoMagicStraight(double targetPosInches, int speedRpm, int accelRpm) {}
-
-  public static void autoMagicTurn(
-      double targetPosInchesLeft, double targetPosInchesRight, int speedRpm, int accelRpm) {}
-
-  // Turn methods
-  // ===================================================
-  public static void rotateLeft(double speed) {
-    // drive(-speed, speed);
-  }
-
-  public static void rotateRight(double speed) {
-    // drive(speed, -speed);
-  }
 }

@@ -7,9 +7,14 @@ public class AutoNetworkBuilder {
 
   public static final int DO_NOTHING = 0;
   public static final int DRIVE_FORWARD = 1;
-  public static final int FOLLOW_PATH1 = 2;
-  public static final int FOLLOW_PATH2 = 3;
-  public static final int FOLLOW_PATH3 = 4;
+
+  public static final int SWERVE_MOVE1 = 2;
+  public static final int SWERVE_MOVE2 = 3;
+  public static final int SWERVE_MOVE3 = 4;
+
+  //public static final int FOLLOW_PATH1 = 10;
+  //public static final int FOLLOW_PATH2 = 11;
+  //public static final int FOLLOW_PATH3 = 12;
 
   // closed-loop position cruise velocity and acceleration (used for all closed-loop position
   // control)
@@ -46,11 +51,14 @@ public class AutoNetworkBuilder {
 
     autoNets = new ArrayList<AutoNetwork>();
 
-    // create networks
 		// create networks
 		autoNets.add(AutoChooser.DO_NOTHING, createDoNothingNetwork());	
 		autoNets.add(AutoChooser.DRIVE_FORWARD, createDriveForward());	
+		autoNets.add(AutoChooser.SWERVE_MOVE1, createSwerveMove1());	
+		autoNets.add(AutoChooser.SWERVE_MOVE2, createSwerveMove2());	
+		autoNets.add(AutoChooser.SWERVE_MOVE3, createSwerveMove3());	
 
+    /*
 		autoNets.add(AutoChooser.FORWARD_STRAIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.STRAIGHT_PATH, true));	
 		autoNets.add(AutoChooser.FORWARD_SWERVE_RIGHT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_RIGHT_AND_CENTER, true));	
 		autoNets.add(AutoChooser.FORWARD_SWERVE_LEFT_PATH, createFollowSinglePathNetwork(FreezyPath.SWERVE_LEFT_AND_CENTER, true));
@@ -67,6 +75,7 @@ public class AutoNetworkBuilder {
 																						FreezyPath.STRAIGHT_PATH, false));
 		autoNets.add(AutoChooser.DOUBLE_PATH_2, createFollowDoublePathNetwork(FreezyPath.SWERVE_RIGHT_AND_CENTER, true,
 																						FreezyPath.SWERVE_RIGHT_AND_CENTER, false));
+    */
 
     return autoNets;
   }
@@ -81,44 +90,49 @@ public class AutoNetworkBuilder {
     AutoState idleState = new AutoState(state_name);
     IdleAction deadEnd = new IdleAction("<Dead End Action>");
     DriveForwardAction driveForwardReset =
-        new DriveForwardAction("<Drive Forward Action -reset>", 0.0, true, 0.0); // reset gyro
+        new DriveForwardAction("<Drive Forward Action -reset>", 0.0, 0.0, 0, 0);
     idleState.addAction(deadEnd);
     idleState.addAction(driveForwardReset);
 
     return idleState;
   }
 
-  private static AutoState createMagicDriveState(
+  private static AutoState createDriveState(
       String state_name,
       double dist_inches,
       double error_inches,
+      double angle_deg,
       int max_vel_rpm,
       int max_accel_rpm) {
     AutoState driveState = new AutoState(state_name);
-    DriveForwardMagicAction driveForwardMagicAction =
-        new DriveForwardMagicAction(
-            "<Drive Forward Magic Action>", dist_inches, max_vel_rpm, max_accel_rpm, true, 0.0);
-    // TimeEvent timer = new TimeEvent(2.5);  // drive forward timer event - allow PID time to
+    DriveForwardAction driveForwardAction =
+        new DriveForwardAction(
+            "<Drive Forward Action>", dist_inches, angle_deg, max_vel_rpm, max_accel_rpm);
+
     // settle
     ClosedLoopPositionEvent pos = new ClosedLoopPositionEvent(dist_inches, error_inches, 0.6);
-    driveState.addAction(driveForwardMagicAction);
-    // driveState.addEvent(timer);
+    driveState.addAction(driveForwardAction);
     driveState.addEvent(pos);
 
     return driveState;
   }
 
-  private static AutoState createTimerState(String state_name, double timer_sec) {
-    AutoState timerState = new AutoState(state_name);
-    IdleAction deadEnd = new IdleAction("<Dead End Action>");
-    DriveForwardAction driveForwardReset =
-        new DriveForwardAction("<Drive Forward Action -reset>", 0.0, true, 0.0); // reset gyro
-    TimeEvent timer = new TimeEvent(timer_sec);
-    timerState.addAction(deadEnd);
-    timerState.addAction(driveForwardReset);
-    timerState.addEvent(timer);
+  private static AutoState createTurnState(
+    String state_name,
+    double angle_deg,
+    double error_deg,
+    double rotate_speed)
+  {
+    AutoState turnState = new AutoState(state_name);
+    TurnAction turnAction =
+        new TurnAction("<Turn Action>", rotate_speed);
 
-    return timerState;
+    // settle
+    ClosedLoopAngleEvent angle = new ClosedLoopAngleEvent(angle_deg, error_deg, 0.6);
+    turnState.addAction(turnAction);
+    turnState.addEvent(angle);
+
+    return turnState;
   }
 
   ////////////////////////////////////////////////////////////
@@ -138,7 +152,7 @@ public class AutoNetworkBuilder {
   }
 
   // **** MOVE FORWARD Network *****
-  // 1) drive forward for a number of sec
+  // 1) drive forward a number of inches
   // 2) go back to idle and stay there
   private static AutoNetwork createDriveForward() {
 
@@ -146,8 +160,8 @@ public class AutoNetworkBuilder {
 
     // create states
     AutoState driveState =
-        createMagicDriveState(
-            "<Drive State 1>", 120.0, 3.0, CLOSED_LOOP_VEL_SLOW, CLOSED_LOOP_ACCEL_SLOW);
+        createDriveState(
+            "<Drive State 1>", 60.0, 3.0, 0.0, CLOSED_LOOP_VEL_SLOW, CLOSED_LOOP_ACCEL_SLOW);
     AutoState idleState = createIdleState("<Idle State>");
 
     // connect the state sequence
@@ -155,6 +169,121 @@ public class AutoNetworkBuilder {
 
     // add states to the network list
     autoNet.addState(driveState);
+    autoNet.addState(idleState);
+
+    return autoNet;
+  }
+
+  // **** SWERVE Move Network 1 *****
+  // 1) drive -45 degs a number of inches
+  // 2) drive +45 degs a number of inches
+  // 3) drive -45 degs a number of inches backwards
+  // 4) drive +45 degs a number of inches backwards
+  // 5) go back to idle and stay there
+  private static AutoNetwork createSwerveMove1() {
+
+    AutoNetwork autoNet = new AutoNetwork("<Swerve Move Network 1>");
+
+    // create states
+    AutoState driveState1 =
+        createDriveState(
+            "<Drive State 1>", 60.0, 3.0, -45.0, CLOSED_LOOP_VEL_SLOW, CLOSED_LOOP_ACCEL_SLOW);
+    AutoState driveState2 =
+        createDriveState(
+            "<Drive State 2>", 60.0, 3.0, +45.0, CLOSED_LOOP_VEL_SLOW, CLOSED_LOOP_ACCEL_SLOW);
+    AutoState driveState3 =
+        createDriveState(
+            "<Drive State 3>", -60.0, 3.0, -45.0, CLOSED_LOOP_VEL_SLOW, CLOSED_LOOP_ACCEL_SLOW);
+    AutoState driveState4 =
+        createDriveState(
+            "<Drive State 4>", -60.0, 3.0, +45.0, CLOSED_LOOP_VEL_SLOW, CLOSED_LOOP_ACCEL_SLOW);
+    AutoState idleState = createIdleState("<Idle State>");
+
+    // connect the state sequence
+    driveState1.associateNextState(driveState2);
+    driveState2.associateNextState(driveState3);
+    driveState3.associateNextState(driveState4);
+    driveState4.associateNextState(idleState);
+
+    // add states to the network list
+    autoNet.addState(driveState1);
+    autoNet.addState(driveState2);
+    autoNet.addState(driveState3);
+    autoNet.addState(driveState4);
+    autoNet.addState(idleState);
+
+    return autoNet;
+  }
+
+  // **** SWERVE Move Network 2 *****
+  // 0) set robot-centric mode
+  // 1) drive -45 degs a number of inches
+  // 2) rotate +90 degs
+  // 3) drive -45 degs a number of inches
+  // 4) rotate +90 degs
+  // 5) drive -45 degs a number of inches
+  // 6) rotate +90 degs
+  // 7) drive -45 degs a number of inches
+  // 8) rotate +90 degs
+  // 9) go back to idle and stay there
+  private static AutoNetwork createSwerveMove2() {
+
+    AutoNetwork autoNet = new AutoNetwork("<Swerve Move Network 2>");
+
+    // create states
+    AutoState driveState1 =
+        createDriveState(
+            "<Drive State 1>", 60.0, 3.0, -45.0, CLOSED_LOOP_VEL_SLOW, CLOSED_LOOP_ACCEL_SLOW);
+    AutoState turnState1 = 
+        createTurnState("<Turn State 1>", +90.0, 3.0, 0.4);
+    AutoState driveState2 =
+        createDriveState(
+            "<Drive State 2>", 60.0, 3.0, -45.0, CLOSED_LOOP_VEL_SLOW, CLOSED_LOOP_ACCEL_SLOW);
+    AutoState turnState2 = 
+        createTurnState("<Turn State 2>", +90.0, 3.0, 0.4);
+    AutoState driveState3 =
+        createDriveState(
+            "<Drive State 3>", 60.0, 3.0, -45.0, CLOSED_LOOP_VEL_SLOW, CLOSED_LOOP_ACCEL_SLOW);
+    AutoState turnState3 = 
+        createTurnState("<Turn State 3>", +90.0, 3.0, 0.4);
+    AutoState driveState4 =
+        createDriveState(
+            "<Drive State 4>", 60.0, 3.0, -45.0, CLOSED_LOOP_VEL_SLOW, CLOSED_LOOP_ACCEL_SLOW);
+    AutoState turnState4 = 
+        createTurnState("<Turn State 4>", +90.0, 3.0, 0.4);
+    AutoState idleState = createIdleState("<Idle State>");
+
+    // connect the state sequence
+    driveState1.associateNextState(turnState1);
+    turnState1.associateNextState(driveState2);
+    driveState2.associateNextState(turnState2);
+    turnState2.associateNextState(driveState3);
+    driveState3.associateNextState(turnState3);
+    turnState3.associateNextState(driveState4);
+    driveState4.associateNextState(turnState4);
+    turnState4.associateNextState(idleState);
+
+    // add states to the network list
+    autoNet.addState(driveState1);
+    autoNet.addState(turnState1);
+    autoNet.addState(driveState2);
+    autoNet.addState(turnState2);
+    autoNet.addState(driveState3);
+    autoNet.addState(turnState3);
+    autoNet.addState(driveState4);
+    autoNet.addState(turnState4);
+    autoNet.addState(idleState);
+
+    return autoNet;
+  }
+
+  // **** SWERVE Move Network 3 *****
+  // 1) go back to idle and stay there
+  private static AutoNetwork createSwerveMove3() {
+
+    AutoNetwork autoNet = new AutoNetwork("<Swerve Move Network 3>");
+    
+    AutoState idleState = createIdleState("<Idle State>");
     autoNet.addState(idleState);
 
     return autoNet;
@@ -169,7 +298,7 @@ public class AutoNetworkBuilder {
 	
 		// create states
 		AutoState followPathState = new AutoState("<Follow Path State>");
-		FollowPathAction follow = new FollowPathAction("<Follow Path Action>", pathToFollow, fwdPolarity);
+		FollowPathAction follow = new FollowPathAction("<Follow Path Action>", pathToFollow, fwdPolarity, true);
 		PathCompleteEvent pathComplete = new PathCompleteEvent();
 		followPathState.addAction(follow);
 		followPathState.addEvent(pathComplete);
@@ -196,13 +325,13 @@ public class AutoNetworkBuilder {
 	
 		// create states
 		AutoState followPathState1 = new AutoState("<Follow Path State 1>");
-		FollowPathAction follow1 = new FollowPathAction("<Follow Path 1 Action>", path1, path1FwdPolarity);
+		FollowPathAction follow1 = new FollowPathAction("<Follow Path 1 Action>", path1, path1FwdPolarity, true);
 		PathCompleteEvent pathComplete1 = new PathCompleteEvent();
 		followPathState1.addAction(follow1);
 		followPathState1.addEvent(pathComplete1);
 
 		AutoState followPathState2 = new AutoState("<Follow Path State 2>");
-		FollowPathAction follow2 = new FollowPathAction("<Follow Path 2 Action>", path2, path2FwdPolarity);
+		FollowPathAction follow2 = new FollowPathAction("<Follow Path 2 Action>", path2, path2FwdPolarity, true);
 		PathCompleteEvent pathComplete2 = new PathCompleteEvent();
 		followPathState2.addAction(follow2);
 		followPathState2.addEvent(pathComplete2);
