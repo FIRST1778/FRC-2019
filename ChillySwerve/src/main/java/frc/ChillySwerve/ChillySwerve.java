@@ -8,8 +8,8 @@ import jaci.pathfinder.followers.EncoderFollower;
 
 public class ChillySwerve {
 
-  private static final double AUTO_DRIVE_ANGLE_CORRECT_COEFF = 0.02;
-  private static final double GYRO_CORRECT_COEFF = 0.03;
+  //private static final double AUTO_DRIVE_ANGLE_CORRECT_COEFF = 0.02;
+  //private static final double GYRO_CORRECT_COEFF = 0.03;
 
   // debug purposes - don't run full on
   private static final double INPUT_GAIN_FACTOR = 0.5;
@@ -60,9 +60,6 @@ public class ChillySwerve {
     // set all drive motor and sensor polarities, reset encoders
     setDriveMotorForward(true);
     resetAllDriveEnc();
-
-    // reset gyro
-    NavXSensor.reset();
   }
 
   public static void initialize() {
@@ -87,9 +84,6 @@ public class ChillySwerve {
         new ChillySwerveUnit(
             HardwareIDs.BACK_RIGHT_DRIVE_TALON_ID, HardwareIDs.BACK_RIGHT_ROTATE_TALON_ID,
             BR_ABS_ZERO_ANGLE_OFFSET);
-
-    // gyro needed for field-centric drive
-    NavXSensor.initialize();
 
     // initialize the swerve modules
     frontLeft.initialize();

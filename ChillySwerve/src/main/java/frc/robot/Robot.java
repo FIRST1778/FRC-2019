@@ -38,6 +38,9 @@ public class Robot extends IterativeRobot {
   public void autonomousInit() {
     InputOutputComm.putString(InputOutputComm.LogTable.kMainLog, "MainLog", "autonomous mode...");
 
+    //IMPORTANT!! Only reset the gyro ONCE, here, at beginning of auto
+    NavXSensor.reset();
+
     ChillySwerve.autoInit();
     
     // start the auto state machine
@@ -72,7 +75,6 @@ public class Robot extends IterativeRobot {
 
     ChillySwerve.disabledInit();
 
-    NavXSensor.reset();
     FreezyPath.stop();
     
     autoSM.stop();
@@ -94,13 +96,6 @@ public class Robot extends IterativeRobot {
     // double gyroAngle = NavXSensor.getYaw();  // -180 deg to +180 deg
     double gyroAngle = NavXSensor.getAngle(); // continuous angle (can be larger than 360 deg)
 
-    // System.out.println("getGyroAngle:  Gyro angle = " + gyroAngle);
-
-    // send output data for test & debug
-    // InputOutputComm.putBoolean(InputOutputComm.LogTable.kMainLog,"Auto/IMU_Connected",navX.isConnected());
-    // InputOutputComm.putBoolean(InputOutputComm.LogTable.kMainLog,"Auto/IMU_Calibrating",navX.isCalibrating());
-
-    // System.out.println("gyroAngle = " + gyroAngle);
     InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "Auto/GyroAngle", gyroAngle);
 
     return gyroAngle;

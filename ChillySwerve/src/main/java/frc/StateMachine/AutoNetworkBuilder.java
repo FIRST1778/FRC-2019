@@ -230,34 +230,36 @@ public class AutoNetworkBuilder {
   }
 
   // **** SWERVE Move Network 2 *****
-  // 1) rotate +90 degs
+  // 1) rotate +90 deg heading
   // 2) Time Delay 1 sec
-  // 3) rotate +90 degs
+  // 3) rotate +180 deg heading
   // 4) Time Delay 1 sec
-  // 5) rotate -90 degs
+  // 5) rotate +90 deg heading
   // 6) Time Delay 1 sec
-  // 7) rotate -90 degs
+  // 7) rotate +0 deg heading
   // 8) Time Delay 1 sec
   // 9) go back to state 1
 
   private static AutoNetwork createSwerveMove2() {
 
     AutoNetwork autoNet = new AutoNetwork("<Swerve Move Network 2>");
-    
+
+    // assumes field-centric translation mode (gyro values persisted between steps)
+
     AutoState turnState1 = 
         createTurnState("<Turn State 1>", +90.0, 3.0, 0.4);
     AutoState timerState1 = 
         createTimerState("<Timer State 1>", 1.0);
     AutoState turnState2 = 
-        createTurnState("<Turn State 2>", +90.0, 3.0, 0.4);
+        createTurnState("<Turn State 2>", +180.0, 3.0, 0.4);
     AutoState timerState2 = 
         createTimerState("<Timer State 2>", 1.0);
     AutoState turnState3 = 
-        createTurnState("<Turn State 3>", -90.0, 3.0, 0.4);
+        createTurnState("<Turn State 3>", +90.0, 3.0, 0.4);
     AutoState timerState3 = 
         createTimerState("<Timer State 3>", 1.0);
     AutoState turnState4 = 
-        createTurnState("<Turn State 4>", -90.0, 3.0, 0.4);
+        createTurnState("<Turn State 4>", +0.0, 3.0, 0.4);
     AutoState timerState4 = 
         createTimerState("<Timer State 4>", 1.0);
 
@@ -285,13 +287,13 @@ public class AutoNetworkBuilder {
 
   // **** SWERVE Move Network 3 *****
   // 1) drive -45 degs a number of inches
-  // 2) rotate +90 degs
+  // 2) rotate +90 deg heading
   // 3) drive -45 degs a number of inches
-  // 4) rotate +90 degs
+  // 4) rotate +180 deg heading
   // 5) drive -45 degs a number of inches
-  // 6) rotate +90 degs
+  // 6) rotate +270 deg heading
   // 7) drive -45 degs a number of inches
-  // 8) rotate +90 degs
+  // 8) rotate +360 deg heading
   // 9) go back to idle and stay there
   private static AutoNetwork createSwerveMove3() {
 
@@ -307,17 +309,17 @@ public class AutoNetworkBuilder {
         createDriveState(
             "<Drive State 2>", 60.0, 3.0, -45.0, CLOSED_LOOP_VEL_SLOW, CLOSED_LOOP_ACCEL_SLOW);
     AutoState turnState2 = 
-        createTurnState("<Turn State 2>", +90.0, 3.0, 0.4);
+        createTurnState("<Turn State 2>", +180.0, 3.0, 0.4);
     AutoState driveState3 =
         createDriveState(
             "<Drive State 3>", 60.0, 3.0, -45.0, CLOSED_LOOP_VEL_SLOW, CLOSED_LOOP_ACCEL_SLOW);
     AutoState turnState3 = 
-        createTurnState("<Turn State 3>", +90.0, 3.0, 0.4);
+        createTurnState("<Turn State 3>", +270.0, 3.0, 0.4);
     AutoState driveState4 =
         createDriveState(
             "<Drive State 4>", 60.0, 3.0, -45.0, CLOSED_LOOP_VEL_SLOW, CLOSED_LOOP_ACCEL_SLOW);
     AutoState turnState4 = 
-        createTurnState("<Turn State 4>", +90.0, 3.0, 0.4);
+        createTurnState("<Turn State 4>", +360.0, 3.0, 0.4);
     AutoState idleState = createIdleState("<Idle State>");
 
     // connect the state sequence
@@ -353,7 +355,7 @@ public class AutoNetworkBuilder {
 	
 		// create states
 		AutoState followPathState = new AutoState("<Follow Path State>");
-		FollowPathAction follow = new FollowPathAction("<Follow Path Action>", pathToFollow, fwdPolarity, true);
+		FollowPathAction follow = new FollowPathAction("<Follow Path Action>", pathToFollow, fwdPolarity);
 		PathCompleteEvent pathComplete = new PathCompleteEvent();
 		followPathState.addAction(follow);
 		followPathState.addEvent(pathComplete);
@@ -380,13 +382,13 @@ public class AutoNetworkBuilder {
 	
 		// create states
 		AutoState followPathState1 = new AutoState("<Follow Path State 1>");
-		FollowPathAction follow1 = new FollowPathAction("<Follow Path 1 Action>", path1, path1FwdPolarity, true);
+		FollowPathAction follow1 = new FollowPathAction("<Follow Path 1 Action>", path1, path1FwdPolarity);
 		PathCompleteEvent pathComplete1 = new PathCompleteEvent();
 		followPathState1.addAction(follow1);
 		followPathState1.addEvent(pathComplete1);
 
 		AutoState followPathState2 = new AutoState("<Follow Path State 2>");
-		FollowPathAction follow2 = new FollowPathAction("<Follow Path 2 Action>", path2, path2FwdPolarity, true);
+		FollowPathAction follow2 = new FollowPathAction("<Follow Path 2 Action>", path2, path2FwdPolarity);
 		PathCompleteEvent pathComplete2 = new PathCompleteEvent();
 		followPathState2.addAction(follow2);
 		followPathState2.addEvent(pathComplete2);

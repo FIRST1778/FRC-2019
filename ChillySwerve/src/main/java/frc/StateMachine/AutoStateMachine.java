@@ -46,9 +46,6 @@ public class AutoStateMachine {
     System.out.println(myString);
     InputOutputComm.putString(InputOutputComm.LogTable.kMainLog, "Auto/AutoSM_network", myString);
 
-    // must initialize the gyro class and reset the angle to our initial rotation
-    NavXSensor.reset();
-
     // reset drive system encoders to zero position
     ChillySwerve.reset();
 

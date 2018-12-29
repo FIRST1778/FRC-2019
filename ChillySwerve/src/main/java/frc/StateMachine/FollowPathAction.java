@@ -24,11 +24,10 @@ public class FollowPathAction extends Action {
     FreezyPath.initialize();
   }
 
-  public FollowPathAction(String name, int pathToFollow, boolean polarity, boolean resetGyro) {
+  public FollowPathAction(String name, int pathToFollow, boolean polarity) {
     this.name = name;
     this.pathToFollow = pathToFollow;
     this.fwdPolarity = polarity;
-    this.resetGyro = resetGyro;
 
     ChillySwerve.initialize();
     NavXSensor.initialize();
@@ -38,9 +37,7 @@ public class FollowPathAction extends Action {
 
   // action entry
   public void initialize() {
-    if (resetGyro)
-      NavXSensor.reset();
-
+    
     // reset the drive encoders
     ChillySwerve.resetAllDriveEnc();
 
