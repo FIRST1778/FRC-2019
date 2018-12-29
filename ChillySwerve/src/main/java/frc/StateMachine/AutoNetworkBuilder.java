@@ -97,6 +97,20 @@ public class AutoNetworkBuilder {
     return idleState;
   }
 
+	private static AutoState createTimerState(String state_name, double timer_sec)
+	{
+		AutoState timerState = new AutoState(state_name);
+		IdleAction deadEnd = new IdleAction("<Dead End Action>");
+    DriveForwardAction driveForwardReset = 
+        new DriveForwardAction("<Drive Forward Action -reset>", 0.0, 0.0, 0, 0);
+		TimeEvent timer = new TimeEvent(timer_sec);
+		timerState.addAction(deadEnd);
+		timerState.addAction(driveForwardReset);
+		timerState.addEvent(timer);
+		
+		return timerState;
+	}
+
   private static AutoState createDriveState(
       String state_name,
       double dist_inches,
@@ -216,7 +230,60 @@ public class AutoNetworkBuilder {
   }
 
   // **** SWERVE Move Network 2 *****
-  // 0) set robot-centric mode
+  // 1) rotate +90 degs
+  // 2) Time Delay 1 sec
+  // 3) rotate +90 degs
+  // 4) Time Delay 1 sec
+  // 5) rotate -90 degs
+  // 6) Time Delay 1 sec
+  // 7) rotate -90 degs
+  // 8) Time Delay 1 sec
+  // 9) go back to state 1
+
+  private static AutoNetwork createSwerveMove2() {
+
+    AutoNetwork autoNet = new AutoNetwork("<Swerve Move Network 2>");
+    
+    AutoState turnState1 = 
+        createTurnState("<Turn State 1>", +90.0, 3.0, 0.4);
+    AutoState timerState1 = 
+        createTimerState("<Timer State 1>", 1.0);
+    AutoState turnState2 = 
+        createTurnState("<Turn State 2>", +90.0, 3.0, 0.4);
+    AutoState timerState2 = 
+        createTimerState("<Timer State 2>", 1.0);
+    AutoState turnState3 = 
+        createTurnState("<Turn State 3>", -90.0, 3.0, 0.4);
+    AutoState timerState3 = 
+        createTimerState("<Timer State 3>", 1.0);
+    AutoState turnState4 = 
+        createTurnState("<Turn State 4>", -90.0, 3.0, 0.4);
+    AutoState timerState4 = 
+        createTimerState("<Timer State 4>", 1.0);
+
+    // connect the state sequence
+    turnState1.associateNextState(timerState1);
+    timerState1.associateNextState(turnState2);
+    turnState2.associateNextState(timerState2);
+    timerState2.associateNextState(turnState3);
+    turnState3.associateNextState(timerState3);
+    timerState3.associateNextState(turnState4);
+    turnState4.associateNextState(timerState4);
+    timerState4.associateNextState(turnState1);
+
+    autoNet.addState(turnState1);
+    autoNet.addState(timerState1);
+    autoNet.addState(turnState2);
+    autoNet.addState(timerState2);
+    autoNet.addState(turnState3);
+    autoNet.addState(timerState3);
+    autoNet.addState(turnState4);
+    autoNet.addState(timerState4);
+
+    return autoNet;
+  }
+
+  // **** SWERVE Move Network 3 *****
   // 1) drive -45 degs a number of inches
   // 2) rotate +90 degs
   // 3) drive -45 degs a number of inches
@@ -226,9 +293,9 @@ public class AutoNetworkBuilder {
   // 7) drive -45 degs a number of inches
   // 8) rotate +90 degs
   // 9) go back to idle and stay there
-  private static AutoNetwork createSwerveMove2() {
+  private static AutoNetwork createSwerveMove3() {
 
-    AutoNetwork autoNet = new AutoNetwork("<Swerve Move Network 2>");
+    AutoNetwork autoNet = new AutoNetwork("<Swerve Move Network 3>");
 
     // create states
     AutoState driveState1 =
@@ -272,18 +339,6 @@ public class AutoNetworkBuilder {
     autoNet.addState(turnState3);
     autoNet.addState(driveState4);
     autoNet.addState(turnState4);
-    autoNet.addState(idleState);
-
-    return autoNet;
-  }
-
-  // **** SWERVE Move Network 3 *****
-  // 1) go back to idle and stay there
-  private static AutoNetwork createSwerveMove3() {
-
-    AutoNetwork autoNet = new AutoNetwork("<Swerve Move Network 3>");
-    
-    AutoState idleState = createIdleState("<Idle State>");
     autoNet.addState(idleState);
 
     return autoNet;
