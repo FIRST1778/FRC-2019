@@ -57,9 +57,8 @@ public class ChillySwerve {
     // zero out all drive motors
     setAllDrivePower(0);
 
-    // set all drive motor and sensor polarities, reset encoders
+    // set all drive motor and sensor polarities
     setDriveMotorForward(true);
-    resetAllDriveEnc();
   }
 
   public static void initialize() {
@@ -136,7 +135,6 @@ public class ChillySwerve {
         InputOutputComm.LogTable.kMainLog, "ChillySwerve/AA_mode", "robot_centric");
    }
 
-
     // debug only
     InputOutputComm.putDouble(
         InputOutputComm.LogTable.kMainLog, "ChillySwerve/AA_swerveCmd/fwd", fwd);
@@ -145,43 +143,6 @@ public class ChillySwerve {
     InputOutputComm.putDouble(
         InputOutputComm.LogTable.kMainLog, "ChillySwerve/AA_swerveCmd/rot", rot);
       
-    // debug only
-    InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AC_Angles/FL_absAngle", frontLeft.getAbsAngle());
-    InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AC_Angles/FR_absAngle", frontRight.getAbsAngle());
-    InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AC_Angles/BL_absAngle", backLeft.getAbsAngle());
-    InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AC_Angles/BR_absAngle", backRight.getAbsAngle());
-
-    InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AD_RawAngles/FL_rawAngle", frontLeft.getRawAbsAngle());
-    InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AD_RawAngles/FR_rawAngle", frontRight.getRawAbsAngle());
-    InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AD_RawAngles/BL_rawAngle", backLeft.getRawAbsAngle());
-    InputOutputComm.putDouble(
-        InputOutputComm.LogTable.kMainLog, "ChillySwerve/AD_RawAngles/BR_rawAngle", backRight.getRawAbsAngle());
- 
-    InputOutputComm.putDouble(
-          InputOutputComm.LogTable.kMainLog, "ChillySwerve/Encoders/FL_turnEnc", frontLeft.getTurnEnc());
-    InputOutputComm.putDouble(
-          InputOutputComm.LogTable.kMainLog, "ChillySwerve/Encoders/FR_turnEnc", frontRight.getTurnEnc());
-    InputOutputComm.putDouble(
-          InputOutputComm.LogTable.kMainLog, "ChillySwerve/Encoders/BL_turnEnc", backLeft.getTurnEnc());
-    InputOutputComm.putDouble(
-          InputOutputComm.LogTable.kMainLog, "ChillySwerve/Encoders/BR_turnEnc", backRight.getTurnEnc());
-  
-    InputOutputComm.putDouble(
-          InputOutputComm.LogTable.kMainLog, "ChillySwerve/ZeroOffsets/FL_TurnZeroOffset", frontLeft.getTurnZeroOffset());
-    InputOutputComm.putDouble(
-          InputOutputComm.LogTable.kMainLog, "ChillySwerve/ZeroOffsets/FR_TurnZeroOffset", frontRight.getTurnZeroOffset());
-    InputOutputComm.putDouble(
-          InputOutputComm.LogTable.kMainLog, "ChillySwerve/ZeroOffsets/BL_TurnZeroOffset", backLeft.getTurnZeroOffset());
-    InputOutputComm.putDouble(
-          InputOutputComm.LogTable.kMainLog, "ChillySwerve/ZeroOffsets/BR_TurnZeroOffset", backRight.getTurnZeroOffset());
-
   }
 
   public static void disabledInit() {
@@ -190,7 +151,7 @@ public class ChillySwerve {
   }
 
   public static void disabledPeriodic() {
-    // nothing yet
+    // nothing needed
   }
 
   public static void swerveDrive(double fwd, double str, double rot) {
@@ -391,8 +352,67 @@ public class ChillySwerve {
   // ==========================================================
   public static double getDistanceInches() {
     
-    // use one of the swerve unit encoders
-    return frontLeft.getDistanceInches();
+    double fl_dist = frontLeft.getDistanceInches();
+    double fr_dist = frontRight.getDistanceInches();
+    double bl_dist = backLeft.getDistanceInches();
+    double br_dist = backRight.getDistanceInches();
+
+    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/Sensors_DriveEnc/FL_dist", fl_dist);
+    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/Sensors_DriveEnc/FR_dist", fr_dist);
+    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/Sensors_DriveEnc/BL_dist", bl_dist);
+    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/Sensors_DriveEnc/BR_dist", br_dist);
+
+    // use one of the swerve encoder values (they should be very similar if working properly)
+    return fl_dist;
+  }
+
+  public static double getTurnAngleDeg() {
+
+    double fl_angle = frontLeft.getAbsAngle();
+    double fr_angle = frontRight.getAbsAngle();
+    double bl_angle = backLeft.getAbsAngle();
+    double br_angle = backRight.getAbsAngle();
+
+    InputOutputComm.putDouble(
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Sensors_AnglesAbs/FL_absAngle", fl_angle);
+    InputOutputComm.putDouble(
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Sensors_AnglesAbs/FR_absAngle", fr_angle);
+    InputOutputComm.putDouble(
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Sensors_AnglesAbs/BL_absAngle", bl_angle);
+    InputOutputComm.putDouble(
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Sensors_AnglesAbs/BR_absAngle", br_angle);
+
+    InputOutputComm.putDouble(
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Sensors_AnglesRaw/FL_rawAngle", frontLeft.getRawAbsAngle());
+    InputOutputComm.putDouble(
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Sensors_AnglesRaw/FR_rawAngle", frontRight.getRawAbsAngle());
+    InputOutputComm.putDouble(
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Sensors_AnglesRaw/BL_rawAngle", backLeft.getRawAbsAngle());
+    InputOutputComm.putDouble(
+        InputOutputComm.LogTable.kMainLog, "ChillySwerve/Sensors_AnglesRaw/BR_rawAngle", backRight.getRawAbsAngle());
+ 
+    /*
+    // Debug only
+    InputOutputComm.putDouble(
+          InputOutputComm.LogTable.kMainLog, "ChillySwerve/AE_Encoders/FL_turnEnc", frontLeft.getTurnEnc());
+    InputOutputComm.putDouble(
+          InputOutputComm.LogTable.kMainLog, "ChillySwerve/AE_Encoders/FR_turnEnc", frontRight.getTurnEnc());
+    InputOutputComm.putDouble(
+          InputOutputComm.LogTable.kMainLog, "ChillySwerve/AE_Encoders/BL_turnEnc", backLeft.getTurnEnc());
+    InputOutputComm.putDouble(
+          InputOutputComm.LogTable.kMainLog, "ChillySwerve/AE_Encoders/BR_turnEnc", backRight.getTurnEnc());
+  
+    InputOutputComm.putDouble(
+          InputOutputComm.LogTable.kMainLog, "ChillySwerve/AF_ZeroOffsets/FL_TurnZeroOffset", frontLeft.getTurnZeroOffset());
+    InputOutputComm.putDouble(
+          InputOutputComm.LogTable.kMainLog, "ChillySwerve/AF_ZeroOffsets/FR_TurnZeroOffset", frontRight.getTurnZeroOffset());
+    InputOutputComm.putDouble(
+          InputOutputComm.LogTable.kMainLog, "ChillySwerve/AF_ZeroOffsets/BL_TurnZeroOffset", backLeft.getTurnZeroOffset());
+    InputOutputComm.putDouble(
+          InputOutputComm.LogTable.kMainLog, "ChillySwerve/AF_ZeroOffsets/BR_TurnZeroOffset", backRight.getTurnZeroOffset());
+    */
+
+    return fl_angle;
   }
 
   /*

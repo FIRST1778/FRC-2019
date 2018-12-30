@@ -53,8 +53,8 @@ public class Robot extends IterativeRobot {
 
     autoSM.process();
 
-    // debug only (read position sensors)
-    getGyroAngle();
+    // read sensor values out to shuffleboard
+    readSensors();
   }
 
   @Override
@@ -66,8 +66,12 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void teleopPeriodic() {
+
     // ChillySwerve-Drive command for all controllers
     ChillySwerve.teleopPeriodic();
+
+    // read sensor values out to shuffleboard
+    readSensors();
   }
 
   @Override
@@ -91,13 +95,16 @@ public class Robot extends IterativeRobot {
   @Override
   public void testPeriodic() {}
 
-  private double getGyroAngle() {
-    // double gyroAngle = 0.0;
-    // double gyroAngle = NavXSensor.getYaw();  // -180 deg to +180 deg
+  private void readSensors()
+  {
+    // report current gyro value
     double gyroAngle = NavXSensor.getAngle(); // continuous angle (can be larger than 360 deg)
+    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/Sensors_Gyro/GyroAngleDeg", gyroAngle);
 
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "Auto/GyroAngle", gyroAngle);
+    // report current drive distances
+    ChillySwerve.getDistanceInches();
 
-    return gyroAngle;
+    // report current turn wheel angles
+    ChillySwerve.getTurnAngleDeg();
   }
 }
