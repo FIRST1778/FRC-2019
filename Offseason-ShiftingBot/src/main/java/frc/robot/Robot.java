@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import frc.lib.util.CrashTracker;
 import frc.robot.auto.AutoFieldState;
+import frc.robot.auto.AutoModeEndedException;
 import frc.robot.auto.AutoModeExecutor;
 import frc.robot.auto.creators.TestAutoModeCreator;
 
@@ -31,15 +32,23 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void robotInit() {
-    CrashTracker.logRobotInit();
-    // testPathFollowers = drive.generatePath(AutoPaths.testPath, false);
-    autoFieldState.setSides(DriverStation.getInstance().getGameSpecificMessage());
-    // drive.sendTelemetry();
+    try {
+      CrashTracker.logRobotInit();
+      // testPathFollowers = drive.generatePath(AutoPaths.testPath, false);
+      autoFieldState.setSides(DriverStation.getInstance().getGameSpecificMessage());
+      // drive.sendTelemetry();
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+    }
   }
 
   @Override
   public void disabledInit() {
-    CrashTracker.logDisabledInit();
+    try {
+      CrashTracker.logDisabledInit();
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+    }
   }
 
   @Override
@@ -57,44 +66,56 @@ public class Robot extends IterativeRobot {
     } catch (Throwable t) {
       CrashTracker.logThrowableCrash(t);
     }
-    // drive.prepareForPath(testPathFollowers);
   }
 
   @Override
   public void teleopInit() {
-    CrashTracker.logTeleopInit();
+    try {
+      CrashTracker.logTeleopInit();
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+    }
   }
 
   @Override
-  public void testInit() {}
+  public void testInit() {
+    try {
+      CrashTracker.logTestInit();
+      throw new AutoModeEndedException();
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+    }
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    try {
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+    }
+  }
 
   @Override
   public void autonomousPeriodic() {
-    // drive.followPath(testPathFollowers);
-
-    // drive.sendTelemetry();
+    try {
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+    }
   }
 
   @Override
   public void teleopPeriodic() {
-    /*drive.setGear(
-        controlInterpreter.getHighGearShift()
-            ? true
-            : (controlInterpreter.getLowGearShift() ? false : drive.isHighGear()));
-
-    drive.setPowers(
-        freezyDriver.freezyDrive(
-            controlInterpreter.getThrottle(),
-            controlInterpreter.getWheelX(),
-            controlInterpreter.getQuickTurn(),
-            drive.isHighGear()));
-
-    drive.sendTelemetry();*/
+    try {
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+    }
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    try {
+    } catch (Throwable t) {
+      CrashTracker.logThrowableCrash(t);
+    }
+  }
 }
