@@ -13,8 +13,13 @@ import java.util.Date;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
-/** Tracks start-up and caught crash events, logging them to a file which dosn't roll over. */
-public class CrashTracker {
+/**
+ * Logs data as a CSV file on the roboRIO, saved as /home/lvuser/crashLog.csv. This file can be
+ * later retrieved through SFTP/SSH and filtered or viewed. The log file contains the following data
+ * points for each marker: the current time/date, the time/date the current JAR file was compiled,
+ * and the current match type and number.
+ */
+public class DebugLog {
   private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
   private static StringWriter sw = new StringWriter();
   private static File logFile = new File("/home/lvuser/crashLog.csv");
@@ -50,6 +55,10 @@ public class CrashTracker {
 
   public static void logThrowableCrash(Throwable throwable) {
     logMarker("Exception", throwable);
+  }
+
+  public static void logNote(String note) {
+    logMarker("\"" + note + "\"");
   }
 
   private static void logMarker(String mark) {

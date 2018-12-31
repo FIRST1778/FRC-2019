@@ -1,14 +1,14 @@
 package frc.lib.util;
 
-/** Runnable class with reports all uncaught throws to CrashTracker. */
-public abstract class CrashTrackingRunnable implements Runnable {
+/** Runnable class with reports all uncaught throws to DebugLog. */
+public abstract class DebugLogRunnable implements Runnable {
 
   @Override
   public final void run() {
     try {
       runCrashTracked();
     } catch (Throwable t) {
-      CrashTracker.logThrowableCrash(t);
+      DebugLog.logThrowableCrash(t);
       throw t;
     }
   }
