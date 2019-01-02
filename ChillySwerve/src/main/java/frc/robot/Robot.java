@@ -61,6 +61,9 @@ public class Robot extends IterativeRobot {
   public void teleopInit() {
     InputOutputComm.putString(InputOutputComm.LogTable.kMainLog, "MainLog", "teleop mode...");
 
+    //IMPORTANT!! DEBUG ONLY - Must remove this gyro reset prior to competition!
+    NavXSensor.reset();
+
     ChillySwerve.teleopInit();
   }
 
