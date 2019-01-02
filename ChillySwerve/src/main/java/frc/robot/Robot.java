@@ -20,13 +20,13 @@ public class Robot extends IterativeRobot {
     InputOutputComm.initialize();
     RPIComm.initialize();
     NavXSensor.initialize();
-    FreezyPath.initialize();
+    //FreezyPath.initialize();
 
     // Initialize ChillySwerve Drive controller classes
     ChillySwerve.initialize();
 
     // Create Autonomous State Machine
-    autoSM = new AutoStateMachine();
+    //autoSM = new AutoStateMachine();
 
     // retrieve Driver Station instance
     ds = DriverStation.getInstance();
@@ -44,14 +44,14 @@ public class Robot extends IterativeRobot {
     ChillySwerve.autoInit();
     
     // start the auto state machine
-    autoSM.start();
+    //autoSM.start();
   }
 
   /** This function is called periodically during autonomous */
   @Override
   public void autonomousPeriodic() {
 
-    autoSM.process();
+    //autoSM.process();
 
     // read sensor values out to shuffleboard
     readSensors();
@@ -79,9 +79,8 @@ public class Robot extends IterativeRobot {
 
     ChillySwerve.disabledInit();
 
-    FreezyPath.stop();
-    
-    autoSM.stop();
+    //FreezyPath.stop();
+    //autoSM.stop();
   }
 
   @Override
