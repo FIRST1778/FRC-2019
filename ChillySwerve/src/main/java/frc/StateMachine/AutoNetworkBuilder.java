@@ -48,12 +48,12 @@ public class AutoNetworkBuilder {
 		autoNets.add(AutoChooser.SWERVE_MOVE2, createSwerveMove2());	
         autoNets.add(AutoChooser.SWERVE_MOVE3, createSwerveMove3());	
         
-		autoNets.add(AutoChooser.DRIVE_AND_ROTATE_PATH1, createFollowSinglePathNetwork(FreezyPath.DRIVE_AND_ROTATE_PATH1, true));	
-		autoNets.add(AutoChooser.DRIVE_AND_ROTATE_PATH2, createFollowSinglePathNetwork(FreezyPath.DRIVE_AND_ROTATE_PATH2, true));	
-		autoNets.add(AutoChooser.DRIVE_AND_ROTATE_PATH3, createFollowSinglePathNetwork(FreezyPath.DRIVE_AND_ROTATE_PATH3, true));	
-		autoNets.add(AutoChooser.DRIVE_AND_ROTATE_PATH4, createFollowSinglePathNetwork(FreezyPath.DRIVE_AND_ROTATE_PATH4, true));	
-		autoNets.add(AutoChooser.DRIVE_AND_ROTATE_PATH5, createFollowSinglePathNetwork(FreezyPath.DRIVE_AND_ROTATE_PATH5, true));	
-		autoNets.add(AutoChooser.DRIVE_AND_ROTATE_PATH6, createFollowSinglePathNetwork(FreezyPath.DRIVE_AND_ROTATE_PATH6, true));	
+		autoNets.add(AutoChooser.DRIVE_AND_ROTATE_PATH1, createFollowSinglePathNetwork(FreezyPath.STRAIGHT_PATH, true));	
+		autoNets.add(AutoChooser.DRIVE_AND_ROTATE_PATH2, createFollowSinglePathNetwork(FreezyPath.DRIVE_AND_ROTATE_PATH1, true));	
+		autoNets.add(AutoChooser.DRIVE_AND_ROTATE_PATH3, createFollowSinglePathNetwork(FreezyPath.DRIVE_AND_ROTATE_PATH2, true));	
+		autoNets.add(AutoChooser.DRIVE_AND_ROTATE_PATH4, createFollowSinglePathNetwork(FreezyPath.DRIVE_AND_ROTATE_PATH3, true));	
+		autoNets.add(AutoChooser.DRIVE_AND_ROTATE_PATH5, createFollowSinglePathNetwork(FreezyPath.DRIVE_AND_ROTATE_PATH4, true));	
+		autoNets.add(AutoChooser.DRIVE_AND_ROTATE_PATH6, createFollowSinglePathNetwork(FreezyPath.DRIVE_AND_ROTATE_PATH5, true));	
 
     return autoNets;
   }

@@ -20,7 +20,6 @@ public class FreezyPath {
 	public static final int DRIVE_AND_ROTATE_PATH3 = 3;
 	public static final int DRIVE_AND_ROTATE_PATH4 = 4;
 	public static final int DRIVE_AND_ROTATE_PATH5 = 5;
-	public static final int DRIVE_AND_ROTATE_PATH6 = 6;
 
 	private static int m_pathToFollow = STRAIGHT_PATH;
 
