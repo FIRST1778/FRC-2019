@@ -12,7 +12,7 @@ public class ChillySwerve {
   //private static final double GYRO_CORRECT_COEFF = 0.03;
 
   // debug purposes - don't run full on
-  private static final double INPUT_GAIN_FACTOR = 0.70;
+  private static final double INPUT_GAIN_FACTOR = 0.50;
 
   // swerve units
   private static ChillySwerveUnit frontLeft, frontRight;
