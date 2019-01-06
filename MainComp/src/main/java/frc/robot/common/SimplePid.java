@@ -44,7 +44,11 @@ public class SimplePid {
    *
    * @param input the current value of the sensor to be used as feedback
    * @param setPoint the goal value or point that the system is set to
-   * @return the calculated PID output value
+   * @return the calculated PID output value - yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet
+   *     yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet
+   *     yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet
+   *     yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet
+   *     yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet
    */
   public double calculate(double input, double setPoint) {
     long deltaTime = System.currentTimeMillis() - lastTime;

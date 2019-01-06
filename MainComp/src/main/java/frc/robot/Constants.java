@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.common.SimplePid.PidConstants;
 
 /**
  * Holds constant properties. For example, robot dimensions, encoder ratios, etc.
@@ -13,19 +12,14 @@ public class Constants {
   public static ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
   public static ShuffleboardTab teleopTab = Shuffleboard.getTab("TeleOp");
 
-  public static final PidConstants PATH_PRIMARY_PID = new PidConstants(0.05, 0.0, 0.0);
-  public static final PidConstants PATH_GYRO_PID = new PidConstants(0.01, 0.0, 0.0);
+  public static final double LEFT_FRONT_ANGLE_OFFSET = 5.0;
+  public static final double RIGHT_FRONT_ANGLE_OFFSET = 80.0;
+  public static final double LEFT_BACK_ANGLE_OFFSET = -110.0;
+  public static final double RIGHT_BACK_ANGLE_OFFSET = -140.0;
 
-  public static final double PATH_MAX_VELOCITY = 60.0;
-  public static final double PATH_KV = 0.5 / PATH_MAX_VELOCITY;
-  public static final double PATH_MAX_ACCELERATION = 45;
-  public static final double PATH_KA = 0.05;
-  public static final double PATH_MAX_JERK = 120.0;
-  public static final double DRIVE_TRACK_WIDTH = 22.25;
-  public static final double PATH_DELTA_TIME = 0.05;
-
-  public static double PATH_ANGLE_OFFSET;
-
-  public static final double DRIVE_WHEEL_DIAMETER = 4.0;
-  public static final int DRIVE_ENCODER_TICKS_PER_ROTATION = 10800;
+  public static final double VEHICLE_WHEELBASE = 23.5;
+  public static final double VEHICLE_TRACKWIDTH = 17.0;
+  public static final double VEHICLE_DIAGONAL =
+      Math.sqrt(
+          (VEHICLE_WHEELBASE * VEHICLE_WHEELBASE) + (VEHICLE_TRACKWIDTH * VEHICLE_TRACKWIDTH));
 }

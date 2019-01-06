@@ -34,11 +34,6 @@ public class NavX {
   protected final long invalidTimestamp = -1;
   protected long lastSensorTimestampMs;
 
-  /**
-   * Yeet.
-   *
-   * @param spiPortId the port
-   */
   public NavX(SPI.Port spiPortId) {
     ahrs = new AHRS(spiPortId, (byte) 200);
     resetState();
@@ -63,6 +58,10 @@ public class NavX {
 
   public synchronized void setAngleAdjustment(double adjustment) {
     angleAdjustment = adjustment;
+  }
+
+  public double getAngle() {
+    return ahrs.getAngle();
   }
 
   protected synchronized double getRawYawDegrees() {

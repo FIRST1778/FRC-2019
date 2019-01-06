@@ -27,7 +27,7 @@ public class TalonSrxFactory {
    * @author FRC 1778 Chill Out
    */
   public static class Configuration {
-    public final int timeoutInMs = 100;
+    public final int timeoutInMs = 10;
     public int profileSlotId = 0;
 
     public double openLoopRampTimeSeconds = 0.0;
@@ -96,7 +96,7 @@ public class TalonSrxFactory {
    *
    * @param id the CAN ID in which the TalonSRX is configured with
    * @param master the TalonSRX for this slave TalonSRX to follow
-   * @return a TalonSRX, configured with the default parameters to follow the master TalonSRX.
+   * @return a TalonSRX, configured with the default parameters to follow the master TalonSRX
    */
   public static TalonSRX createSlaveTalon(int id, TalonSRX master) {
     TalonSRX talon = createDefaultTalon(id);

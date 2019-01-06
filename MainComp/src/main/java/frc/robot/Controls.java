@@ -55,17 +55,17 @@ public class Controls {
     }
   }
 
-  private static final ControllerType DRIVER_CONTROLLER_TYPE = ControllerType.LOGITECH_F310;
+  private static final ControllerType DRIVER_CONTROLLER_TYPE = ControllerType.FREEZY_CONTROLLER;
   private static final ControllerType OPERATOR_CONTROLLER_TYPE = ControllerType.LOGITECH_F310;
 
-  private static final int PORT_DRIVER_CONTROLLER = 0;
+  private static final int PORT_DRIVE_CONTROLLER = 0;
   private static final int PORT_OPERATOR_CONTROLLER = 1;
 
   private Joystick driverController;
   private Joystick operatorController;
 
   private Controls() {
-    driverController = new Joystick(PORT_DRIVER_CONTROLLER);
+    driverController = new Joystick(PORT_DRIVE_CONTROLLER);
     operatorController = new Joystick(PORT_OPERATOR_CONTROLLER);
   }
 
@@ -91,7 +91,7 @@ public class Controls {
   /**
    * Returns the operator joystick/controller.
    *
-   * @return the operator's joystick or controller.
+   * @return the operator's joystick or controller
    */
   public Joystick getOperatorController() {
     return operatorController;
@@ -99,11 +99,11 @@ public class Controls {
 
   // Driver Controls
   /**
-   * Returns the driver's throttle stick.
+   * Returns the driver's longitudinal translation stick.
    *
-   * @return the driver's throttle stick
+   * @return the driver's longitudinal translation stick
    */
-  public double getThrottle() {
+  public double getTranslationY() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
         return driverController.getRawAxis(InterLinkElite.Axis.LEFT_Y);
@@ -123,35 +123,35 @@ public class Controls {
   }
 
   /**
-   * Returns the driver's turn stick x-axis.
+   * Returns the driver's lateral translation stick.
    *
-   * @return the driver's turn stick x-axis
+   * @return the driver's lateral translation stick
    */
-  public double getWheelX() {
+  public double getTranslationX() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
-        return driverController.getRawAxis(InterLinkElite.Axis.RIGHT_X);
+        return driverController.getRawAxis(InterLinkElite.Axis.LEFT_X);
       case INTERLINK_ELITE_CONTROLLER:
-        return driverController.getRawAxis(InterLinkElite.Axis.RIGHT_X);
+        return driverController.getRawAxis(InterLinkElite.Axis.LEFT_X);
       case LOGITECH_DUAL_ACTION:
-        return driverController.getRawAxis(LogitechDualAction.Axis.RIGHT_X);
+        return driverController.getRawAxis(LogitechDualAction.Axis.LEFT_X);
       case LOGITECH_F310:
-        return driverController.getRawAxis(LogitechF310.Axis.RIGHT_X);
+        return driverController.getRawAxis(LogitechF310.Axis.LEFT_X);
       case XBOX_ONE:
-        return driverController.getRawAxis(XboxOne.Axis.RIGHT_X);
+        return driverController.getRawAxis(XboxOne.Axis.LEFT_X);
       case XBOX_ONE_ELITE:
-        return driverController.getRawAxis(XboxOneElite.Axis.RIGHT_X);
+        return driverController.getRawAxis(XboxOneElite.Axis.LEFT_X);
       default:
         return 0;
     }
   }
 
   /**
-   * Returns the driver's turn stick y-axis.
+   * Returns the driver's rotation stick y-axis.
    *
-   * @return the driver's turn stick y-axis.
+   * @return the driver's rotation stick y-axis
    */
-  public double getWheelY() {
+  public double getRotation() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
         return -driverController.getRawAxis(InterLinkElite.Axis.RIGHT_Y);
@@ -175,7 +175,7 @@ public class Controls {
    *
    * @return the driver's quickturn switch state
    */
-  public boolean getQuickTurn() {
+  public boolean getSlowMode() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
         return driverController.getRawButton(FreezyController.RIGHT_SHOULDER_SWITCH);
@@ -195,14 +195,14 @@ public class Controls {
   }
 
   /**
-   * Returns the driver's gear shift down switch state.
+   * Returns the driver's toggle to field centric switch state.
    *
-   * @return the driver's gear shift down switch state
+   * @return the driver's toggle to field centric switch state
    */
-  public boolean getLowGearShift() {
+  public boolean getFieldCentricToggle() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
-        return !driverController.getRawButton(FreezyController.LEFT_SHOULDER_SWITCH);
+        return driverController.getRawButton(FreezyController.LEFT_SHOULDER_SWITCH);
       case INTERLINK_ELITE_CONTROLLER:
         return driverController.getRawButton(InterLinkElite.LEFT_SHOULDER_DOWN_SWITCH);
       case LOGITECH_DUAL_ACTION:
@@ -213,30 +213,6 @@ public class Controls {
         return driverController.getRawAxis(XboxOne.Axis.LEFT_TRIGGER) >= 0.5;
       case XBOX_ONE_ELITE:
         return driverController.getRawAxis(XboxOneElite.Axis.LEFT_TRIGGER) >= 0.5;
-      default:
-        return false;
-    }
-  }
-
-  /**
-   * Returns the driver's gear shift up switch state.
-   *
-   * @return the driver's gear shift up switch state
-   */
-  public boolean getHighGearShift() {
-    switch (DRIVER_CONTROLLER_TYPE) {
-      case FREEZY_CONTROLLER:
-        return driverController.getRawButton(FreezyController.LEFT_SHOULDER_SWITCH);
-      case INTERLINK_ELITE_CONTROLLER:
-        return driverController.getRawButton(InterLinkElite.LEFT_SHOULDER_UP_SWITCH);
-      case LOGITECH_DUAL_ACTION:
-        return driverController.getRawButton(LogitechDualAction.RIGHT_TRIGGER);
-      case LOGITECH_F310:
-        return driverController.getRawAxis(LogitechF310.Axis.RIGHT_TRIGGER) >= 0.5;
-      case XBOX_ONE:
-        return driverController.getRawAxis(XboxOne.Axis.RIGHT_TRIGGER) >= 0.5;
-      case XBOX_ONE_ELITE:
-        return driverController.getRawAxis(XboxOneElite.Axis.RIGHT_TRIGGER) >= 0.5;
       default:
         return false;
     }

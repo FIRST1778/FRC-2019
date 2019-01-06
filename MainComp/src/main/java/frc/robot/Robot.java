@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import frc.lib.util.DebugLog;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeExecutor;
+import frc.robot.components.SwerveDrive;
 import java.util.Optional;
 
 /**
@@ -18,6 +19,9 @@ public class Robot extends IterativeRobot {
   private AutoFieldState autoFieldState = AutoFieldState.getInstance();
   private AutoModeSelector autoModeSelector = new AutoModeSelector();
   private AutoModeExecutor autoModeExecutor;
+
+  private SwerveDrive swerve = SwerveDrive.getinstance();
+  private Controls controls = Controls.getInstance();
 
   public Robot() {
     DebugLog.logRobotConstruction();
@@ -70,6 +74,7 @@ public class Robot extends IterativeRobot {
   @Override
   public void teleopInit() {
     try {
+      sendTelemetry();
       DebugLog.logTeleopInit();
 
       if (autoModeExecutor != null) {
@@ -118,7 +123,30 @@ public class Robot extends IterativeRobot {
   @Override
   public void teleopPeriodic() {
     try {
-      System.out.println("TeleOp");
+      boolean slowMode = controls.getSlowMode();
+
+      if (controls.getFieldCentricToggle()) {
+        double angle = Math.toRadians(swerve.getNavX().getAngle());
+
+        double forward = (slowMode ? 0.6 : 1.0) * controls.getTranslationY();
+        double strafe = (slowMode ? 0.6 : 1.0) * controls.getTranslationX();
+
+        double temp = (forward * Math.cos(angle)) + (strafe * Math.sin(angle));
+        strafe = (-forward * Math.sin(angle)) + (strafe * Math.cos(angle));
+        forward = temp;
+
+        swerve.setSignals(
+            swerve.calculateModuleSignals(
+                (slowMode ? 0.6 : 1.0) * forward,
+                (slowMode ? 0.6 : 1.0) * strafe,
+                (slowMode ? 0.6 : 1.0) * controls.getRotation()));
+      } else {
+        swerve.setSignals(
+            swerve.calculateModuleSignals(
+                (slowMode ? 0.6 : 1.0) * controls.getTranslationY(),
+                (slowMode ? 0.6 : 1.0) * controls.getTranslationX(),
+                (slowMode ? 0.6 : 1.0) * controls.getRotation()));
+      }
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }
@@ -130,5 +158,9 @@ public class Robot extends IterativeRobot {
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }
+  }
+
+  private void sendTelemetry() {
+    swerve.sendTelemetry();
   }
 }
