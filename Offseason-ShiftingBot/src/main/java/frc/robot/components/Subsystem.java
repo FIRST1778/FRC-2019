@@ -1,7 +1,5 @@
 package frc.robot.components;
 
-import frc.lib.util.NetworkTableWrapper;
-
 /**
  * This is the base class which all subsystems/components inherit. This requires that each subsystem
  * can print telemetry data to the subsystem's NetworkTableWrapper as well as reset any sensors
@@ -10,8 +8,6 @@ import frc.lib.util.NetworkTableWrapper;
  * @author FRC 1778 Chill Out
  */
 public abstract class Subsystem {
-  public NetworkTableWrapper debugTable = new NetworkTableWrapper("debug/" + getSubsystemName());
-
   /** Print telemetry associated with this subsystem to the NetworkTables. */
   public abstract void sendTelemetry();
 

@@ -1,6 +1,6 @@
 package frc.robot.auto;
 
-import frc.lib.util.CrashTrackingRunnable;
+import frc.lib.util.DebugLogRunnable;
 
 /** This class selects, runs, and stops (if necessary) a specified autonomous mode. */
 public class AutoModeExecutor {
@@ -16,7 +16,7 @@ public class AutoModeExecutor {
     autoMode = newAutoMode;
     autoThread =
         new Thread(
-            new CrashTrackingRunnable() {
+            new DebugLogRunnable() {
               @Override
               public void runCrashTracked() {
                 if (autoMode != null) {

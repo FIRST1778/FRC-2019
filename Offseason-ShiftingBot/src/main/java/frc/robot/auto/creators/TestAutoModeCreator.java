@@ -1,6 +1,6 @@
 package frc.robot.auto.creators;
 
-import frc.robot.auto.AutoFieldState;
+import frc.robot.AutoFieldState;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.modes.TestAutoMode;
 

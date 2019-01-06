@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.common.SimplePid.PidConstants;
 
 /**
@@ -8,6 +10,8 @@ import frc.robot.common.SimplePid.PidConstants;
  * @author FRC 1778 Chill Out
  */
 public class Constants {
+  public static ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
+  public static ShuffleboardTab teleopTab = Shuffleboard.getTab("TeleOp");
 
   public static final PidConstants PATH_PRIMARY_PID = new PidConstants(0.05, 0.0, 0.0);
   public static final PidConstants PATH_GYRO_PID = new PidConstants(0.01, 0.0, 0.0);

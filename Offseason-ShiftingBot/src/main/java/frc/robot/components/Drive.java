@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.lib.driver.NavX;
 import frc.lib.driver.TalonSrxFactory;
 import frc.lib.util.DriveSignal;
-import frc.lib.util.NetworkTableWrapper;
 import frc.robot.Constants;
 import frc.robot.Ports;
 import frc.robot.common.SimplePid;
@@ -39,8 +38,6 @@ public class Drive extends Subsystem {
 
   private DoubleSolenoid leftShifter;
   private DoubleSolenoid rightShifter;
-
-  private NetworkTableWrapper networkTable = new NetworkTableWrapper(getSubsystemName());
 
   private SimplePid gyroPathPid;
 
@@ -113,7 +110,7 @@ public class Drive extends Subsystem {
 
   @Override
   public void sendTelemetry() {
-    networkTable.putBoolean("High Gear", isHighGear());
+    /*networkTable.putBoolean("High Gear", isHighGear());
     networkTable.putBoolean("Brake Mode", isBraking());
     networkTable.putNumber("Left Encoder", convertEncoderTicksToInches(getLeftEncoderPosition()));
     networkTable.putNumber("Right Encoder", convertEncoderTicksToInches(getRightEncoderPosition()));
@@ -124,7 +121,7 @@ public class Drive extends Subsystem {
     debugTable.putNumber("Left Current", leftMaster.getOutputCurrent());
     debugTable.putNumber("Right Current", rightMaster.getOutputCurrent());
     debugTable.putNumber("Left2 Current", leftSlave.getOutputCurrent());
-    debugTable.putNumber("Right2 Current", rightSlave.getOutputCurrent());
+    debugTable.putNumber("Right2 Current", rightSlave.getOutputCurrent());*/
   }
 
   @Override
