@@ -23,5 +23,8 @@ public class Climber
     public static void teleopPeriodic() {
       
     }
-  
+
+    public static void disabledInit() {
+    }
+    
 }

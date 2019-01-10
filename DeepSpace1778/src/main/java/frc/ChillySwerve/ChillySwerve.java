@@ -19,7 +19,6 @@ public class ChillySwerve {
 
   // swerve inputs
   private static Joystick driveGamepad;
-  private static final double JOYSTICK_DEADZONE = 0.1;
 
   // drive values
   private static double fwd = 0.0;
@@ -104,18 +103,18 @@ public class ChillySwerve {
     double joyVal;
 
     // get joystick inputs
-    joyVal = INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.LEFT_Y_AXIS);
-    fwd = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
+    joyVal = INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.DRIVER_LEFT_Y_AXIS);
+    fwd = (Math.abs(joyVal) > HardwareIDs.DRIVER_JOYSTICK_DEADZONE) ? joyVal : 0.0;
 
-    joyVal = -1.0 * INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.LEFT_X_AXIS);
-    str = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
+    joyVal = -1.0 * INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.DRIVER_LEFT_X_AXIS);
+    str = (Math.abs(joyVal) > HardwareIDs.DRIVER_JOYSTICK_DEADZONE) ? joyVal : 0.0;
 
-    joyVal = -1.0 * INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.RIGHT_X_AXIS);
-    rot = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
+    joyVal = -1.0 * INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.DRIVER_RIGHT_X_AXIS);
+    rot = (Math.abs(joyVal) > HardwareIDs.DRIVER_JOYSTICK_DEADZONE) ? joyVal : 0.0;
 
     // swerve reference mode (toggle control)
     // left toggle switch on freezy drive control unit
-    field_centric = driveGamepad.getRawButton(2);  
+    field_centric = driveGamepad.getRawButton(HardwareIDs.DRIVER_LEFT_SWITCH);  
 
     if (field_centric)
     {

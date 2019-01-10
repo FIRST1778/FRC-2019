@@ -9,7 +9,6 @@ import frc.NetworkComm.InputOutputComm;
 import frc.NetworkComm.RPIComm;
 
 import frc.Systems.NavXSensor;
-import frc.Systems.Lift;
 import frc.Systems.Climber;
 import frc.Systems.GamePieceControl;
 
@@ -25,7 +24,6 @@ public class Robot extends TimedRobot {
     RPIComm.initialize();
     NavXSensor.initialize();
     Climber.initialize();
-    Lift.initialize();
     GamePieceControl.initialize();
 
     // Initialize ChillySwerve Drive controller classes
@@ -61,7 +59,6 @@ public class Robot extends TimedRobot {
 
     NavXSensor.reset();
 
-    Lift.teleopInit();
     Climber.teleopInit();
     GamePieceControl.teleopInit();
 
@@ -71,7 +68,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    Lift.teleopPeriodic();
     Climber.teleopPeriodic();
     GamePieceControl.teleopPeriodic();
     ChillySwerve.teleopPeriodic();
@@ -83,6 +79,8 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
 
+    Climber.disabledInit();
+    GamePieceControl.disabledInit();
     ChillySwerve.disabledInit();
   }
 
