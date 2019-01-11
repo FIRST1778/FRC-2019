@@ -14,5 +14,30 @@ public class CameraSensor
 
       return;
     }
+
+    public static void autoInit()
+    {
+
+    }
+
+    public static void autoPeriodic()
+    {
+
+    }
+
+    public static void teleopInit()
+    {
+
+    }
+    
+    public static void teleopPeriodic()
+    {
+  
+    }
+
+    public static void disabledInit()
+    {
+
+    }
 }
   

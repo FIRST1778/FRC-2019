@@ -8,8 +8,18 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 public class InputOutputComm {
 
   private static boolean initialized = false;
-  static final String PI_ADDRESS = "10.17.78.10";
-  static final int PORT = 1181; // or whatever it ends up being
+
+  public class LimelightData {
+      public double targetOffsetAngle_Horizontal = 0;
+      public double targetOffsetAngle_Vertical = 0;
+      public double targetArea = 0;
+      public double targetSkew = 0;
+  };
+
+  // instance data and methods
+  private static NetworkTableInstance tableInstance;
+  private static NetworkTable table;
+  private static NetworkTable limelightTable;
 
   public static void initialize() {
     if (initialized) return;
@@ -17,12 +27,7 @@ public class InputOutputComm {
     // get default local network table
     tableInstance = NetworkTableInstance.getDefault();
     table = tableInstance.getTable("InputOutput1778/DataTable");
-
-    // publish the address of the Raspberry Pi camera stream
-    tableInstance
-        .getEntry("/CameraPublisher/PiCamera/streams")
-        .setStringArray(
-            new String[] {"mjpeg:http://" + PI_ADDRESS + ":" + PORT + "/?action=stream"});
+    limelightTable = tableInstance.getTable("limelight");
 
     initialized = true;
   }
@@ -33,9 +38,19 @@ public class InputOutputComm {
     kDriveLog
   };
 
-  // instance data and methods
-  private static NetworkTableInstance tableInstance;
-  private static NetworkTable table;
+
+  /*
+  public static LimelightData getLimelightData()
+  {
+    LimelightData lld;
+
+    lld.targetOffsetAngle_Horizontal = limelightTable.getEntry("tx").getDouble(0);
+    lld.targetOffsetAngle_Vertical = limelightTable.getEntry("ty").getDouble(0);
+    lld.targetArea = limelightTable.getEntry("ta").getDouble(0);
+    lld.targetSkew = limelightTable.getEntry("ts").getDouble(0);
+    return lld;
+  }
+  */
 
   public static void putBoolean(LogTable log, String key, boolean value) {
 

@@ -6,11 +6,12 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import frc.ChillySwerve.ChillySwerve;
 
 import frc.NetworkComm.InputOutputComm;
-import frc.NetworkComm.RPIComm;
-
-import frc.Systems.NavXSensor;
 import frc.Systems.Climber;
 import frc.Systems.GamePieceControl;
+
+import frc.Systems.NavXSensor;
+import frc.Systems.CameraSensor;
+
 
 public class Robot extends TimedRobot {
 
@@ -21,10 +22,11 @@ public class Robot extends TimedRobot {
 
     // Initialize robot subsystems
     InputOutputComm.initialize();
-    RPIComm.initialize();
-    NavXSensor.initialize();
     Climber.initialize();
     GamePieceControl.initialize();
+
+    NavXSensor.initialize();
+    CameraSensor.initialize();
 
     // Initialize ChillySwerve Drive controller classes
     ChillySwerve.initialize();
@@ -42,6 +44,8 @@ public class Robot extends TimedRobot {
     InputOutputComm.putString(InputOutputComm.LogTable.kMainLog, "MainLog", "autonomous mode...");
 
     NavXSensor.reset();
+    CameraSensor.autoInit();
+
     ChillySwerve.autoInit();   
   }
 
@@ -58,6 +62,7 @@ public class Robot extends TimedRobot {
     InputOutputComm.putString(InputOutputComm.LogTable.kMainLog, "MainLog", "teleop mode...");
 
     NavXSensor.reset();
+    CameraSensor.teleopInit();
 
     Climber.teleopInit();
     GamePieceControl.teleopInit();
@@ -82,6 +87,7 @@ public class Robot extends TimedRobot {
     Climber.disabledInit();
     GamePieceControl.disabledInit();
     ChillySwerve.disabledInit();
+    CameraSensor.disabledInit();
   }
 
   @Override
