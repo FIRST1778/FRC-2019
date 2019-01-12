@@ -157,7 +157,6 @@ public class TalonSrxFactory {
     talon.configPeakCurrentDuration(config.peakCurrentLimitDuration, config.timeoutInMs);
     talon.configContinuousCurrentLimit(config.continuousCurrentLimit, config.timeoutInMs);
 
-    talon.setSelectedSensorPosition(0, 0, config.timeoutInMs);
     talon.setStatusFramePeriod(config.statusFrame, config.statusFramePeriod, config.timeoutInMs);
     talon.enableVoltageCompensation(config.enableVoltageCompensation);
     talon.enableCurrentLimit(config.enableCurrentLimit);

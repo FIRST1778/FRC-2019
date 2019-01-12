@@ -1,7 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.TimedRobot;
 import frc.lib.util.DebugLog;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeExecutor;
@@ -15,7 +15,7 @@ import java.util.Optional;
  *
  * @author FRC 1778 Chill Out
  */
-public class Robot extends IterativeRobot {
+public class Robot extends TimedRobot {
   private AutoFieldState autoFieldState = AutoFieldState.getInstance();
   private AutoModeSelector autoModeSelector = new AutoModeSelector();
   private AutoModeExecutor autoModeExecutor;
@@ -32,6 +32,7 @@ public class Robot extends IterativeRobot {
     try {
       DebugLog.logRobotInit();
 
+      sendTelemetry();
       autoModeSelector.updateModeCreator();
       autoFieldState.setSides(DriverStation.getInstance().getGameSpecificMessage());
     } catch (Throwable t) {
@@ -74,8 +75,9 @@ public class Robot extends IterativeRobot {
   @Override
   public void teleopInit() {
     try {
-      sendTelemetry();
       DebugLog.logTeleopInit();
+
+      swerve.zeroSensors();
 
       if (autoModeExecutor != null) {
         autoModeExecutor.stop();
@@ -89,7 +91,6 @@ public class Robot extends IterativeRobot {
   public void testInit() {
     try {
       DebugLog.logTestInit();
-      throw new NullPointerException();
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }
@@ -135,11 +136,13 @@ public class Robot extends IterativeRobot {
         strafe = (-forward * Math.sin(angle)) + (strafe * Math.cos(angle));
         forward = temp;
 
-        swerve.setSignals(
+        if (controls.getTranslationX() != 0 | controls.getTranslationY() != 0) {
+            swerve.setSignals(
             swerve.calculateModuleSignals(
                 (slowMode ? 0.6 : 1.0) * forward,
                 (slowMode ? 0.6 : 1.0) * strafe,
                 (slowMode ? 0.6 : 1.0) * controls.getRotation()));
+        }
       } else {
         swerve.setSignals(
             swerve.calculateModuleSignals(
@@ -155,6 +158,11 @@ public class Robot extends IterativeRobot {
   @Override
   public void testPeriodic() {
     try {
+      swerve.setAllToAngle(0);
+      System.out.println("leftFront angle: " + swerve.leftFront.getAbsAngle());
+      System.out.println("rightFront angle: " + swerve.rightFront.getAbsAngle());
+      System.out.println("leftBack angle: " + swerve.leftBack.getAbsAngle());
+      System.out.println("rightBack angle: " + swerve.rightBack.getAbsAngle());
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }

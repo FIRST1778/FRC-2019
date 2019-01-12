@@ -10,10 +10,10 @@ import java.util.List;
 public class SwerveDrive extends Subsystem {
   private static SwerveDrive instance = new SwerveDrive();
 
-  private SwerveModule leftFront;
-  private SwerveModule rightFront;
-  private SwerveModule leftBack;
-  private SwerveModule rightBack;
+  public SwerveModule leftFront;
+  public SwerveModule rightFront;
+  public SwerveModule leftBack;
+  public SwerveModule rightBack;
 
   private NavX navX;
 
@@ -33,13 +33,13 @@ public class SwerveDrive extends Subsystem {
             Ports.LEFT_FRONT_ID, Ports.LEFT_FRONT_TURN_ID, Constants.LEFT_FRONT_ANGLE_OFFSET);
     rightFront =
         new SwerveModule(
-            Ports.RIGHT_FRONT_ID, Ports.LEFT_FRONT_TURN_ID, Constants.LEFT_FRONT_ANGLE_OFFSET);
+            Ports.RIGHT_FRONT_ID, Ports.RIGHT_FRONT_TURN_ID, Constants.RIGHT_FRONT_ANGLE_OFFSET);
     leftBack =
         new SwerveModule(
             Ports.LEFT_BACK_ID, Ports.LEFT_BACK_TURN_ID, Constants.LEFT_BACK_ANGLE_OFFSET);
     rightBack =
         new SwerveModule(
-            Ports.RIGHT_BACK_ID, Ports.LEFT_BACK_TURN_ID, Constants.LEFT_BACK_ANGLE_OFFSET);
+            Ports.RIGHT_BACK_ID, Ports.RIGHT_BACK_TURN_ID, Constants.RIGHT_BACK_ANGLE_OFFSET);
 
     navX = new NavX(Ports.NAVX_SPI);
   }
@@ -166,10 +166,19 @@ public class SwerveDrive extends Subsystem {
     leftBack.setDrivePower(signals.get(2).getDrivePower());
     rightBack.setDrivePower(signals.get(3).getDrivePower());
 
+    setTurnPower(0.25);
+
     leftFront.setTargetAngle(signals.get(0).getAngle());
     rightFront.setTargetAngle(signals.get(1).getAngle());
     leftBack.setTargetAngle(signals.get(2).getAngle());
     rightBack.setTargetAngle(signals.get(3).getAngle());
+  }
+
+  public void setAllToAngle(double angle) {
+    leftFront.setTargetAngle(angle);
+    rightFront.setTargetAngle(angle);
+    leftBack.setTargetAngle(angle);
+    rightBack.setTargetAngle(angle);
   }
 
   public void stop() {
@@ -182,5 +191,12 @@ public class SwerveDrive extends Subsystem {
     rightFront.setDrivePower(rightFrontPower);
     leftBack.setDrivePower(leftBackPower);
     rightBack.setDrivePower(rightBackPower);
+  }
+
+  public void setTurnPower(double turnPower) {
+    leftFront.setTurnPower(turnPower);
+    rightFront.setTurnPower(turnPower);
+    leftBack.setTurnPower(turnPower);
+    rightBack.setTurnPower(turnPower);
   }
 }

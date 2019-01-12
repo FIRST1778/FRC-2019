@@ -12,10 +12,10 @@ public class Constants {
   public static ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
   public static ShuffleboardTab teleopTab = Shuffleboard.getTab("TeleOp");
 
-  public static final double LEFT_FRONT_ANGLE_OFFSET = 5.0;
-  public static final double RIGHT_FRONT_ANGLE_OFFSET = 80.0;
-  public static final double LEFT_BACK_ANGLE_OFFSET = -110.0;
-  public static final double RIGHT_BACK_ANGLE_OFFSET = -140.0;
+  public static final double LEFT_FRONT_ANGLE_OFFSET = -35.0;
+  public static final double RIGHT_FRONT_ANGLE_OFFSET = 30.0;
+  public static final double LEFT_BACK_ANGLE_OFFSET = -12.0;
+  public static final double RIGHT_BACK_ANGLE_OFFSET = 80.0;
 
   public static final double VEHICLE_WHEELBASE = 23.5;
   public static final double VEHICLE_TRACKWIDTH = 17.0;

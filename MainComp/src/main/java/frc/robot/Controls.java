@@ -7,6 +7,7 @@ import frc.lib.gamepads.LogitechDualAction;
 import frc.lib.gamepads.LogitechF310;
 import frc.lib.gamepads.XboxOne;
 import frc.lib.gamepads.XboxOneElite;
+import frc.lib.util.SimpleUtil;
 
 /**
  * Use this class to map controls between different controllers.
@@ -106,7 +107,8 @@ public class Controls {
   public double getTranslationY() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
-        return driverController.getRawAxis(InterLinkElite.Axis.LEFT_Y);
+        return SimpleUtil.handleDeadband(
+            driverController.getRawAxis(InterLinkElite.Axis.LEFT_Y), 0.05);
       case INTERLINK_ELITE_CONTROLLER:
         return -driverController.getRawAxis(InterLinkElite.Axis.LEFT_Y);
       case LOGITECH_DUAL_ACTION:
@@ -130,7 +132,8 @@ public class Controls {
   public double getTranslationX() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
-        return driverController.getRawAxis(InterLinkElite.Axis.LEFT_X);
+        return SimpleUtil.handleDeadband(
+            -driverController.getRawAxis(InterLinkElite.Axis.LEFT_X), 0.05);
       case INTERLINK_ELITE_CONTROLLER:
         return driverController.getRawAxis(InterLinkElite.Axis.LEFT_X);
       case LOGITECH_DUAL_ACTION:
@@ -154,17 +157,18 @@ public class Controls {
   public double getRotation() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
-        return -driverController.getRawAxis(InterLinkElite.Axis.RIGHT_Y);
+        return SimpleUtil.handleDeadband(
+            -driverController.getRawAxis(InterLinkElite.Axis.RIGHT_X), 0.05);
       case INTERLINK_ELITE_CONTROLLER:
-        return -driverController.getRawAxis(InterLinkElite.Axis.RIGHT_Y);
+        return -driverController.getRawAxis(InterLinkElite.Axis.RIGHT_X);
       case LOGITECH_DUAL_ACTION:
-        return -driverController.getRawAxis(LogitechDualAction.Axis.RIGHT_Y);
+        return -driverController.getRawAxis(LogitechDualAction.Axis.RIGHT_X);
       case LOGITECH_F310:
-        return -driverController.getRawAxis(LogitechF310.Axis.RIGHT_Y);
+        return -driverController.getRawAxis(LogitechF310.Axis.RIGHT_X);
       case XBOX_ONE:
-        return -driverController.getRawAxis(XboxOne.Axis.RIGHT_Y);
+        return -driverController.getRawAxis(XboxOne.Axis.RIGHT_X);
       case XBOX_ONE_ELITE:
-        return -driverController.getRawAxis(XboxOneElite.Axis.RIGHT_Y);
+        return -driverController.getRawAxis(XboxOneElite.Axis.RIGHT_X);
       default:
         return 0;
     }

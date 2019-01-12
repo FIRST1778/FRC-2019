@@ -45,9 +45,9 @@ public class SwerveModule {
     driveConfiguration.enableCurrentLimit = true;
 
     turnConfiguration = new TalonSrxFactory.Configuration();
-    turnConfiguration.feedbackDevice = FeedbackDevice.QuadEncoder;
+    turnConfiguration.feedbackDevice = FeedbackDevice.Analog;
     turnConfiguration.invertSensorPhase = true;
-    driveConfiguration.neutralPowerMode = NeutralMode.Brake;
+    turnConfiguration.neutralPowerMode = NeutralMode.Brake;
     turnConfiguration.pidKp = 4.2;
     turnConfiguration.pidKi = 0.01;
     turnConfiguration.pidKd = 0.0;
@@ -62,7 +62,6 @@ public class SwerveModule {
     turnMotor = TalonSrxFactory.createTalon(turnTalonID, turnConfiguration);
 
     zeroAngleOffset = angleOffset;
-    targetAngle = 0.0;
     setTargetAngle(0);
   }
 

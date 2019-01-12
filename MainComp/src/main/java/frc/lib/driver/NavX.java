@@ -61,7 +61,7 @@ public class NavX {
   }
 
   public double getAngle() {
-    return ahrs.getAngle();
+    return -ahrs.getAngle();
   }
 
   protected synchronized double getRawYawDegrees() {
