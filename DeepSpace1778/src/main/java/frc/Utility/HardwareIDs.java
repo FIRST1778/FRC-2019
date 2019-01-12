@@ -21,6 +21,7 @@ public class HardwareIDs {
   public static final int LEFT_COLLECTOR_PWM_ID = 0;
   public static final int RIGHT_COLLECTOR_PWM_ID = 1;
   public static final int ARTICULATOR_PWM_ID = 2;
+  public static final int VACUUM_PWM_ID = 3;
 
   // climber Spark IDs
   public static final int CLIMBER_PISTON_PWM_ID = 3;

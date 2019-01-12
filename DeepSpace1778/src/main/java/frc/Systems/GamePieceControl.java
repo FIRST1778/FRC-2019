@@ -21,11 +21,15 @@ public class GamePieceControl
 	private static final boolean LEFT_COLLECTOR_INVERTED = true;
 	private static final boolean RIGHT_COLLECTOR_INVERTED = false;
 	private static final boolean ARTICULATOR_INVERTED = false;
+	private static final boolean VACUUM_INVERTED = false;
 
 	private static final double COLLECTOR_OUT_AUTOEXPEL_STRENGTH = -0.65;  // auto out for expelling
 
 	// collector intake motors
 	private static Spark leftCollectorMotor, rightCollectorMotor; 
+
+	// panel suction cup motor
+	private static Spark vacuumMotor;
 	
 	// articulator (moves collector up and down)
 	private static Spark articulator;
@@ -47,6 +51,9 @@ public class GamePieceControl
 
 		articulator = new Spark(HardwareIDs.ARTICULATOR_PWM_ID);
 		articulator.setInverted(ARTICULATOR_INVERTED);
+
+		vacuumMotor = new Spark(HardwareIDs.VACUUM_PWM_ID);
+		vacuumMotor.setInverted(VACUUM_INVERTED);
 
     initialized = true;
   }
