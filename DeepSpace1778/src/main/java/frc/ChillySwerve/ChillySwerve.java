@@ -39,10 +39,10 @@ public class ChillySwerve {
   private static boolean initialized = false;
 
   // wheel angle offsets in deg
-  public static final double FL_ABS_ZERO_ANGLE_OFFSET = 5.0;
-  public static final double FR_ABS_ZERO_ANGLE_OFFSET = 80.0;
-  public static final double BL_ABS_ZERO_ANGLE_OFFSET = -110.0;
-  public static final double BR_ABS_ZERO_ANGLE_OFFSET = -140.0;
+  public static final double FL_ABS_ZERO_ANGLE_OFFSET = -35.0;
+  public static final double FR_ABS_ZERO_ANGLE_OFFSET = 30.0;
+  public static final double BL_ABS_ZERO_ANGLE_OFFSET = -12.0;
+  public static final double BR_ABS_ZERO_ANGLE_OFFSET = 80.0;
 
   public static void reset() {
 
