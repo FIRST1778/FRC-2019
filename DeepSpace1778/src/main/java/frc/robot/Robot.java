@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import frc.ChillySwerve.ChillySwerve;
 
 import frc.NetworkComm.InputOutputComm;
+import frc.Systems.Lift;
 import frc.Systems.Climber;
 import frc.Systems.GamePieceControl;
 
@@ -22,6 +23,7 @@ public class Robot extends TimedRobot {
 
     // Initialize robot subsystems
     InputOutputComm.initialize();
+    Lift.initialize();
     Climber.initialize();
     GamePieceControl.initialize();
 
@@ -64,6 +66,7 @@ public class Robot extends TimedRobot {
     NavXSensor.reset();
     CameraSensor.teleopInit();
 
+    Lift.teleopInit();
     Climber.teleopInit();
     GamePieceControl.teleopInit();
 
@@ -73,6 +76,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
+    Lift.teleopPeriodic();
     Climber.teleopPeriodic();
     GamePieceControl.teleopPeriodic();
     ChillySwerve.teleopPeriodic();
@@ -84,6 +88,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
 
+    Lift.disabledInit();
     Climber.disabledInit();
     GamePieceControl.disabledInit();
     ChillySwerve.disabledInit();
