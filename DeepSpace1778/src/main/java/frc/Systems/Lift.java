@@ -5,8 +5,6 @@ import frc.Utility.HardwareIDs;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import javax.lang.model.util.ElementScanner6;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
@@ -62,14 +60,11 @@ public class Lift
 	// encoder polarity
 	public static final boolean ALIGNED_MASTER_SENSOR = true;	// encoder polarity
 
-
     // encoder variables
     private static final int ENCODER_PULSES_PER_REV = 256 * 4; // 63R  - on the competition bot motors
     private static final double INCHES_PER_REV = 1.0;
     private static final double INCHES_PER_ENCODER_PULSE = INCHES_PER_REV / ENCODER_PULSES_PER_REV;
     private static final double RPM_TO_UNIT_PER_100MS = ENCODER_PULSES_PER_REV / (60 * 10);
-
-    private static double currentPos = LIFT_LEVEL_FLOOR;  // default starting pos
 
 	// lift motor
 	private static TalonSRX masterMotor, slaveMotor;
@@ -89,8 +84,6 @@ public class Lift
         // create and initialize lift motors
 	    masterMotor = configureMotor(HardwareIDs.LIFT_MASTER_TALON_ID, MASTER_REVERSE_MOTOR, ALIGNED_MASTER_SENSOR, kP, kI, kD, kF);
 		slaveMotor = configureMotor(HardwareIDs.LIFT_SLAVE_TALON_ID, SLAVE_REVERSE_MOTOR, HardwareIDs.LIFT_MASTER_TALON_ID);
-
-        currentPos = LIFT_LEVEL_FLOOR;  // default starting pos, assumes lift completely down
 
         initialized = true;
     }
@@ -114,8 +107,13 @@ public class Lift
     	_talon.configMotionCruiseVelocity(0, TIMEOUT_MS);
     	_talon.configMotionAcceleration(0, TIMEOUT_MS);
     	_talon.setSelectedSensorPosition(0, PIDLOOP_IDX, TIMEOUT_MS);
-    	
-    	//_talon.setNeutralMode(NeutralMode.Brake);
+ 
+		// forward limit switch is for up motion
+		_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+		// reverse limit switch is for down action
+		_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+
+    	_talon.setNeutralMode(NeutralMode.Brake);
  
     	return _talon;
     }
@@ -130,7 +128,7 @@ public class Lift
     	if (talonIDToFollow > 0)
     		_talon.set(ControlMode.Follower, (double)talonIDToFollow);
     	
-    	//_talon.setNeutralMode(NeutralMode.Brake);
+    	_talon.setNeutralMode(NeutralMode.Brake);
    	
     	return _talon;
     }
