@@ -30,6 +30,7 @@ public class HardwareIDs {
   // swerve and co-driver controller joystick IDs
   public static final int CONTROL_GAMEPAD_ID = 0;
   public static final int CO_DRIVER_GAMEPAD_ID = 1;
+  public static final int CONTROL_PANEL_ID = 2;
 
   // deadzones
   public static final double DRIVER_JOYSTICK_DEADZONE = 0.03;
@@ -57,6 +58,20 @@ public class HardwareIDs {
   public static final int CO_DRIVER_B_BUTTON = 2;
   public static final int CO_DRIVER_X_BUTTON = 3;
   public static final int CO_DRIVER_Y_BUTTON = 4;
+
+  // custom control panel buttons - lift positions
+  public static final int CP_ROCKET_CARGO_HIGH = 1;
+  public static final int CP_ROCKET_CARGO_MED = 2;
+  public static final int CP_ROCKET_CARGO_LOW = 3;
+  public static final int CP_ROCKET_HATCH_HIGH = 4;
+  public static final int CP_ROCKET_HATCH_MED = 5;
+  public static final int CP_ROCKET_HATCH_LOW = 6;
+  public static final int CP_CARGOSHIP_CARGO = 7;
+  public static final int CP_CARGOSHIP_HATCH = 8;
+  public static final int CP_FEEDER_STATION = 9;
+  public static final int CP_NEAR_FLOOR = 10;
+  public static final int CP_FLOOR = 11;
+  public static final int CLIMBER_OUTRIGGER_DEPLOY = 12;
 
   // encoder variables
   public static final int ENCODER_PULSES_PER_REV = 256 * 4; // 63R  - on the competition bot motors

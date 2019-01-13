@@ -20,8 +20,26 @@ public class Lift
     private static boolean initialized = false;
  
     // preprogrammed lift levels in inches from floor level
-    private static final double cargoLiftLevel[] = { 0.0, 20.0, 40.0, 60.0, 80.0 };
-    private static final double hatchLiftLevel[] = { 0.0, 10.0, 30.0, 50.0, 70.0 };
+    private static final double ROCKET_CARGO_HIGH = 80.0;
+    private static final double ROCKET_CARGO_MED = 60.0;
+    private static final double ROCKET_CARGO_LOW = 40.0;
+
+    private static final double ROCKET_HATCH_HIGH = 70.0;
+    private static final double ROCKET_HATCH_MED = 50.0;
+    private static final double ROCKET_HATCH_LOW = 30.0;
+
+    private static final double CARGOSHIP_CARGO = 50.0;
+    private static final double CARGOSHIP_HATCH = 30.0;
+    private static final double FEEDER_STATION = 30.0;
+
+    private static final double LIFT_LEVEL_NEAR_FLOOR = 10.0;
+    private static final double LIFT_LEVEL_FLOOR = 0.0;
+
+    // arranged in same order as control panel buttons (first item as zero)
+    private static double liftLevels[] = {0, ROCKET_CARGO_HIGH, ROCKET_CARGO_MED, ROCKET_CARGO_LOW,
+                                            ROCKET_HATCH_HIGH, ROCKET_HATCH_MED, ROCKET_HATCH_LOW, 
+                                            CARGOSHIP_CARGO, CARGOSHIP_HATCH, FEEDER_STATION,
+                                            LIFT_LEVEL_NEAR_FLOOR, LIFT_LEVEL_FLOOR };
 
 	private final static int CLOSED_LOOP_VEL_SLOW = 600; 
 	private final static int CLOSED_LOOP_ACCEL_SLOW = 300;
@@ -51,12 +69,12 @@ public class Lift
     private static final double INCHES_PER_ENCODER_PULSE = INCHES_PER_REV / ENCODER_PULSES_PER_REV;
     private static final double RPM_TO_UNIT_PER_100MS = ENCODER_PULSES_PER_REV / (60 * 10);
 
-    private static double currentPos = cargoLiftLevel[0];  // default starting pos
+    private static double currentPos = LIFT_LEVEL_FLOOR;  // default starting pos
 
 	// lift motor
 	private static TalonSRX masterMotor, slaveMotor;
 
-    private static Joystick gamepad;
+    private static Joystick gamepad, controlPanel;
 
     public static void initialize() {
   
@@ -66,12 +84,13 @@ public class Lift
         InputOutputComm.putString(InputOutputComm.LogTable.kMainLog, "MainLog", "initializing lift...");
 
         gamepad = new Joystick(HardwareIDs.CO_DRIVER_GAMEPAD_ID);
+        controlPanel = new Joystick(HardwareIDs.CONTROL_PANEL_ID);
 
         // create and initialize lift motors
 	    masterMotor = configureMotor(HardwareIDs.LIFT_MASTER_TALON_ID, MASTER_REVERSE_MOTOR, ALIGNED_MASTER_SENSOR, kP, kI, kD, kF);
 		slaveMotor = configureMotor(HardwareIDs.LIFT_SLAVE_TALON_ID, SLAVE_REVERSE_MOTOR, HardwareIDs.LIFT_MASTER_TALON_ID);
 
-        currentPos = cargoLiftLevel[0];  // default starting pos, assumes lift completely down
+        currentPos = LIFT_LEVEL_FLOOR;  // default starting pos, assumes lift completely down
 
         initialized = true;
     }
@@ -140,69 +159,21 @@ public class Lift
 
     private static void checkLiftControls() 
     {
-				
-        boolean upHatch = false;
-        boolean downHatch = false;
-        boolean upCargo = false;
-        boolean downCargo = false;
-        
-        if (gamepad.getRawButton(HardwareIDs.CO_DRIVER_A_BUTTON)) downHatch = true;
-        if (gamepad.getRawButton(HardwareIDs.CO_DRIVER_B_BUTTON)) upHatch = true;
-        if (gamepad.getRawButton(HardwareIDs.CO_DRIVER_X_BUTTON)) downCargo = true;
-        if (gamepad.getRawButton(HardwareIDs.CO_DRIVER_Y_BUTTON)) upCargo = true;
-
-        // no change requests, just return
-        if (!downHatch && !upHatch && !downCargo && !upCargo)
-            return;
-
         double currentPos = getCurrPosInches();
-        double commandedPos = currentPos;
-
-        if (downHatch)
+        double cmdPos = currentPos;
+           
+        // check all control panel lift buttons (note they start with 1, not zero)
+        for (int i = HardwareIDs.CP_ROCKET_CARGO_HIGH; i <= HardwareIDs.CP_FLOOR; i++)
         {
-            for (int i=(hatchLiftLevel.length - 1); i>=0; i--)
-            {
-                if (hatchLiftLevel[i] < currentPos) {
-                    commandedPos = hatchLiftLevel[i];
-                    break;
-                }
-            }
+            if (controlPanel.getRawButton(i)) cmdPos = liftLevels[i];
         }
-        else if (downCargo)
-        {
-            for (int i=(cargoLiftLevel.length - 1); i>=0; i--)
-            {
-                if (cargoLiftLevel[i] < currentPos) {
-                    commandedPos = hatchLiftLevel[i];
-                    break;
-                }
 
-            }
-        }
-        else if (upHatch)
+        // if commanded position is significantly different from current, send command to lift
+        if (Math.abs(cmdPos - currentPos) > ALLOWABLE_LIFT_POS_ERROR)
         {
-            for (int i=0; i < hatchLiftLevel.length; i++)
-            {
-                if (hatchLiftLevel[i] > currentPos) {
-                    commandedPos = hatchLiftLevel[i];
-                    break;
-                }
-            }
+            // send lift to new commanded position
+            runLift(cmdPos, CLOSED_LOOP_VEL_SLOW, CLOSED_LOOP_ACCEL_SLOW);
         }
-        else if (upCargo)
-        {
-            for (int i=0; i < cargoLiftLevel.length; i++)
-            {
-                if (cargoLiftLevel[i] > currentPos) {
-                    commandedPos = cargoLiftLevel[i];
-                    break;
-                }
-            }
-         }
-        else return;
-
-		// send lift to commanded position
-		runLift(commandedPos, CLOSED_LOOP_VEL_SLOW, CLOSED_LOOP_ACCEL_SLOW);
   }
 
     public static void teleopInit() {
