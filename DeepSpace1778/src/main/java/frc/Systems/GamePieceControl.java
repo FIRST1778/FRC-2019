@@ -3,6 +3,12 @@ package frc.Systems;
 import frc.NetworkComm.InputOutputComm;
 import frc.Utility.HardwareIDs;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -23,6 +29,8 @@ public class GamePieceControl
 	private static final boolean ARTICULATOR_INVERTED = false;
 	private static final boolean VACUUM_INVERTED = false;
 
+	private static final double ARTICULATOR_FACTOR = 0.5;
+	private static final double VACUUM_FACTOR = 0.5;
 	private static final double COLLECTOR_OUT_AUTOEXPEL_STRENGTH = -0.65;  // auto out for expelling
 
 	// collector intake motors
@@ -32,7 +40,7 @@ public class GamePieceControl
 	private static Spark vacuumMotor;
 	
 	// articulator (moves collector up and down)
-	private static Spark articulator;
+	private static TalonSRX articulator;
   
   public static void initialize() {
 
@@ -49,20 +57,37 @@ public class GamePieceControl
 		rightCollectorMotor = new Spark(HardwareIDs.RIGHT_COLLECTOR_PWM_ID);
 		rightCollectorMotor.setInverted(RIGHT_COLLECTOR_INVERTED);
 
-		articulator = new Spark(HardwareIDs.ARTICULATOR_PWM_ID);
-		articulator.setInverted(ARTICULATOR_INVERTED);
+		articulator = configureMotor(HardwareIDs.ARTICULATOR_TALON_ID, ARTICULATOR_INVERTED);
 
 		vacuumMotor = new Spark(HardwareIDs.VACUUM_PWM_ID);
 		vacuumMotor.setInverted(VACUUM_INVERTED);
 
     initialized = true;
   }
-  
+
+    // open-loop/limit switch motor configuration
+    private static TalonSRX configureMotor(int talonID, boolean revMotor)
+    {
+    	TalonSRX _talon;
+    	_talon = new TalonSRX(talonID);
+    	_talon.setInverted(revMotor);
+    	    	 
+		  // forward limit switch is for up motion
+		  _talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+		  // reverse limit switch is for down action
+		  _talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+
+      _talon.setNeutralMode(NeutralMode.Brake);
+ 
+    	return _talon;
+    }
+
 	public static void stopMotors()
 	{
 		// stop collector motors
 		leftCollectorMotor.set(0);
-    rightCollectorMotor.set(0);		
+		rightCollectorMotor.set(0);	
+		vacuumMotor.set(0);	
   }
   
   public static void depositCargo()
@@ -79,7 +104,28 @@ public class GamePieceControl
 		leftCollectorMotor.set(strength);
 		rightCollectorMotor.set(strength);
   }
-  
+	
+	private static void checkVacuumControls() {
+		// enable vacuum button
+		if (gamepad.getRawButton(HardwareIDs.CO_DRIVER_LEFT_BUMPER))
+			vacuumMotor.set(VACUUM_FACTOR);
+
+		// disable vacuum button
+		if (gamepad.getRawButton(HardwareIDs.CO_DRIVER_RIGHT_BUMPER))
+			vacuumMotor.set(0);
+		
+	}
+
+	private static void checkArticulatorControls() {
+		// articulator control
+		double articulatorStrength = gamepad.getRawAxis(HardwareIDs.CO_DRIVER_RIGHT_Y_AXIS);
+		// clamp expel strength to operating range
+		articulatorStrength = (articulatorStrength < COLLECTOR_DEAD_ZONE) ? 0.0 : articulatorStrength;
+
+		InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"GamePieceCtrl/ArticulatorStrength", articulatorStrength);
+
+		articulator.set(ControlMode.PercentOutput, articulatorStrength*ARTICULATOR_FACTOR);
+	}
 
 	private static void checkCollectorControls() {	
 		
@@ -115,7 +161,9 @@ public class GamePieceControl
   }
 
   public static void teleopPeriodic() {
-    checkCollectorControls();
+		checkCollectorControls();
+		checkArticulatorControls();
+		checkVacuumControls();
   }
 
   public static void disabledInit() {

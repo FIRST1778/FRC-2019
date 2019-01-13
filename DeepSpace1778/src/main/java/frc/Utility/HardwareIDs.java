@@ -13,19 +13,19 @@ public class HardwareIDs {
   public static final int BACK_LEFT_ROTATE_TALON_ID = 6;
   public static final int BACK_RIGHT_ROTATE_TALON_ID = 10;
 
-  // lift motor controller ID
+  // lift motor controller Talon IDs
   public static final int LIFT_MASTER_TALON_ID = 21;
   public static final int LIFT_SLAVE_TALON_ID = 22;
 
-  // Collector Spark IDs
+  // articulator & climber Talon IDs
+  public static final int ARTICULATOR_TALON_ID = 31;
+  public static final int CLIMBER_PISTON_TALON_ID = 32;
+
+  // Spark (PWM) IDs
   public static final int LEFT_COLLECTOR_PWM_ID = 0;
   public static final int RIGHT_COLLECTOR_PWM_ID = 1;
-  public static final int ARTICULATOR_PWM_ID = 2;
-  public static final int VACUUM_PWM_ID = 3;
-
-  // climber Spark IDs
-  public static final int CLIMBER_PISTON_PWM_ID = 3;
-  public static final int CLIMBER_ROLLER_PWM_ID = 4;
+  public static final int VACUUM_PWM_ID = 2;
+  public static final int CLIMBER_ROLLER_PWM_ID = 3;
 
   // swerve and co-driver controller joystick IDs
   public static final int CONTROL_GAMEPAD_ID = 0;
