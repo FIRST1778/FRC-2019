@@ -65,8 +65,8 @@ public class GamePieceControl
     initialized = true;
   }
 
-    // open-loop/limit switch motor configuration
-    private static TalonSRX configureMotor(int talonID, boolean revMotor)
+	// open-loop/limit switch motor configuration
+	private static TalonSRX configureMotor(int talonID, boolean revMotor)
     {
     	TalonSRX _talon;
     	_talon = new TalonSRX(talonID);
@@ -88,9 +88,10 @@ public class GamePieceControl
 		leftCollectorMotor.set(0);
 		rightCollectorMotor.set(0);	
 		vacuumMotor.set(0);	
-  }
+		articulator.set(ControlMode.PercentOutput, 0);
+  	}
   
-  public static void depositCargo()
+  	public static void depositCargo()
 	{
 		InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"GamePieceCtrl/CollectorStrength", COLLECTOR_OUT_AUTOEXPEL_STRENGTH);
 		leftCollectorMotor.set(COLLECTOR_OUT_AUTOEXPEL_STRENGTH);
@@ -103,9 +104,10 @@ public class GamePieceControl
 		InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog,"GamePieceCtrl/CollectorStrength", strength);
 		leftCollectorMotor.set(strength);
 		rightCollectorMotor.set(strength);
-  }
+  	}
 	
-	private static void checkVacuumControls() {
+	private static void checkVacuumControls() 
+	{
 		// enable vacuum button
 		if (gamepad.getRawButton(HardwareIDs.CO_DRIVER_LEFT_BUMPER))
 			vacuumMotor.set(VACUUM_FACTOR);
@@ -116,7 +118,8 @@ public class GamePieceControl
 		
 	}
 
-	private static void checkArticulatorControls() {
+	private static void checkArticulatorControls() 
+	{
 		// articulator control
 		double articulatorStrength = gamepad.getRawAxis(HardwareIDs.CO_DRIVER_RIGHT_Y_AXIS);
 		// clamp expel strength to operating range
@@ -127,7 +130,8 @@ public class GamePieceControl
 		articulator.set(ControlMode.PercentOutput, articulatorStrength*ARTICULATOR_FACTOR);
 	}
 
-	private static void checkCollectorControls() {	
+	private static void checkCollectorControls() 
+	{	
 		
 		// collector intake control
 		double collectorInStrength = gamepad.getRawAxis(HardwareIDs.CO_DRIVER_LEFT_TRIGGER_AXIS);

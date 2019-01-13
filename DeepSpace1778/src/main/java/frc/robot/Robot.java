@@ -69,7 +69,6 @@ public class Robot extends TimedRobot {
     Lift.teleopInit();
     Climber.teleopInit();
     GamePieceControl.teleopInit();
-
     ChillySwerve.teleopInit();
   }
 

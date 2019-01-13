@@ -65,10 +65,19 @@ public class Climber
     	return _talon;
     }
 
-    public static void teleopInit() {
+    public static void stopMotors()
+    {
+      // stop climber motors
+      rollerMotor.set(0);	
+      pistonMotor.set(ControlMode.PercentOutput, 0);
+    }
+  
+    public static void teleopInit() 
+    {
     }
 
-    public static void teleopPeriodic() {
+    public static void teleopPeriodic() 
+    {
       if (controlPanel.getRawButton(HardwareIDs.CLIMBER_OUTRIGGER_DEPLOY))
       {
           // trigger solenoid to release outrigger
@@ -83,7 +92,9 @@ public class Climber
       rollerMotor.set(climbStrength*ROLLER_FACTOR);
     }
 
-    public static void disabledInit() {
+    public static void disabledInit() 
+    {
+      stopMotors();
     }
     
 }
