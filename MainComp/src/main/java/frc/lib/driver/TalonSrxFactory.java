@@ -9,7 +9,7 @@ import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 /**
- * This creates and sets most of the convenient settings for a TalonSRX. This includes feedback
+ * This creates and sets most of the convenient settings for a Talon SRX. This includes feedback
  * devices, voltage limits, control modes, inversion, etc.
  *
  * @author FRC 1778 Chill Out

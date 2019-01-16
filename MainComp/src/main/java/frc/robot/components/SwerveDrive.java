@@ -1,6 +1,7 @@
 package frc.robot.components;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import frc.lib.driver.NavX;
 import frc.lib.util.ModuleSignal;
 import frc.robot.Constants;
@@ -36,6 +37,8 @@ public class SwerveDrive extends Subsystem {
   private NetworkTableEntry rightBackTurnAngleEntry;
   private NetworkTableEntry rightBackDrivePowerEntry;
 
+  private NetworkTableEntry totalCurrentEntry;
+
   private boolean shuffleboardInitialized;
 
   public static SwerveDrive getinstance() {
@@ -70,18 +73,27 @@ public class SwerveDrive extends Subsystem {
       leftBackDrivePowerEntry.setDouble(leftBack.getDrivePower());
       rightBackTurnAngleEntry.setDouble(rightBack.getCurrentAngle());
       rightBackDrivePowerEntry.setDouble(rightBack.getDrivePower());
+      totalCurrentEntry.setDouble(
+          leftFront.getDriveMotor().getOutputCurrent()
+              + leftFront.getTurnMotor().getOutputCurrent()
+              + rightFront.getDriveMotor().getOutputCurrent()
+              + rightFront.getTurnMotor().getOutputCurrent()
+              + leftBack.getDriveMotor().getOutputCurrent()
+              + leftBack.getTurnMotor().getOutputCurrent()
+              + rightBack.getDriveMotor().getOutputCurrent()
+              + rightBack.getTurnMotor().getOutputCurrent());
     } else {
       leftFrontTurnAngleEntry =
           Constants.teleopTab
               .add("Left Front Angle", 0)
-              .withWidget("Text View")
+              .withWidget(BuiltInWidgets.kTextView)
               .withPosition(0, 0)
               .withSize(1, 1)
               .getEntry();
       leftFrontDrivePowerEntry =
           Constants.teleopTab
-              .add("Left Front ", 0)
-              .withWidget("Text View")
+              .add("Left Front", 0)
+              .withWidget(BuiltInWidgets.kTextView)
               .withPosition(0, 1)
               .withSize(1, 1)
               .getEntry();
@@ -89,14 +101,14 @@ public class SwerveDrive extends Subsystem {
       rightFrontTurnAngleEntry =
           Constants.teleopTab
               .add("Right Front Angle", 0)
-              .withWidget("Text View")
+              .withWidget(BuiltInWidgets.kTextView)
               .withPosition(1, 0)
               .withSize(1, 1)
               .getEntry();
       rightFrontDrivePowerEntry =
           Constants.teleopTab
-              .add("Right Front ", 0)
-              .withWidget("Text View")
+              .add("Right Front", 0)
+              .withWidget(BuiltInWidgets.kTextView)
               .withPosition(1, 1)
               .withSize(1, 1)
               .getEntry();
@@ -104,14 +116,14 @@ public class SwerveDrive extends Subsystem {
       leftBackTurnAngleEntry =
           Constants.teleopTab
               .add("Left Back Angle", 0)
-              .withWidget("Text View")
+              .withWidget(BuiltInWidgets.kTextView)
               .withPosition(2, 0)
               .withSize(1, 1)
               .getEntry();
       leftBackDrivePowerEntry =
           Constants.teleopTab
-              .add("Left Back ", 0)
-              .withWidget("Text View")
+              .add("Left Back", 0)
+              .withWidget(BuiltInWidgets.kTextView)
               .withPosition(2, 1)
               .withSize(1, 1)
               .getEntry();
@@ -119,16 +131,24 @@ public class SwerveDrive extends Subsystem {
       rightBackTurnAngleEntry =
           Constants.teleopTab
               .add("Right Back Angle", 0)
-              .withWidget("Text View")
+              .withWidget(BuiltInWidgets.kTextView)
               .withPosition(3, 0)
               .withSize(1, 1)
               .getEntry();
       rightBackDrivePowerEntry =
           Constants.teleopTab
-              .add("Right Back ", 0)
-              .withWidget("Text View")
+              .add("Right Back", 0)
+              .withWidget(BuiltInWidgets.kTextView)
               .withPosition(3, 1)
               .withSize(1, 1)
+              .getEntry();
+
+      totalCurrentEntry =
+          Constants.teleopTab
+              .add("Total Current", 0)
+              .withWidget(BuiltInWidgets.kGraph)
+              .withPosition(5, 1)
+              .withSize(4, 4)
               .getEntry();
       shuffleboardInitialized = true;
     }
@@ -195,6 +215,8 @@ public class SwerveDrive extends Subsystem {
     leftBack.setDrivePower(signals.get(2).getDrivePower());
     rightBack.setDrivePower(signals.get(3).getDrivePower());
 
+    setAllTurnPowers(0.5);
+
     leftFront.setTargetAngle(signals.get(0).getAngle());
     rightFront.setTargetAngle(signals.get(1).getAngle());
     leftBack.setTargetAngle(signals.get(2).getAngle());
@@ -210,6 +232,7 @@ public class SwerveDrive extends Subsystem {
 
   public void stop() {
     setAllDrivePowers(0, 0, 0, 0);
+    setAllTurnPowers(0.1);
   }
 
   private void setAllDrivePowers(
@@ -218,5 +241,12 @@ public class SwerveDrive extends Subsystem {
     rightFront.setDrivePower(rightFrontPower);
     leftBack.setDrivePower(leftBackPower);
     rightBack.setDrivePower(rightBackPower);
+  }
+
+  private void setAllTurnPowers(double power) {
+    leftFront.setTurnPower(power);
+    rightFront.setTurnPower(power);
+    leftBack.setTurnPower(power);
+    rightBack.setTurnPower(power);
   }
 }

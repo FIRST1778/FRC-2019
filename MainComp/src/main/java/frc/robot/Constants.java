@@ -14,8 +14,8 @@ public class Constants {
 
   public static final double LEFT_FRONT_ANGLE_OFFSET = -35.0;
   public static final double RIGHT_FRONT_ANGLE_OFFSET = 30.0;
-  public static final double LEFT_BACK_ANGLE_OFFSET = -12.0;
-  public static final double RIGHT_BACK_ANGLE_OFFSET = 80.0;
+  public static final double LEFT_BACK_ANGLE_OFFSET = -18.0;
+  public static final double RIGHT_BACK_ANGLE_OFFSET = 76.0;
 
   public static final double VEHICLE_WHEELBASE = 23.5;
   public static final double VEHICLE_TRACKWIDTH = 17.0;

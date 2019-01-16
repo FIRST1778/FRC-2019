@@ -125,28 +125,34 @@ public class Robot extends TimedRobot {
       sendTelemetry();
 
       boolean slowMode = controls.getSlowMode();
+      if (controls.getTranslationX() != 0
+          | controls.getTranslationY() != 0
+          | controls.getRotation() != 0) {
 
-      if (controls.getFieldCentricToggle()) {
-        double angle = Math.toRadians(swerve.getNavX().getAngle());
+        if (controls.getFieldCentricToggle()) {
+          double angle = Math.toRadians(swerve.getNavX().getAngle());
 
-        double forward = (slowMode ? 0.6 : 1.0) * controls.getTranslationY();
-        double strafe = (slowMode ? 0.6 : 1.0) * controls.getTranslationX();
+          double forward = (slowMode ? 0.6 : 1.0) * controls.getTranslationY();
+          double strafe = (slowMode ? 0.6 : 1.0) * controls.getTranslationX();
 
-        double temp = (forward * Math.cos(angle)) + (strafe * Math.sin(angle));
-        strafe = (-forward * Math.sin(angle)) + (strafe * Math.cos(angle));
-        forward = temp;
+          double temp = (forward * Math.cos(angle)) + (strafe * Math.sin(angle));
+          strafe = (-forward * Math.sin(angle)) + (strafe * Math.cos(angle));
+          forward = temp;
 
-        swerve.setSignals(
-            swerve.calculateModuleSignals(
-                (slowMode ? 0.6 : 1.0) * forward,
-                (slowMode ? 0.6 : 1.0) * strafe,
-                (slowMode ? 0.6 : 1.0) * controls.getRotation()));
+          swerve.setSignals(
+              swerve.calculateModuleSignals(
+                  (slowMode ? 0.6 : 1.0) * forward,
+                  (slowMode ? 0.6 : 1.0) * strafe,
+                  (slowMode ? 0.6 : 1.0) * controls.getRotation()));
+        } else {
+          swerve.setSignals(
+              swerve.calculateModuleSignals(
+                  (slowMode ? 0.6 : 1.0) * controls.getTranslationY(),
+                  (slowMode ? 0.6 : 1.0) * controls.getTranslationX(),
+                  (slowMode ? 0.6 : 1.0) * controls.getRotation()));
+        }
       } else {
-        swerve.setSignals(
-            swerve.calculateModuleSignals(
-                (slowMode ? 0.6 : 1.0) * controls.getTranslationY(),
-                (slowMode ? 0.6 : 1.0) * controls.getTranslationX(),
-                (slowMode ? 0.6 : 1.0) * controls.getRotation()));
+        swerve.stop();
       }
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);

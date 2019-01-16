@@ -26,7 +26,6 @@ public class SwerveModule {
   private double zeroAngleOffset;
   private double targetAngle;
   private double lastDrivePower;
-  private double lastTurnPower;
 
   private static final double ENCODER_PULSES_PER_REV = 20 * 4; // am-3314a (CIM)encoders
   private static final double INCHES_PER_REV = (5.9 * 3.14159); // 5.9-in diameter wheel (worn)
@@ -46,10 +45,11 @@ public class SwerveModule {
     driveConfiguration.pidKd = 0.0;
     driveConfiguration.pidKf = 0.0;
     driveConfiguration.pidIntegralZone = 18;
-    driveConfiguration.continuousCurrentLimit = 30;
-    driveConfiguration.peakCurrentLimit = 35;
+    driveConfiguration.continuousCurrentLimit = 15;
+    driveConfiguration.peakCurrentLimit = 20;
     driveConfiguration.peakCurrentLimitDuration = 100;
     driveConfiguration.enableCurrentLimit = true;
+    driveConfiguration.openLoopRampTimeSeconds = 0.25;
 
     turnConfiguration = new TalonSrxFactory.Configuration();
     turnConfiguration.feedbackDevice = FeedbackDevice.Analog;
@@ -60,10 +60,11 @@ public class SwerveModule {
     turnConfiguration.pidKd = 200.0;
     turnConfiguration.pidKf = 0.0;
     turnConfiguration.pidIntegralZone = 200;
-    turnConfiguration.continuousCurrentLimit = 30;
-    turnConfiguration.peakCurrentLimit = 30;
+    turnConfiguration.continuousCurrentLimit = 10;
+    turnConfiguration.peakCurrentLimit = 15;
     turnConfiguration.peakCurrentLimitDuration = 100;
     turnConfiguration.enableCurrentLimit = true;
+    turnConfiguration.openLoopRampTimeSeconds = 2.0;
 
     driveMotor = TalonSrxFactory.createTalon(driveTalonID, driveConfiguration);
     turnMotor = TalonSrxFactory.createTalon(turnTalonID, turnConfiguration);
@@ -86,10 +87,6 @@ public class SwerveModule {
 
   public double getDrivePower() {
     return lastDrivePower;
-  }
-
-  public double getTurnPower() {
-    return lastTurnPower;
   }
 
   public double getTurnOffset() {
@@ -119,6 +116,10 @@ public class SwerveModule {
   public void setDrivePower(double percent) {
     lastDrivePower = percent;
     driveMotor.set(ControlMode.PercentOutput, percent);
+  }
+
+  public void setTurnPower(double percent) {
+    turnMotor.set(ControlMode.PercentOutput, percent);
   }
 
   public double getCurrentAngle() {
