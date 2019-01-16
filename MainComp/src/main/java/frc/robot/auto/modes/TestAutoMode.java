@@ -5,13 +5,16 @@ import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeEndedException;
 import frc.robot.auto.actions.RunOnceAction;
 
+/**
+ * A simple auto mode to test that auto selection works.
+ *
+ * @author FRC 1778 Chill Out
+ */
 public class TestAutoMode extends AutoModeBase {
-  boolean switchOnLeft;
-  boolean scaleOnLeft;
+  private int teamSelectedPosition;
 
-  public TestAutoMode(boolean isSwitchOnLeft, boolean isScaleOnLeft) {
-    switchOnLeft = isSwitchOnLeft;
-    scaleOnLeft = isScaleOnLeft;
+  public TestAutoMode(int driverStationPosition) {
+    teamSelectedPosition = driverStationPosition;
   }
 
   @Override
@@ -20,7 +23,7 @@ public class TestAutoMode extends AutoModeBase {
         new RunOnceAction() {
           @Override
           public void runOnce() {
-            DebugLog.logNote("Switch=" + switchOnLeft + ", Scale=" + scaleOnLeft);
+            DebugLog.logNote("Running auto for " + teamSelectedPosition + " position");
           }
         });
   }

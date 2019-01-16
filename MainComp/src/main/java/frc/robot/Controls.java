@@ -70,40 +70,19 @@ public class Controls {
     operatorController = new Joystick(PORT_OPERATOR_CONTROLLER);
   }
 
-  /**
-   * Returns a static instance of Controls, to be used instead of instantiating new objects of
-   * Controls.
-   *
-   * @return an instance of Controls to avoid multiple objects of the same hardware devices
-   */
   public static Controls getInstance() {
     return instance;
   }
 
-  /**
-   * Returns the driver joystick/controller.
-   *
-   * @return the driver's joystick or controller
-   */
   public Joystick getDriverController() {
     return driverController;
   }
 
-  /**
-   * Returns the operator joystick/controller.
-   *
-   * @return the operator's joystick or controller
-   */
   public Joystick getOperatorController() {
     return operatorController;
   }
 
   // Driver Controls
-  /**
-   * Returns the driver's longitudinal translation stick.
-   *
-   * @return the driver's longitudinal translation stick
-   */
   public double getTranslationY() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
@@ -124,11 +103,6 @@ public class Controls {
     }
   }
 
-  /**
-   * Returns the driver's lateral translation stick.
-   *
-   * @return the driver's lateral translation stick
-   */
   public double getTranslationX() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
@@ -149,11 +123,6 @@ public class Controls {
     }
   }
 
-  /**
-   * Returns the driver's rotation stick y-axis.
-   *
-   * @return the driver's rotation stick y-axis
-   */
   public double getRotation() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
@@ -174,11 +143,6 @@ public class Controls {
     }
   }
 
-  /**
-   * Returns the driver's quickturn switch state.
-   *
-   * @return the driver's quickturn switch state
-   */
   public boolean getSlowMode() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
@@ -198,11 +162,6 @@ public class Controls {
     }
   }
 
-  /**
-   * Returns the driver's toggle to field centric switch state.
-   *
-   * @return the driver's toggle to field centric switch state
-   */
   public boolean getFieldCentricToggle() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:

@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Composite action, running all sub-actions at the same time. All actions are started then
- * periodically updated until all actions report being done.
+ * Executes a list of actions in parallel, periodically updating each until they are all finished.
+ *
+ * @author FRC 254 The Cheesy Poofs
  */
 public class ParallelAction implements Action {
 

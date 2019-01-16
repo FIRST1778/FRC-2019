@@ -6,14 +6,15 @@ import frc.robot.auto.actions.Action;
 /**
  * An abstract class that is the basis of the robot's autonomous routines. This is implemented in
  * auto modes (which are routines that do actions).
+ *
+ * @author FRC 254 The Cheesy Poofs
  */
 public abstract class AutoModeBase {
-  protected double updateRate = 1.0 / 20.0;
+  protected double updateRate = 1.0 / 50.0;
   protected boolean active = false;
 
   protected abstract void routine() throws AutoModeEndedException;
 
-  /** Runs the routine. */
   public void run() {
     active = true;
 
@@ -39,11 +40,6 @@ public abstract class AutoModeBase {
     return active;
   }
 
-  /**
-   * Returns true if mode is active. This will throw AutoModeEndedException if not active.
-   *
-   * @return true if mode is active
-   */
   public boolean isActiveWithThrow() throws AutoModeEndedException {
     if (!isActive()) {
       throw new AutoModeEndedException();
@@ -52,11 +48,6 @@ public abstract class AutoModeBase {
     return isActive();
   }
 
-  /**
-   * Runs the specified action.
-   *
-   * @param action the action to run
-   */
   public void runAction(Action action) throws AutoModeEndedException {
     isActiveWithThrow();
     action.start();

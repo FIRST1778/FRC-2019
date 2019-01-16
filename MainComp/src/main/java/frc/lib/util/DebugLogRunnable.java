@@ -1,6 +1,10 @@
 package frc.lib.util;
 
-/** Runnable class with reports all uncaught throws to DebugLog. */
+/**
+ * Runnable class which reports all uncaught throwable exceptions to DebugLog.
+ *
+ * @author FRC 1778 Chill Out
+ */
 public abstract class DebugLogRunnable implements Runnable {
 
   @Override

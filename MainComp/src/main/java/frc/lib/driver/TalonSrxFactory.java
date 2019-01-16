@@ -12,20 +12,10 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  * This creates and sets most of the convenient settings for a TalonSRX. This includes feedback
  * devices, voltage limits, control modes, inversion, etc.
  *
- * <p>This is adapted from 254's code, but is updated to work with the newer TalonSRX API.
- *
  * @author FRC 1778 Chill Out
- * @see <a
- *     href="https://github.com/Team254/FRC-2017-Public/blob/master/src/com/team254/lib/util/drivers/LazyCANTalon.java">254's
- *     Code</a>
  */
 public class TalonSrxFactory {
 
-  /**
-   * Contains the configuration parameters for the TalonSRX.
-   *
-   * @author FRC 1778 Chill Out
-   */
   public static class Configuration {
     public final int timeoutInMs = 10;
     public int profileSlotId = 0;
@@ -81,36 +71,16 @@ public class TalonSrxFactory {
 
   private static final Configuration DEFAULT_CONFIGURATION = new Configuration();
 
-  /**
-   * Create a basic TalonSRX.
-   *
-   * @param id the CAN ID in which the TalonSRX is configured with
-   * @return a TalonSRX, configured with the default parameters
-   */
   public static TalonSRX createDefaultTalon(int id) {
     return createTalon(id, DEFAULT_CONFIGURATION);
   }
 
-  /**
-   * Create a slave TalonSRX.
-   *
-   * @param id the CAN ID in which the TalonSRX is configured with
-   * @param master the TalonSRX for this slave TalonSRX to follow
-   * @return a TalonSRX, configured with the default parameters to follow the master TalonSRX
-   */
   public static TalonSRX createSlaveTalon(int id, TalonSRX master) {
     TalonSRX talon = createDefaultTalon(id);
     talon.follow(master);
     return talon;
   }
 
-  /**
-   * Configure a full fledged TalonSRX, this sets all of the configuration paramters set in the
-   * config.
-   *
-   * @param id the TalonSRX id to apply the new Configuration
-   * @param config the Configuration that stores all of the settings for the TalonSRX}
-   */
   public static TalonSRX createTalon(int id, Configuration config) {
     TalonSRX talon = new TalonSRX(id);
 

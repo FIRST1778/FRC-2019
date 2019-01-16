@@ -1,5 +1,6 @@
 package frc.robot.components;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import frc.lib.driver.NavX;
 import frc.lib.util.ModuleSignal;
 import frc.robot.Constants;
@@ -7,6 +8,12 @@ import frc.robot.Ports;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles all calculations and control over the four (4) swerve modules associated with the swerve
+ * drive. The swerve drive also has one (1) NavX IMU connected to the subsystem.
+ *
+ * @author FRC 1778 Chill Out
+ */
 public class SwerveDrive extends Subsystem {
   private static SwerveDrive instance = new SwerveDrive();
 
@@ -17,12 +24,20 @@ public class SwerveDrive extends Subsystem {
 
   private NavX navX;
 
-  /**
-   * Returns a static instance of SwerveDrive, to be used instead of instantiating new objects of
-   * SwerveDrive.
-   *
-   * @return an instance of SwerveDrive to avoid multiple objects of the same hardware devices
-   */
+  private NetworkTableEntry leftFrontTurnAngleEntry;
+  private NetworkTableEntry leftFrontDrivePowerEntry;
+
+  private NetworkTableEntry rightFrontTurnAngleEntry;
+  private NetworkTableEntry rightFrontDrivePowerEntry;
+
+  private NetworkTableEntry leftBackTurnAngleEntry;
+  private NetworkTableEntry leftBackDrivePowerEntry;
+
+  private NetworkTableEntry rightBackTurnAngleEntry;
+  private NetworkTableEntry rightBackDrivePowerEntry;
+
+  private boolean shuffleboardInitialized;
+
   public static SwerveDrive getinstance() {
     return instance;
   }
@@ -46,49 +61,77 @@ public class SwerveDrive extends Subsystem {
 
   @Override
   public void sendTelemetry() {
-    Constants.teleopTab
-        .add("Left Front Angle", leftFront.getRawAbsAngle())
-        .withWidget("Text View")
-        .withPosition(0, 0)
-        .withSize(1, 1);
-    Constants.teleopTab
-        .add("Left Front ", leftFront.getDrivePower())
-        .withWidget("Text View")
-        .withPosition(0, 1)
-        .withSize(1, 1);
+    if (shuffleboardInitialized) {
+      leftFrontTurnAngleEntry.setDouble(leftFront.getCurrentAngle());
+      leftFrontDrivePowerEntry.setDouble(leftFront.getDrivePower());
+      rightFrontTurnAngleEntry.setDouble(rightFront.getCurrentAngle());
+      rightFrontDrivePowerEntry.setDouble(rightFront.getDrivePower());
+      leftBackTurnAngleEntry.setDouble(leftBack.getCurrentAngle());
+      leftBackDrivePowerEntry.setDouble(leftBack.getDrivePower());
+      rightBackTurnAngleEntry.setDouble(rightBack.getCurrentAngle());
+      rightBackDrivePowerEntry.setDouble(rightBack.getDrivePower());
+    } else {
+      leftFrontTurnAngleEntry =
+          Constants.teleopTab
+              .add("Left Front Angle", 0)
+              .withWidget("Text View")
+              .withPosition(0, 0)
+              .withSize(1, 1)
+              .getEntry();
+      leftFrontDrivePowerEntry =
+          Constants.teleopTab
+              .add("Left Front ", 0)
+              .withWidget("Text View")
+              .withPosition(0, 1)
+              .withSize(1, 1)
+              .getEntry();
 
-    Constants.teleopTab
-        .add("Right Front Angle", rightFront.getRawAbsAngle())
-        .withWidget("Text View")
-        .withPosition(1, 0)
-        .withSize(1, 1);
-    Constants.teleopTab
-        .add("Right Front ", rightFront.getDrivePower())
-        .withWidget("Text View")
-        .withPosition(1, 1)
-        .withSize(1, 1);
+      rightFrontTurnAngleEntry =
+          Constants.teleopTab
+              .add("Right Front Angle", 0)
+              .withWidget("Text View")
+              .withPosition(1, 0)
+              .withSize(1, 1)
+              .getEntry();
+      rightFrontDrivePowerEntry =
+          Constants.teleopTab
+              .add("Right Front ", 0)
+              .withWidget("Text View")
+              .withPosition(1, 1)
+              .withSize(1, 1)
+              .getEntry();
 
-    Constants.teleopTab
-        .add("Left Back Angle", leftBack.getRawAbsAngle())
-        .withWidget("Text View")
-        .withPosition(2, 0)
-        .withSize(1, 1);
-    Constants.teleopTab
-        .add("Left Back ", leftBack.getDrivePower())
-        .withWidget("Text View")
-        .withPosition(2, 1)
-        .withSize(1, 1);
+      leftBackTurnAngleEntry =
+          Constants.teleopTab
+              .add("Left Back Angle", 0)
+              .withWidget("Text View")
+              .withPosition(2, 0)
+              .withSize(1, 1)
+              .getEntry();
+      leftBackDrivePowerEntry =
+          Constants.teleopTab
+              .add("Left Back ", 0)
+              .withWidget("Text View")
+              .withPosition(2, 1)
+              .withSize(1, 1)
+              .getEntry();
 
-    Constants.teleopTab
-        .add("Right Back Angle", rightBack.getRawAbsAngle())
-        .withWidget("Text View")
-        .withPosition(3, 0)
-        .withSize(1, 1);
-    Constants.teleopTab
-        .add("Right Back ", rightBack.getDrivePower())
-        .withWidget("Text View")
-        .withPosition(3, 1)
-        .withSize(1, 1);
+      rightBackTurnAngleEntry =
+          Constants.teleopTab
+              .add("Right Back Angle", 0)
+              .withWidget("Text View")
+              .withPosition(3, 0)
+              .withSize(1, 1)
+              .getEntry();
+      rightBackDrivePowerEntry =
+          Constants.teleopTab
+              .add("Right Back ", 0)
+              .withWidget("Text View")
+              .withPosition(3, 1)
+              .withSize(1, 1)
+              .getEntry();
+      shuffleboardInitialized = true;
+    }
   }
 
   @Override
@@ -104,24 +147,10 @@ public class SwerveDrive extends Subsystem {
     navX.zeroYaw();
   }
 
-  /**
-   * Returns the drivebase's NavX IMU. Use this instead of reinstantiating the NavX, which will
-   * result in no response from the sensor.
-   *
-   * @return the drivebase's NavX IMU
-   */
   public NavX getNavX() {
     return navX;
   }
 
-  /**
-   * Calculates the angle and speed signals for each of the swerve modules, stored as an ArrayList.
-   *
-   * @see <a href="Ether's whitepaper (on
-   *     ChiefDelphi)">https://www.chiefdelphi.com/t/paper-4-wheel-independent-drive-independent-steering-swerve/107383</a>
-   * @return an ArrayList that contains 4 ModuleSignals, in the order of left front, right front,
-   *     left back, and right back
-   */
   public ArrayList<ModuleSignal> calculateModuleSignals(
       double forward, double strafe, double rotation) {
     ArrayList<ModuleSignal> signals = new ArrayList<ModuleSignal>(4);
@@ -136,11 +165,6 @@ public class SwerveDrive extends Subsystem {
     double leftBackPower = Math.sqrt((b * b) + (d * d));
     double rightBackPower = Math.sqrt((b * b) + (c * c));
 
-    double leftFrontAngle = Math.atan2(a, d) * 180 / Math.PI;
-    double rightFrontAngle = Math.atan2(a, c) * 180 / Math.PI;
-    double leftBackAngle = Math.atan2(b, d) * 180 / Math.PI;
-    double rightBackAngle = Math.atan2(b, c) * 180 / Math.PI;
-
     double max =
         Math.max(
             leftFrontPower, Math.max(rightFrontPower, Math.max(leftBackPower, rightBackPower)));
@@ -151,6 +175,11 @@ public class SwerveDrive extends Subsystem {
       leftBackPower /= max;
       rightBackPower /= max;
     }
+
+    double leftFrontAngle = Math.atan2(a, d) * 180 / Math.PI;
+    double rightFrontAngle = Math.atan2(a, c) * 180 / Math.PI;
+    double leftBackAngle = Math.atan2(b, d) * 180 / Math.PI;
+    double rightBackAngle = Math.atan2(b, c) * 180 / Math.PI;
 
     signals.add(new ModuleSignal(leftFrontPower, leftFrontAngle));
     signals.add(new ModuleSignal(rightFrontPower, rightFrontAngle));
@@ -165,8 +194,6 @@ public class SwerveDrive extends Subsystem {
     rightFront.setDrivePower(signals.get(1).getDrivePower());
     leftBack.setDrivePower(signals.get(2).getDrivePower());
     rightBack.setDrivePower(signals.get(3).getDrivePower());
-
-    setTurnPower(0.25);
 
     leftFront.setTargetAngle(signals.get(0).getAngle());
     rightFront.setTargetAngle(signals.get(1).getAngle());
@@ -191,12 +218,5 @@ public class SwerveDrive extends Subsystem {
     rightFront.setDrivePower(rightFrontPower);
     leftBack.setDrivePower(leftBackPower);
     rightBack.setDrivePower(rightBackPower);
-  }
-
-  public void setTurnPower(double turnPower) {
-    leftFront.setTurnPower(turnPower);
-    rightFront.setTurnPower(turnPower);
-    leftBack.setTurnPower(turnPower);
-    rightBack.setTurnPower(turnPower);
   }
 }

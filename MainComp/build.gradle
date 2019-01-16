@@ -1,6 +1,7 @@
 plugins {
   id "java"
-  id "edu.wpi.first.GradleRIO" version "2019.1.1"
+  id "checkstyle"
+  id "edu.wpi.first.GradleRIO" version "2019.2.1"
   id "com.diffplug.gradle.spotless" version "3.16.0"
 }
 
@@ -52,6 +53,12 @@ spotless {
   groovyGradle {
     greclipse()
     indentWithSpaces(2)}
+}
+
+checkstyle {
+  toolVersion = '8.16'
+  config = rootProject.resources.text.fromFile('etc/checkstyle/checkstyle.xml')
+  configProperties = [ "suppressionFile" : project(':').file('etc/checkstyle/suppressions.xml')]
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')

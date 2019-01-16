@@ -9,7 +9,14 @@ import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.followers.EncoderFollower;
 
-/** SwerveModule */
+/**
+ * Each instance of SwerveModule handles the two (2) Talon SRX controllers used to drive one (1) CIM
+ * motor with a quadrature CIMCoder and one (1) BAG motor with an absolute MA3 encoder connected to
+ * each swerve module. This simplifies the control structure for the swerve drive subsystem by
+ * breaking up each module as a separate controllable appendage in the drivebase.
+ *
+ * @author FRC 1778 Chill Out
+ */
 public class SwerveModule {
   private TalonSRX turnMotor;
   private TalonSRX driveMotor;
@@ -39,7 +46,7 @@ public class SwerveModule {
     driveConfiguration.pidKd = 0.0;
     driveConfiguration.pidKf = 0.0;
     driveConfiguration.pidIntegralZone = 18;
-    driveConfiguration.continuousCurrentLimit = 25;
+    driveConfiguration.continuousCurrentLimit = 30;
     driveConfiguration.peakCurrentLimit = 35;
     driveConfiguration.peakCurrentLimitDuration = 100;
     driveConfiguration.enableCurrentLimit = true;
@@ -48,13 +55,13 @@ public class SwerveModule {
     turnConfiguration.feedbackDevice = FeedbackDevice.Analog;
     turnConfiguration.invertSensorPhase = true;
     turnConfiguration.neutralPowerMode = NeutralMode.Brake;
-    turnConfiguration.pidKp = 4.2;
-    turnConfiguration.pidKi = 0.01;
-    turnConfiguration.pidKd = 0.0;
+    turnConfiguration.pidKp = 30;
+    turnConfiguration.pidKi = 0.001;
+    turnConfiguration.pidKd = 200.0;
     turnConfiguration.pidKf = 0.0;
     turnConfiguration.pidIntegralZone = 200;
-    turnConfiguration.continuousCurrentLimit = 25;
-    turnConfiguration.peakCurrentLimit = 35;
+    turnConfiguration.continuousCurrentLimit = 30;
+    turnConfiguration.peakCurrentLimit = 30;
     turnConfiguration.peakCurrentLimitDuration = 100;
     turnConfiguration.enableCurrentLimit = true;
 
@@ -67,7 +74,6 @@ public class SwerveModule {
 
   public void stopMotors() {
     setDrivePower(0);
-    setTurnPower(0);
   }
 
   public TalonSRX getDriveMotor() {
@@ -115,20 +121,13 @@ public class SwerveModule {
     driveMotor.set(ControlMode.PercentOutput, percent);
   }
 
-  public void setTurnPower(double percent) {
-    turnMotor.set(ControlMode.PercentOutput, percent);
-  }
-
-  /**
-   * Get the current angle of the swerve module
-   *
-   * @return An angle in the range [0, 360)
-   */
   public double getCurrentAngle() {
     double angle = turnMotor.getSelectedSensorPosition(0) * (360.0 / 1024.0);
     angle -= zeroAngleOffset;
     angle %= 360;
-    if (angle < 0) angle += 360;
+    if (angle < 0) {
+      angle += 360;
+    }
 
     return angle;
   }
@@ -141,7 +140,9 @@ public class SwerveModule {
 
     double currentAngle = getRawAbsAngle();
     double currentAngleMod = currentAngle % 360;
-    if (currentAngleMod < 0) currentAngleMod += 360;
+    if (currentAngleMod < 0) {
+      currentAngleMod += 360;
+    }
 
     double delta = currentAngleMod - targetAngle;
 
@@ -153,8 +154,11 @@ public class SwerveModule {
 
     delta = currentAngleMod - targetAngle;
     if (delta > 90 || delta < -90) {
-      if (delta > 90) targetAngle += 180;
-      else if (delta < -90) targetAngle -= 180;
+      if (delta > 90) {
+        targetAngle += 180;
+      } else if (delta < -90) {
+        targetAngle -= 180;
+      }
       driveMotor.setInverted(false);
     } else {
       driveMotor.setInverted(true);
@@ -183,11 +187,6 @@ public class SwerveModule {
 
       setTargetAngle(Pathfinder.r2d(heading) + gyroAngle);
     }
-  }
-
-  public void stop() {
-    setDrivePower(0);
-    setTurnPower(0);
   }
 
   public void setBrakeMode(boolean brake) {

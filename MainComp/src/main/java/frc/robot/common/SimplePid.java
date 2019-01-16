@@ -13,13 +13,6 @@ public class SimplePid {
   private double lastError;
   private long lastTime;
 
-  /**
-   * Initializes the system by setting the kp, ki, and kd gains for the system to use in the future.
-   *
-   * @param kp the kp gain
-   * @param ki the kp gain
-   * @param kd the kp gain
-   */
   public SimplePid(double kp, double ki, double kd) {
     this.kp = kp;
     this.ki = ki;
@@ -27,11 +20,6 @@ public class SimplePid {
     lastTime = System.currentTimeMillis();
   }
 
-  /**
-   * Initializes the system by setting the kp, ki, and kd gains for the system to use in the future.
-   *
-   * @param pid the pid gains to use
-   */
   public SimplePid(PidConstants pid) {
     this.kp = pid.getKp();
     this.ki = pid.getKi();
@@ -39,17 +27,6 @@ public class SimplePid {
     lastTime = System.currentTimeMillis();
   }
 
-  /**
-   * Calculates PID based off of the input and set point values.
-   *
-   * @param input the current value of the sensor to be used as feedback
-   * @param setPoint the goal value or point that the system is set to
-   * @return the calculated PID output value - yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet
-   *     yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet
-   *     yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet
-   *     yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet
-   *     yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet yeet
-   */
   public double calculate(double input, double setPoint) {
     long deltaTime = System.currentTimeMillis() - lastTime;
 
@@ -71,7 +48,6 @@ public class SimplePid {
     return output;
   }
 
-  /** Inverts all of the PID gains, so if kp is set to 0.8, it will change to -0.8. */
   public void invertGains() {
     kp = -kp;
     ki = -ki;
@@ -83,69 +59,32 @@ public class SimplePid {
     private double ki;
     private double kd;
 
-    /**
-     * Holds the three PID gain constants requred for a PID loop.
-     *
-     * @param kp the kp to set
-     * @param ki the ki to set
-     * @param kd the kd to set
-     */
     public PidConstants(double kp, double ki, double kd) {
       this.kp = kp;
       this.ki = ki;
       this.kd = kd;
     }
 
-    /**
-     * Sets the new kp.
-     *
-     * @param kp the kp to set
-     */
     public void setKp(double kp) {
       this.kp = kp;
     }
 
-    /**
-     * Sets the new ki.
-     *
-     * @param ki the ki to set
-     */
     public void setKi(double ki) {
       this.ki = ki;
     }
 
-    /**
-     * Sets the new kd.
-     *
-     * @param kd the kd to set
-     */
     public void setKd(double kd) {
       this.kd = kd;
     }
 
-    /**
-     * Returns the current kp gain.
-     *
-     * @return the kp gain
-     */
     public double getKp() {
       return kp;
     }
 
-    /**
-     * Returns the current ki gain.
-     *
-     * @return the ki gain
-     */
     public double getKi() {
       return ki;
     }
 
-    /**
-     * Returns the current kd gain.
-     *
-     * @return the kd gain
-     */
     public double getKd() {
       return kd;
     }

@@ -3,9 +3,17 @@ package frc.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.lib.util.DebugLog;
 import frc.robot.auto.AutoModeBase;
-import frc.robot.auto.creators.*;
+import frc.robot.auto.creators.AutoModeCreator;
+import frc.robot.auto.creators.DoNothingAutoModeCreator;
+import frc.robot.auto.creators.TestAutoModeCreator;
 import java.util.Optional;
 
+/**
+ * Handles selecting an autonomous mode based on input from SendableChoosers in Shuffleboard. This
+ * returns an AutoModeCreator for the selected auto mode.
+ *
+ * @author FRC 1778 Chill Out
+ */
 public class AutoModeSelector {
   enum StartingPosition {
     LEFT,
@@ -77,10 +85,10 @@ public class AutoModeSelector {
     cachedWantedMode = null;
   }
 
-  public Optional<AutoModeBase> getAutoMode(AutoFieldState fieldState) {
+  public Optional<AutoModeBase> getAutoMode(int teamDriverStationLocation) {
     if (!creator.isPresent()) {
       return Optional.empty();
     }
-    return Optional.of(creator.get().getStateDependentAutoMode(fieldState));
+    return Optional.of(creator.get().getStateDependentAutoMode(teamDriverStationLocation));
   }
 }

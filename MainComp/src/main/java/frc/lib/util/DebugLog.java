@@ -18,6 +18,8 @@ import java.util.zip.ZipEntry;
  * later retrieved through SFTP/SSH and filtered or viewed. The log file contains the following data
  * points for each marker: the current time/date, the time/date the current JAR file was compiled,
  * and the current match type and number.
+ *
+ * @author FRC 1778 Chill Out
  */
 public class DebugLog {
   private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -105,6 +107,7 @@ public class DebugLog {
         try {
           d = new Date(new File(resource.toURI()).lastModified());
         } catch (URISyntaxException ignored) {
+          System.out.println("Last modified date failed to be parsed as URI");
         }
       } else if (resource.getProtocol().equals("jar")) {
         String path = resource.getPath();
@@ -118,6 +121,7 @@ public class DebugLog {
           Date zeTimeDate = new Date(zeTimeLong);
           d = zeTimeDate;
         } catch (IOException | RuntimeException ignored) {
+          System.out.println("Failed to get JAR as Zip");
         }
       }
     }

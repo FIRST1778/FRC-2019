@@ -1,9 +1,10 @@
 package frc.robot.auto.actions;
 
 /**
- * Template action for something that only needs to be done once and has no need for updates.
+ * Abstract class template for an action that is only run for a single loop. This immediately
+ * finishes.
  *
- * @see Action
+ * @author FRC 254 The Cheesy Poofs
  */
 public abstract class RunOnceAction implements Action {
   @Override

@@ -9,14 +9,13 @@ import frc.robot.components.SwerveDrive;
 import java.util.Optional;
 
 /**
- * This is the main hub for all other classes. Each of the overrided methods are synced with FMS and
+ * The main hub for all other classes. Each of the overrided methods are synced with FMS and
  * driverstation packets. Periodic methods loop throughverything inside of them and then return to
  * the top. Init methods are run once, and then pass on to their respective periodic method.
  *
  * @author FRC 1778 Chill Out
  */
 public class Robot extends TimedRobot {
-  private AutoFieldState autoFieldState = AutoFieldState.getInstance();
   private AutoModeSelector autoModeSelector = new AutoModeSelector();
   private AutoModeExecutor autoModeExecutor;
 
@@ -32,9 +31,7 @@ public class Robot extends TimedRobot {
     try {
       DebugLog.logRobotInit();
 
-      sendTelemetry();
       autoModeSelector.updateModeCreator();
-      autoFieldState.setSides(DriverStation.getInstance().getGameSpecificMessage());
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }
@@ -99,14 +96,14 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     try {
-      autoFieldState.setSides(DriverStation.getInstance().getGameSpecificMessage());
+      sendTelemetry();
+
       autoModeSelector.updateModeCreator();
 
-      if (autoFieldState.isValid()) {
-        Optional<AutoModeBase> autoMode = autoModeSelector.getAutoMode(autoFieldState);
-        if (autoMode.isPresent() && autoMode.get() != autoModeExecutor.getAutoMode()) {
-          autoModeExecutor.setAutoMode(autoMode.get());
-        }
+      Optional<AutoModeBase> autoMode =
+          autoModeSelector.getAutoMode(DriverStation.getInstance().getLocation());
+      if (autoMode.isPresent() && autoMode.get() != autoModeExecutor.getAutoMode()) {
+        autoModeExecutor.setAutoMode(autoMode.get());
       }
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
@@ -116,6 +113,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     try {
+      sendTelemetry();
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }
@@ -124,6 +122,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     try {
+      sendTelemetry();
+
       boolean slowMode = controls.getSlowMode();
 
       if (controls.getFieldCentricToggle()) {
@@ -136,13 +136,11 @@ public class Robot extends TimedRobot {
         strafe = (-forward * Math.sin(angle)) + (strafe * Math.cos(angle));
         forward = temp;
 
-        if (controls.getTranslationX() != 0 | controls.getTranslationY() != 0) {
-            swerve.setSignals(
+        swerve.setSignals(
             swerve.calculateModuleSignals(
                 (slowMode ? 0.6 : 1.0) * forward,
                 (slowMode ? 0.6 : 1.0) * strafe,
                 (slowMode ? 0.6 : 1.0) * controls.getRotation()));
-        }
       } else {
         swerve.setSignals(
             swerve.calculateModuleSignals(
@@ -158,6 +156,8 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
     try {
+      sendTelemetry();
+
       swerve.setAllToAngle(0);
       System.out.println("leftFront angle: " + swerve.leftFront.getAbsAngle());
       System.out.println("rightFront angle: " + swerve.rightFront.getAbsAngle());

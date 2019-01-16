@@ -3,7 +3,11 @@ package frc.robot.auto.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Executes one action at a time. Useful as a member of ParallelAction */
+/**
+ * Executes a list of actions in series, executing the next as soon as the first is completed.
+ *
+ * @author FRC 254 The Cheesy Poofs
+ */
 public class SeriesAction implements Action {
 
   private Action currentAction;
