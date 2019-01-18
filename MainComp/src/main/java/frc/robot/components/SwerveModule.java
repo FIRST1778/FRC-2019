@@ -53,11 +53,12 @@ public class SwerveModule {
 
     turnConfiguration = new TalonSrxFactory.Configuration();
     turnConfiguration.feedbackDevice = FeedbackDevice.Analog;
+    turnConfiguration.invert = true;
     turnConfiguration.invertSensorPhase = true;
     turnConfiguration.neutralPowerMode = NeutralMode.Brake;
-    turnConfiguration.pidKp = 30;
-    turnConfiguration.pidKi = 0.001;
-    turnConfiguration.pidKd = 200.0;
+    turnConfiguration.pidKp = 8.4; // 10.0;
+    turnConfiguration.pidKi = 0.04; // 0.0;
+    turnConfiguration.pidKd = 0.0; // 50.0;
     turnConfiguration.pidKf = 0.0;
     turnConfiguration.pidIntegralZone = 200;
     turnConfiguration.continuousCurrentLimit = 10;

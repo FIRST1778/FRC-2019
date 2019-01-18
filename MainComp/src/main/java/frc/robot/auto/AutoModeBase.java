@@ -10,6 +10,7 @@ import frc.robot.auto.actions.Action;
  * @author FRC 254 The Cheesy Poofs
  */
 public abstract class AutoModeBase {
+
   protected double updateRate = 1.0 / 50.0;
   protected boolean active = false;
 

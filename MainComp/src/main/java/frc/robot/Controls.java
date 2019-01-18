@@ -15,6 +15,7 @@ import frc.lib.util.SimpleUtil;
  * @author FRC 1778 Chill Out
  */
 public class Controls {
+
   private static Controls instance = new Controls();
 
   public enum ControllerType {
@@ -107,7 +108,7 @@ public class Controls {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
         return SimpleUtil.handleDeadband(
-            -driverController.getRawAxis(InterLinkElite.Axis.LEFT_X), 0.05);
+            driverController.getRawAxis(InterLinkElite.Axis.LEFT_X), 0.05);
       case INTERLINK_ELITE_CONTROLLER:
         return driverController.getRawAxis(InterLinkElite.Axis.LEFT_X);
       case LOGITECH_DUAL_ACTION:

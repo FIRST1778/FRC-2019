@@ -17,6 +17,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 public class TalonSrxFactory {
 
   public static class Configuration {
+
     public final int timeoutInMs = 10;
     public int profileSlotId = 0;
 
@@ -47,7 +48,7 @@ public class TalonSrxFactory {
     public double pidKf = 0.0;
     public int pidIntegralZone = 0;
     public int allowableClosedLoopError = 0;
-    public double pidMaxIntegralAccumulator = 0;
+    public double pidMaxIntegralAccumulator = 0.0;
     public double closedLoopPeakOutput = 1.0;
     public int closedLoopPeriod = 1;
     public boolean pidInvertPolarity = false;

@@ -180,26 +180,26 @@ public class SwerveDrive extends Subsystem {
     double c = forward + (rotation * (Constants.VEHICLE_TRACKWIDTH / Constants.VEHICLE_DIAGONAL));
     double d = forward - (rotation * (Constants.VEHICLE_TRACKWIDTH / Constants.VEHICLE_DIAGONAL));
 
-    double leftFrontPower = Math.sqrt((a * a) + (d * d));
-    double rightFrontPower = Math.sqrt((a * a) + (c * c));
-    double leftBackPower = Math.sqrt((b * b) + (d * d));
-    double rightBackPower = Math.sqrt((b * b) + (c * c));
+    double rightFrontPower = Math.sqrt((b * b) + (c * c));
+    double leftFrontPower = Math.sqrt((b * b) + (d * d));
+    double leftBackPower = Math.sqrt((a * a) + (d * d));
+    double rightBackPower = Math.sqrt((a * a) + (c * c));
 
     double max =
         Math.max(
             leftFrontPower, Math.max(rightFrontPower, Math.max(leftBackPower, rightBackPower)));
 
     if (max > 1) {
-      leftFrontPower /= max;
       rightFrontPower /= max;
+      leftFrontPower /= max;
       leftBackPower /= max;
       rightBackPower /= max;
     }
 
-    double leftFrontAngle = Math.atan2(a, d) * 180 / Math.PI;
-    double rightFrontAngle = Math.atan2(a, c) * 180 / Math.PI;
-    double leftBackAngle = Math.atan2(b, d) * 180 / Math.PI;
-    double rightBackAngle = Math.atan2(b, c) * 180 / Math.PI;
+    double rightFrontAngle = Math.atan2(b, c) * 180 / Math.PI;
+    double leftFrontAngle = Math.atan2(b, d) * 180 / Math.PI;
+    double leftBackAngle = Math.atan2(a, d) * 180 / Math.PI;
+    double rightBackAngle = Math.atan2(a, c) * 180 / Math.PI;
 
     signals.add(new ModuleSignal(leftFrontPower, leftFrontAngle));
     signals.add(new ModuleSignal(rightFrontPower, rightFrontAngle));
@@ -232,7 +232,7 @@ public class SwerveDrive extends Subsystem {
 
   public void stop() {
     setAllDrivePowers(0, 0, 0, 0);
-    setAllTurnPowers(0.1);
+    // setAllTurnPowers(0.0);
   }
 
   private void setAllDrivePowers(
@@ -243,7 +243,7 @@ public class SwerveDrive extends Subsystem {
     rightBack.setDrivePower(rightBackPower);
   }
 
-  private void setAllTurnPowers(double power) {
+  public void setAllTurnPowers(double power) {
     leftFront.setTurnPower(power);
     rightFront.setTurnPower(power);
     leftBack.setTurnPower(power);

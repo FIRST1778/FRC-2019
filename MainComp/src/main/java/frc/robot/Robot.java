@@ -1,7 +1,10 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import frc.lib.util.DebugLog;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeExecutor;
@@ -16,11 +19,14 @@ import java.util.Optional;
  * @author FRC 1778 Chill Out
  */
 public class Robot extends TimedRobot {
+
   private AutoModeSelector autoModeSelector = new AutoModeSelector();
   private AutoModeExecutor autoModeExecutor;
 
   private SwerveDrive swerve = SwerveDrive.getinstance();
   private Controls controls = Controls.getInstance();
+
+  private NetworkTableEntry totalPdpVoltage;
 
   public Robot() {
     DebugLog.logRobotConstruction();
@@ -130,7 +136,7 @@ public class Robot extends TimedRobot {
           | controls.getRotation() != 0) {
 
         if (controls.getFieldCentricToggle()) {
-          double angle = Math.toRadians(swerve.getNavX().getAngle());
+          double angle = Math.toRadians(-swerve.getNavX().getAngle());
 
           double forward = (slowMode ? 0.6 : 1.0) * controls.getTranslationY();
           double strafe = (slowMode ? 0.6 : 1.0) * controls.getTranslationX();
@@ -164,6 +170,7 @@ public class Robot extends TimedRobot {
     try {
       sendTelemetry();
 
+      // swerve.setAllTurnPowers(1);
       swerve.setAllToAngle(0);
       System.out.println("leftFront angle: " + swerve.leftFront.getAbsAngle());
       System.out.println("rightFront angle: " + swerve.rightFront.getAbsAngle());
@@ -174,7 +181,21 @@ public class Robot extends TimedRobot {
     }
   }
 
+  boolean shuffleboardInitialized;
+
   private void sendTelemetry() {
     swerve.sendTelemetry();
+    if (shuffleboardInitialized) {
+      totalPdpVoltage.setDouble(RobotController.getBatteryVoltage());
+    } else {
+      totalPdpVoltage =
+          Constants.teleopTab
+              .add("Battery Voltage", 0)
+              .withWidget(BuiltInWidgets.kGraph)
+              .withPosition(0, 2)
+              .withSize(4, 5)
+              .getEntry();
+      shuffleboardInitialized = true;
+    }
   }
 }
