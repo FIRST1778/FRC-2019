@@ -37,7 +37,8 @@ public class SwerveDrive extends Subsystem {
   private NetworkTableEntry rightBackTurnAngleEntry;
   private NetworkTableEntry rightBackDrivePowerEntry;
 
-  private NetworkTableEntry totalCurrentEntry;
+  private NetworkTableEntry bagMotorCurrentEntry;
+  private NetworkTableEntry cimMotorCurrentEntry;
 
   private boolean shuffleboardInitialized;
 
@@ -73,15 +74,16 @@ public class SwerveDrive extends Subsystem {
       leftBackDrivePowerEntry.setDouble(leftBack.getDrivePower());
       rightBackTurnAngleEntry.setDouble(rightBack.getCurrentAngle());
       rightBackDrivePowerEntry.setDouble(rightBack.getDrivePower());
-      totalCurrentEntry.setDouble(
-          leftFront.getDriveMotor().getOutputCurrent()
-              + leftFront.getTurnMotor().getOutputCurrent()
-              + rightFront.getDriveMotor().getOutputCurrent()
+      bagMotorCurrentEntry.setDouble(
+          +leftFront.getTurnMotor().getOutputCurrent()
               + rightFront.getTurnMotor().getOutputCurrent()
-              + leftBack.getDriveMotor().getOutputCurrent()
               + leftBack.getTurnMotor().getOutputCurrent()
-              + rightBack.getDriveMotor().getOutputCurrent()
               + rightBack.getTurnMotor().getOutputCurrent());
+      cimMotorCurrentEntry.setDouble(
+          leftFront.getDriveMotor().getOutputCurrent()
+              + rightFront.getDriveMotor().getOutputCurrent()
+              + leftBack.getDriveMotor().getOutputCurrent()
+              + rightBack.getDriveMotor().getOutputCurrent());
     } else {
       leftFrontTurnAngleEntry =
           Constants.teleopTab
@@ -143,12 +145,20 @@ public class SwerveDrive extends Subsystem {
               .withSize(1, 1)
               .getEntry();
 
-      totalCurrentEntry =
+      bagMotorCurrentEntry =
           Constants.teleopTab
-              .add("Total Current", 0)
+              .add("BAG Current", 0)
               .withWidget(BuiltInWidgets.kGraph)
-              .withPosition(5, 1)
-              .withSize(4, 4)
+              .withPosition(4, 0)
+              .withSize(3, 3)
+              .getEntry();
+
+      cimMotorCurrentEntry =
+          Constants.teleopTab
+              .add("CIM Current", 0)
+              .withWidget(BuiltInWidgets.kGraph)
+              .withPosition(7, 0)
+              .withSize(3, 3)
               .getEntry();
       shuffleboardInitialized = true;
     }
@@ -180,26 +190,26 @@ public class SwerveDrive extends Subsystem {
     double c = forward + (rotation * (Constants.VEHICLE_TRACKWIDTH / Constants.VEHICLE_DIAGONAL));
     double d = forward - (rotation * (Constants.VEHICLE_TRACKWIDTH / Constants.VEHICLE_DIAGONAL));
 
-    double rightFrontPower = Math.sqrt((b * b) + (c * c));
-    double leftFrontPower = Math.sqrt((b * b) + (d * d));
-    double leftBackPower = Math.sqrt((a * a) + (d * d));
-    double rightBackPower = Math.sqrt((a * a) + (c * c));
+    double leftFrontPower = Math.sqrt((a * a) + (d * d));
+    double rightFrontPower = Math.sqrt((a * a) + (c * c));
+    double leftBackPower = Math.sqrt((b * b) + (d * d));
+    double rightBackPower = Math.sqrt((b * b) + (c * c));
 
     double max =
         Math.max(
             leftFrontPower, Math.max(rightFrontPower, Math.max(leftBackPower, rightBackPower)));
 
     if (max > 1) {
-      rightFrontPower /= max;
       leftFrontPower /= max;
+      rightFrontPower /= max;
       leftBackPower /= max;
       rightBackPower /= max;
     }
 
-    double rightFrontAngle = Math.atan2(b, c) * 180 / Math.PI;
-    double leftFrontAngle = Math.atan2(b, d) * 180 / Math.PI;
-    double leftBackAngle = Math.atan2(a, d) * 180 / Math.PI;
-    double rightBackAngle = Math.atan2(a, c) * 180 / Math.PI;
+    double leftFrontAngle = Math.atan2(a, d) * 180 / Math.PI;
+    double rightFrontAngle = Math.atan2(a, c) * 180 / Math.PI;
+    double leftBackAngle = Math.atan2(b, d) * 180 / Math.PI;
+    double rightBackAngle = Math.atan2(b, c) * 180 / Math.PI;
 
     signals.add(new ModuleSignal(leftFrontPower, leftFrontAngle));
     signals.add(new ModuleSignal(rightFrontPower, rightFrontAngle));

@@ -45,15 +45,15 @@ public class SwerveModule {
     driveConfiguration.pidKd = 0.0;
     driveConfiguration.pidKf = 0.0;
     driveConfiguration.pidIntegralZone = 18;
-    driveConfiguration.continuousCurrentLimit = 15;
-    driveConfiguration.peakCurrentLimit = 20;
+    driveConfiguration.continuousCurrentLimit = 30;
+    driveConfiguration.peakCurrentLimit = 50;
     driveConfiguration.peakCurrentLimitDuration = 100;
     driveConfiguration.enableCurrentLimit = true;
     driveConfiguration.openLoopRampTimeSeconds = 0.25;
 
     turnConfiguration = new TalonSrxFactory.Configuration();
     turnConfiguration.feedbackDevice = FeedbackDevice.Analog;
-    turnConfiguration.invert = true;
+    turnConfiguration.invert = false;
     turnConfiguration.invertSensorPhase = true;
     turnConfiguration.neutralPowerMode = NeutralMode.Brake;
     turnConfiguration.pidKp = 8.4; // 10.0;

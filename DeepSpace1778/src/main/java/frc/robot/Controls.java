@@ -88,7 +88,7 @@ public class Controls {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
         return SimpleUtil.handleDeadband(
-            driverController.getRawAxis(InterLinkElite.Axis.LEFT_Y), 0.05);
+            driverController.getRawAxis(FreezyController.Axis.LEFT_Y), 0.05);
       case INTERLINK_ELITE_CONTROLLER:
         return -driverController.getRawAxis(InterLinkElite.Axis.LEFT_Y);
       case LOGITECH_DUAL_ACTION:
@@ -108,17 +108,17 @@ public class Controls {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
         return SimpleUtil.handleDeadband(
-            driverController.getRawAxis(InterLinkElite.Axis.LEFT_X), 0.05);
+            -driverController.getRawAxis(FreezyController.Axis.LEFT_X), 0.05);
       case INTERLINK_ELITE_CONTROLLER:
-        return driverController.getRawAxis(InterLinkElite.Axis.LEFT_X);
+        return -driverController.getRawAxis(InterLinkElite.Axis.LEFT_X);
       case LOGITECH_DUAL_ACTION:
-        return driverController.getRawAxis(LogitechDualAction.Axis.LEFT_X);
+        return -driverController.getRawAxis(LogitechDualAction.Axis.LEFT_X);
       case LOGITECH_F310:
-        return driverController.getRawAxis(LogitechF310.Axis.LEFT_X);
+        return -driverController.getRawAxis(LogitechF310.Axis.LEFT_X);
       case XBOX_ONE:
-        return driverController.getRawAxis(XboxOne.Axis.LEFT_X);
+        return -driverController.getRawAxis(XboxOne.Axis.LEFT_X);
       case XBOX_ONE_ELITE:
-        return driverController.getRawAxis(XboxOneElite.Axis.LEFT_X);
+        return -driverController.getRawAxis(XboxOneElite.Axis.LEFT_X);
       default:
         return 0;
     }
@@ -128,7 +128,7 @@ public class Controls {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
         return SimpleUtil.handleDeadband(
-            -driverController.getRawAxis(InterLinkElite.Axis.RIGHT_X), 0.05);
+            -driverController.getRawAxis(FreezyController.Axis.RIGHT_X), 0.05);
       case INTERLINK_ELITE_CONTROLLER:
         return -driverController.getRawAxis(InterLinkElite.Axis.RIGHT_X);
       case LOGITECH_DUAL_ACTION:

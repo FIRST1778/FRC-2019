@@ -23,6 +23,14 @@ public class Ports {
   public static final int ELEVATOR_MASTER_ID = -1;
   public static final int ELEVATOR_SLAVE_ID = -1;
 
+  public static final int ARTICULATOR_ID = -1;
+  public static final int CLIMBER_PISTON_ID = -1;
+
+  public static final int LEFT_COLLECTOR_ID = -1;
+  public static final int RIGHT_COLLECTOR_ID = -1;
+  public static final int HATCH_PANEL_VACUUM_ID = -1;
+  public static final int CLIMBER_ROLLER_ID = -1;
+
   // Sensors
   public static final SPI.Port NAVX_SPI = SPI.Port.kMXP;
 }

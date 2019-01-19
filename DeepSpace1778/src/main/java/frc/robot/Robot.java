@@ -1,120 +1,201 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import frc.lib.util.DebugLog;
+import frc.robot.auto.AutoModeBase;
+import frc.robot.auto.AutoModeExecutor;
+import frc.robot.components.SwerveDrive;
+import java.util.Optional;
 
-import frc.ChillySwerve.ChillySwerve;
-
-import frc.NetworkComm.InputOutputComm;
-import frc.Systems.Lift;
-import frc.Systems.Climber;
-import frc.Systems.GamePieceControl;
-
-import frc.Systems.NavXSensor;
-import frc.Systems.CameraSensor;
-
-
+/**
+ * The main hub for all other classes. Each of the overrided methods are synced with FMS and
+ * driverstation packets. Periodic methods loop throughverything inside of them and then return to
+ * the top. Init methods are run once, and then pass on to their respective periodic method.
+ *
+ * @author FRC 1778 Chill Out
+ */
 public class Robot extends TimedRobot {
 
-  protected DriverStation ds;
- 
+  private AutoModeSelector autoModeSelector = new AutoModeSelector();
+  private AutoModeExecutor autoModeExecutor;
+
+  private SwerveDrive swerve = SwerveDrive.getinstance();
+  private Controls controls = Controls.getInstance();
+
+  private NetworkTableEntry totalPdpVoltage;
+
+  public Robot() {
+    DebugLog.logRobotConstruction();
+  }
+
   @Override
   public void robotInit() {
+    try {
+      DebugLog.logRobotInit();
 
-    // Initialize robot subsystems
-    InputOutputComm.initialize();
-    Lift.initialize();
-    Climber.initialize();
-    GamePieceControl.initialize();
-
-    NavXSensor.initialize();
-    CameraSensor.initialize();
-
-    // Initialize ChillySwerve Drive controller classes
-    ChillySwerve.initialize();
-
-    // retrieve Driver Station instance
-    ds = DriverStation.getInstance();
-
-    InputOutputComm.putString(InputOutputComm.LogTable.kMainLog, "MainLog", "robot initialized...");
-  }
-
-  @Override
-  public void autonomousInit() {
-
-    // NOTE: No notable auto modes this season
-    InputOutputComm.putString(InputOutputComm.LogTable.kMainLog, "MainLog", "autonomous mode...");
-
-    NavXSensor.reset();
-    CameraSensor.autoInit();
-
-    ChillySwerve.autoInit();   
-  }
-
-  /** This function is called periodically during autonomous */
-  @Override
-  public void autonomousPeriodic() {
-
-    // read sensor values out to shuffleboard
-    readSensors();
-  }
-
-  @Override
-  public void teleopInit() {
-    InputOutputComm.putString(InputOutputComm.LogTable.kMainLog, "MainLog", "teleop mode...");
-
-    NavXSensor.reset();
-    CameraSensor.teleopInit();
-
-    Lift.teleopInit();
-    Climber.teleopInit();
-    GamePieceControl.teleopInit();
-    ChillySwerve.teleopInit();
-  }
-
-  @Override
-  public void teleopPeriodic() {
-
-    Lift.teleopPeriodic();
-    Climber.teleopPeriodic();
-    GamePieceControl.teleopPeriodic();
-    ChillySwerve.teleopPeriodic();
-
-    // read sensor values out to shuffleboard
-    readSensors();
+      autoModeSelector.updateModeCreator();
+    } catch (Throwable t) {
+      DebugLog.logThrowableCrash(t);
+    }
   }
 
   @Override
   public void disabledInit() {
+    try {
+      DebugLog.logDisabledInit();
 
-    Lift.disabledInit();
-    Climber.disabledInit();
-    GamePieceControl.disabledInit();
-    ChillySwerve.disabledInit();
-    CameraSensor.disabledInit();
+      if (autoModeExecutor != null) {
+        autoModeExecutor.stop();
+      }
+
+      autoModeSelector.reset();
+      autoModeSelector.updateModeCreator();
+      autoModeExecutor = new AutoModeExecutor();
+    } catch (Throwable t) {
+      DebugLog.logThrowableCrash(t);
+    }
+  }
+
+  @Override
+  public void autonomousInit() {
+    try {
+      DebugLog.logAutoInit();
+
+      autoModeExecutor.start();
+      DebugLog.logNote(
+          String.format(
+              "Auto mode %s selected and running.",
+              autoModeExecutor.getAutoMode().getClass().getSimpleName()));
+    } catch (Throwable t) {
+      DebugLog.logThrowableCrash(t);
+    }
+  }
+
+  @Override
+  public void teleopInit() {
+    try {
+      DebugLog.logTeleopInit();
+
+      swerve.zeroSensors();
+
+      if (autoModeExecutor != null) {
+        autoModeExecutor.stop();
+      }
+    } catch (Throwable t) {
+      DebugLog.logThrowableCrash(t);
+    }
+  }
+
+  @Override
+  public void testInit() {
+    try {
+      DebugLog.logTestInit();
+    } catch (Throwable t) {
+      DebugLog.logThrowableCrash(t);
+    }
   }
 
   @Override
   public void disabledPeriodic() {
-    ChillySwerve.disabledPeriodic();
+    try {
+      sendTelemetry();
+
+      autoModeSelector.updateModeCreator();
+
+      Optional<AutoModeBase> autoMode =
+          autoModeSelector.getAutoMode(DriverStation.getInstance().getLocation());
+      if (autoMode.isPresent() && autoMode.get() != autoModeExecutor.getAutoMode()) {
+        autoModeExecutor.setAutoMode(autoMode.get());
+      }
+    } catch (Throwable t) {
+      DebugLog.logThrowableCrash(t);
+    }
   }
 
   @Override
-  public void testInit() {}
+  public void autonomousPeriodic() {
+    try {
+      sendTelemetry();
+    } catch (Throwable t) {
+      DebugLog.logThrowableCrash(t);
+    }
+  }
 
   @Override
-  public void testPeriodic() {}
+  public void teleopPeriodic() {
+    try {
+      sendTelemetry();
 
-  private void readSensors()
-  {
-    // report current gyro value
-    double gyroAngle = NavXSensor.getAngle(); // continuous angle (can be larger than 360 deg)
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "ChillySwerve/Sensors_Gyro/GyroAngleDeg", gyroAngle);
+      boolean slowMode = controls.getSlowMode();
+      if (controls.getTranslationX() != 0
+          | controls.getTranslationY() != 0
+          | controls.getRotation() != 0) {
 
-    // report current drive distances
-    ChillySwerve.getDistanceInches();
+        if (controls.getFieldCentricToggle()) {
+          double angle = Math.toRadians(swerve.getNavX().getAngle());
 
-    // report current turn wheel angles
-    ChillySwerve.getTurnAngleDeg();
+          double forward = (slowMode ? 0.6 : 1.0) * controls.getTranslationY();
+          double strafe = (slowMode ? 0.6 : 1.0) * controls.getTranslationX();
+
+          double temp = (forward * Math.cos(angle)) + (strafe * Math.sin(angle));
+          strafe = (-forward * Math.sin(angle)) + (strafe * Math.cos(angle));
+          forward = temp;
+
+          swerve.setSignals(
+              swerve.calculateModuleSignals(
+                  (slowMode ? 0.6 : 1.0) * forward,
+                  (slowMode ? 0.6 : 1.0) * strafe,
+                  (slowMode ? 0.6 : 1.0) * controls.getRotation()));
+        } else {
+          swerve.setSignals(
+              swerve.calculateModuleSignals(
+                  (slowMode ? 0.6 : 1.0) * controls.getTranslationY(),
+                  (slowMode ? 0.6 : 1.0) * controls.getTranslationX(),
+                  (slowMode ? 0.6 : 1.0) * controls.getRotation()));
+        }
+      } else {
+        swerve.stop();
+      }
+    } catch (Throwable t) {
+      DebugLog.logThrowableCrash(t);
+    }
+  }
+
+  @Override
+  public void testPeriodic() {
+    try {
+      sendTelemetry();
+
+      // swerve.setAllTurnPowers(1);
+      swerve.setAllToAngle(0);
+      System.out.println("leftFront angle: " + swerve.leftFront.getAbsAngle());
+      System.out.println("rightFront angle: " + swerve.rightFront.getAbsAngle());
+      System.out.println("leftBack angle: " + swerve.leftBack.getAbsAngle());
+      System.out.println("rightBack angle: " + swerve.rightBack.getAbsAngle());
+    } catch (Throwable t) {
+      DebugLog.logThrowableCrash(t);
+    }
+  }
+
+  boolean shuffleboardInitialized;
+
+  private void sendTelemetry() {
+    swerve.sendTelemetry();
+    if (shuffleboardInitialized) {
+      totalPdpVoltage.setDouble(RobotController.getBatteryVoltage());
+    } else {
+      totalPdpVoltage =
+          Constants.teleopTab
+              .add("Battery Voltage", 0)
+              .withWidget(BuiltInWidgets.kGraph)
+              .withPosition(0, 2)
+              .withSize(4, 5)
+              .getEntry();
+      shuffleboardInitialized = true;
+    }
   }
 }
