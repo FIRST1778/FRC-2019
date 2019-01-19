@@ -1,9 +1,8 @@
 package frc.StateMachine;
 
-import edu.wpi.first.wpilibj.Utility;
+import edu.wpi.first.wpilibj.RobotController;
 import frc.NetworkComm.InputOutputComm;
 import frc.Systems.NavXSensor;
-import java.util.prefs.Preferences;
 
 // event triggered when closed-loop gyro gets to a certain predetermined angle
 public class ClosedLoopAngleEvent extends Event {
@@ -15,9 +14,6 @@ public class ClosedLoopAngleEvent extends Event {
   private double durationSec = 0.0;
 
   private long startTimeUs = 0;
-
-  private InputOutputComm ioComm;
-  private NavXSensor navX;
 
   public ClosedLoopAngleEvent(double targetAngleDeg, double errorDeg, double durationSec) {
     this.name = "<Gyro Angle Event>";
@@ -32,9 +28,8 @@ public class ClosedLoopAngleEvent extends Event {
 
   // overloaded initialize method
   public void initialize() {
-    // System.out.println("GyroAngleEvent initialized!");
 
-    startTimeUs = Utility.getFPGATime();
+    startTimeUs = RobotController.getFPGATime();
 
     super.initialize();
   }
@@ -42,12 +37,6 @@ public class ClosedLoopAngleEvent extends Event {
   private double getGyroAngle() {
 
     double gyroAngle = NavXSensor.getAngle(); // continuous angle (can be larger than 360 deg)
-
-    // send output data for test & debug
-    InputOutputComm.putBoolean(
-        InputOutputComm.LogTable.kMainLog, "Auto/IMU_Connected", navX.isConnected());
-    InputOutputComm.putBoolean(
-        InputOutputComm.LogTable.kMainLog, "Auto/IMU_Calibrating", navX.isCalibrating());
 
     // System.out.println("gyroAngle = " + gyroAngle);
     InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "Auto/GyroAngle", gyroAngle);
@@ -63,11 +52,11 @@ public class ClosedLoopAngleEvent extends Event {
 
       // outside error range...
       // reset timer and return false
-      startTimeUs = Utility.getFPGATime();
+      startTimeUs = RobotController.getFPGATime();
       return false;
     }
 
-    long currentTimeUs = Utility.getFPGATime();
+    long currentTimeUs = RobotController.getFPGATime();
     double delta = (currentTimeUs - startTimeUs) / 1e6;
     // System.out.println("delta = " + delta + " duration = " + durationSec);
 
@@ -78,14 +67,5 @@ public class ClosedLoopAngleEvent extends Event {
 
     System.out.println("ClosedLoopAngleEvent triggered!");
     return true;
-  }
-
-  public void persistWrite(int counter, Preferences prefs) {
-
-    // create node for event
-    Preferences eventPrefs = prefs.node(counter + "_" + this.name);
-
-    // store event details
-    eventPrefs.put("class", this.getClass().toString());
   }
 }

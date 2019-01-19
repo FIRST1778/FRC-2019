@@ -1,62 +1,46 @@
 package frc.StateMachine;
 
 import frc.ChillySwerve.ChillySwerve;
-import frc.NetworkComm.InputOutputComm;
-import frc.Systems.NavXSensor;
 
 public class DriveForwardAction extends Action {
 
   private String name;
-  private double speed = 0.0;
-  private boolean resetGyro = true;
-  private double headingDeg = 0.0;
+  private double targetPosInches = 0.0;
+  private double angleDeg = 0.0;
+  private int speedRpm = 0;
+  private int accelRpm = 0;
 
-  public DriveForwardAction(double speed, boolean resetGyro, double headingDeg) {
+  public DriveForwardAction(
+      double targetPosInches, double angleDeg, int speedRpm, int accelRpm) {
     this.name = "<Drive Forward Action>";
-    this.speed = speed;
-    this.resetGyro = resetGyro;
-    this.headingDeg = headingDeg; // absolute heading to use if not resetting gyro
+    this.targetPosInches = targetPosInches;
+    this.angleDeg = angleDeg;
+    this.speedRpm = speedRpm;
+    this.accelRpm = accelRpm;
 
     ChillySwerve.initialize();
-    NavXSensor.initialize();
-    InputOutputComm.initialize();
   }
 
-  public DriveForwardAction(String name, double speed, boolean resetGyro, double headingDeg) {
+  public DriveForwardAction(
+      String name,
+      double targetPosInches,
+      double angleDeg,
+      int speedRpm,
+      int accelRpm) {
     this.name = name;
-    this.speed = speed;
-    this.resetGyro = resetGyro;
-    this.headingDeg = headingDeg; // absolute heading to use if not resetting gyro
+    this.targetPosInches = targetPosInches;
+    this.angleDeg = angleDeg;
+    this.speedRpm = speedRpm;
+    this.accelRpm = accelRpm;
 
     ChillySwerve.initialize();
-    NavXSensor.initialize();
-    InputOutputComm.initialize();
-  }
-
-  private double getGyroAngle() {
-    // double gyroAngle = 0.0;
-    // double gyroAngle = NavXSensor.getYaw();  // -180 deg to +180 deg
-    double gyroAngle = NavXSensor.getAngle(); // continuous angle (can be larger than 360 deg)
-
-    // System.out.println("autoPeriodicStraight:  Gyro angle = " + gyroAngle);
-
-    // send output data for test & debug
-    InputOutputComm.putBoolean(
-        InputOutputComm.LogTable.kMainLog, "Auto/IMU_Connected", NavXSensor.isConnected());
-    InputOutputComm.putBoolean(
-        InputOutputComm.LogTable.kMainLog, "Auto/IMU_Calibrating", NavXSensor.isCalibrating());
-
-    // System.out.println("gyroAngle = " + gyroAngle);
-    InputOutputComm.putDouble(InputOutputComm.LogTable.kMainLog, "Auto/GyroAngle", gyroAngle);
-
-    return gyroAngle;
   }
 
   // action entry
   public void initialize() {
-    // do some drivey initialization
 
-    ChillySwerve.autoInit(resetGyro, headingDeg, false);
+    ChillySwerve.resetAllDriveEnc();
+    ChillySwerve.autoStraight(targetPosInches, angleDeg, speedRpm, accelRpm);
 
     super.initialize();
   }
@@ -65,11 +49,6 @@ public class DriveForwardAction extends Action {
   public void process() {
 
     // do some drivey stuff
-    ChillySwerve.autoGyroStraight(speed, headingDeg);
-
-    // get gyro angle
-    // (not used for anything else here except reporting to driver)
-    getGyroAngle();
 
     super.process();
   }
@@ -78,7 +57,7 @@ public class DriveForwardAction extends Action {
   public void cleanup() {
     // do some drivey cleanup
 
-    ChillySwerve.autoStop();
+    ChillySwerve.stopDrive();
 
     // cleanup base class
     super.cleanup();

@@ -5,19 +5,6 @@ plugins {
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
 
-task getAllArtifacts() {
-    doLast {
-        project.configurations.each { Configuration conf ->
-            if(!conf.canBeResolved) {
-                return
-            }
-            println("Resolving: " + conf.getName())
-            conf.resolvedConfiguration.resolvedArtifacts.each { ResolvedArtifact art ->
-                art.file    // Needed to trigger download
-            }
-        }
-    }
-}
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
 deploy {

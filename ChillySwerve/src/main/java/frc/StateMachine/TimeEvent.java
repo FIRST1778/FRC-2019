@@ -1,6 +1,6 @@
 package frc.StateMachine;
 
-import edu.wpi.first.wpilibj.Utility;
+import edu.wpi.first.wpilibj.RobotController;
 import java.util.prefs.Preferences;
 
 // event triggered when timer gets to a certain predetermined angle
@@ -23,14 +23,14 @@ public class TimeEvent extends Event {
   // overloaded initialize method
   public void initialize() {
     // System.out.println("TimeEvent initialized!");
-    startTimeUs = Utility.getFPGATime();
+    startTimeUs = RobotController.getFPGATime();
 
     super.initialize();
   }
 
   // overloaded trigger method
   public boolean isTriggered() {
-    long currentTimeUs = Utility.getFPGATime();
+    long currentTimeUs = RobotController.getFPGATime();
     double delta = (currentTimeUs - startTimeUs) / 1e6;
     // System.out.println("delta = " + delta + " duration = " + durationSec);
 

@@ -52,7 +52,6 @@ public class ClosedLoopPositionEvent extends Event {
       return false;
     }
 
-    // long currentTimeUs = Utility.getFPGATime();    // deprecated
     long currentTimeUs = RobotController.getFPGATime();
     double delta = (currentTimeUs - startTimeUs) / 1e6;
     // System.out.println("delta = " + delta + " duration = " + durationSec);

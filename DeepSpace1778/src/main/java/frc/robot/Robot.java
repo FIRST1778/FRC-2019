@@ -1,32 +1,37 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import frc.ChillySwerve.ChillySwerve;
-import frc.NetworkComm.InputOutputComm;
-import frc.NetworkComm.RPIComm;
-import frc.StateMachine.AutoStateMachine;
-import frc.Systems.NavXSensor;
-import frc.Systems.FreezyPath;
+import edu.wpi.first.wpilibj.TimedRobot;
 
-public class Robot extends IterativeRobot {
+import frc.ChillySwerve.ChillySwerve;
+
+import frc.NetworkComm.InputOutputComm;
+import frc.Systems.Lift;
+import frc.Systems.Climber;
+import frc.Systems.GamePieceControl;
+
+import frc.Systems.NavXSensor;
+import frc.Systems.CameraSensor;
+
+
+public class Robot extends TimedRobot {
 
   protected DriverStation ds;
-  protected AutoStateMachine autoSM;
-
+ 
   @Override
   public void robotInit() {
+
     // Initialize robot subsystems
     InputOutputComm.initialize();
-    RPIComm.initialize();
+    Lift.initialize();
+    Climber.initialize();
+    GamePieceControl.initialize();
+
     NavXSensor.initialize();
-    //FreezyPath.initialize();
+    CameraSensor.initialize();
 
     // Initialize ChillySwerve Drive controller classes
     ChillySwerve.initialize();
-
-    // Create Autonomous State Machine
-    //autoSM = new AutoStateMachine();
 
     // retrieve Driver Station instance
     ds = DriverStation.getInstance();
@@ -36,22 +41,19 @@ public class Robot extends IterativeRobot {
 
   @Override
   public void autonomousInit() {
+
+    // NOTE: No notable auto modes this season
     InputOutputComm.putString(InputOutputComm.LogTable.kMainLog, "MainLog", "autonomous mode...");
 
-    //IMPORTANT!! Only reset the gyro ONCE, here, at beginning of auto
     NavXSensor.reset();
+    CameraSensor.autoInit();
 
-    ChillySwerve.autoInit();
-    
-    // start the auto state machine
-    //autoSM.start();
+    ChillySwerve.autoInit();   
   }
 
   /** This function is called periodically during autonomous */
   @Override
   public void autonomousPeriodic() {
-
-    //autoSM.process();
 
     // read sensor values out to shuffleboard
     readSensors();
@@ -61,16 +63,21 @@ public class Robot extends IterativeRobot {
   public void teleopInit() {
     InputOutputComm.putString(InputOutputComm.LogTable.kMainLog, "MainLog", "teleop mode...");
 
-    //IMPORTANT!! DEBUG ONLY - Must remove this gyro reset prior to competition!
     NavXSensor.reset();
+    CameraSensor.teleopInit();
 
+    Lift.teleopInit();
+    Climber.teleopInit();
+    GamePieceControl.teleopInit();
     ChillySwerve.teleopInit();
   }
 
   @Override
   public void teleopPeriodic() {
 
-    // ChillySwerve-Drive command for all controllers
+    Lift.teleopPeriodic();
+    Climber.teleopPeriodic();
+    GamePieceControl.teleopPeriodic();
     ChillySwerve.teleopPeriodic();
 
     // read sensor values out to shuffleboard
@@ -80,10 +87,11 @@ public class Robot extends IterativeRobot {
   @Override
   public void disabledInit() {
 
+    Lift.disabledInit();
+    Climber.disabledInit();
+    GamePieceControl.disabledInit();
     ChillySwerve.disabledInit();
-
-    //FreezyPath.stop();
-    //autoSM.stop();
+    CameraSensor.disabledInit();
   }
 
   @Override

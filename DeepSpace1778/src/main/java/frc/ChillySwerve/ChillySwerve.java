@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.NetworkComm.InputOutputComm;
 import frc.Systems.NavXSensor;
 import frc.Utility.HardwareIDs;
-import jaci.pathfinder.followers.EncoderFollower;
 
 public class ChillySwerve {
 
@@ -20,7 +19,6 @@ public class ChillySwerve {
 
   // swerve inputs
   private static Joystick driveGamepad;
-  private static final double JOYSTICK_DEADZONE = 0.1;
 
   // drive values
   private static double fwd = 0.0;
@@ -41,10 +39,10 @@ public class ChillySwerve {
   private static boolean initialized = false;
 
   // wheel angle offsets in deg
-  public static final double FL_ABS_ZERO_ANGLE_OFFSET = 5.0;
-  public static final double FR_ABS_ZERO_ANGLE_OFFSET = 80.0;
-  public static final double BL_ABS_ZERO_ANGLE_OFFSET = -110.0;
-  public static final double BR_ABS_ZERO_ANGLE_OFFSET = -140.0;
+  public static final double FL_ABS_ZERO_ANGLE_OFFSET = -35.0;
+  public static final double FR_ABS_ZERO_ANGLE_OFFSET = 30.0;
+  public static final double BL_ABS_ZERO_ANGLE_OFFSET = -12.0;
+  public static final double BR_ABS_ZERO_ANGLE_OFFSET = 80.0;
 
   public static void reset() {
 
@@ -105,18 +103,18 @@ public class ChillySwerve {
     double joyVal;
 
     // get joystick inputs
-    joyVal = INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.LEFT_Y_AXIS);
-    fwd = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
+    joyVal = INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.DRIVER_LEFT_Y_AXIS);
+    fwd = (Math.abs(joyVal) > HardwareIDs.DRIVER_JOYSTICK_DEADZONE) ? joyVal : 0.0;
 
-    joyVal = -1.0 * INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.LEFT_X_AXIS);
-    str = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
+    joyVal = -1.0 * INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.DRIVER_LEFT_X_AXIS);
+    str = (Math.abs(joyVal) > HardwareIDs.DRIVER_JOYSTICK_DEADZONE) ? joyVal : 0.0;
 
-    joyVal = -1.0 * INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.RIGHT_X_AXIS);
-    rot = (Math.abs(joyVal) > JOYSTICK_DEADZONE) ? joyVal : 0.0;
+    joyVal = -1.0 * INPUT_GAIN_FACTOR * driveGamepad.getRawAxis(HardwareIDs.DRIVER_RIGHT_X_AXIS);
+    rot = (Math.abs(joyVal) > HardwareIDs.DRIVER_JOYSTICK_DEADZONE) ? joyVal : 0.0;
 
     // swerve reference mode (toggle control)
     // left toggle switch on freezy drive control unit
-    field_centric = driveGamepad.getRawButton(2);  
+    field_centric = driveGamepad.getRawButton(HardwareIDs.DRIVER_LEFT_SWITCH);  
 
     if (field_centric)
     {
@@ -235,15 +233,6 @@ public class ChillySwerve {
     backLeft.setDriveMotorForward(motorPolarity);
     backRight.setDriveMotorForward(motorPolarity);
 
-  }
-
-  // mode used with Pathfinder
-  public static void directDrive(
-      EncoderFollower fl, EncoderFollower fr, EncoderFollower bl, EncoderFollower br) {
-    frontLeft.drivePath(fl);
-    frontRight.drivePath(fr);
-    backLeft.drivePath(bl);
-    backRight.drivePath(br);
   }
 
   public static void fieldCentricDrive(double fwd, double str, double rot) {
