@@ -8,6 +8,7 @@ package frc.robot.components;
  * @author FRC 1778 Chill Out
  */
 public abstract class Subsystem {
+
   public abstract void sendTelemetry();
 
   public abstract void resetEncoders();

@@ -18,6 +18,7 @@ import jaci.pathfinder.followers.EncoderFollower;
  * @author FRC 1778 Chill Out
  */
 public class SwerveModule {
+
   private TalonSRX turnMotor;
   private TalonSRX driveMotor;
 
@@ -203,6 +204,6 @@ public class SwerveModule {
   }
 
   public void resetDriveEncoder() {
-    driveMotor.setSelectedSensorPosition(0);
+    driveMotor.setSelectedSensorPosition(0, 0, driveConfiguration.timeoutInMs);
   }
 }

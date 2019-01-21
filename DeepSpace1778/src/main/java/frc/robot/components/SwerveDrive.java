@@ -16,6 +16,7 @@ import java.util.List;
  * @author FRC 1778 Chill Out
  */
 public class SwerveDrive extends Subsystem {
+
   private static SwerveDrive instance = new SwerveDrive();
 
   public SwerveModule leftFront;
