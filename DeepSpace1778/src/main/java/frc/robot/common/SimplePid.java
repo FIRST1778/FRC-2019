@@ -6,6 +6,7 @@ package frc.robot.common;
  * @author FRC 1778 Chill Out
  */
 public class SimplePid {
+
   private double kp;
   private double ki;
   private double kd;
@@ -55,6 +56,7 @@ public class SimplePid {
   }
 
   public static class PidConstants {
+
     private double kp;
     private double ki;
     private double kd;

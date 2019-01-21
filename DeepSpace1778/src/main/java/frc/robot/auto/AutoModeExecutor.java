@@ -9,6 +9,7 @@ import frc.lib.util.DebugLogRunnable;
  * @author FRC 1778 Chill Out
  */
 public class AutoModeExecutor {
+
   private AutoModeBase autoMode;
   private Thread autoThread = null;
 

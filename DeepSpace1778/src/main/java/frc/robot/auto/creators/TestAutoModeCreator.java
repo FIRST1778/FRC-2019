@@ -9,6 +9,7 @@ import frc.robot.auto.modes.TestAutoMode;
  * @author FRC 1778 Chill Out
  */
 public class TestAutoModeCreator implements AutoModeCreator {
+
   private TestAutoMode modePositionOne = new TestAutoMode(1);
   private TestAutoMode modePositionTwo = new TestAutoMode(2);
   private TestAutoMode modePositionThree = new TestAutoMode(3);

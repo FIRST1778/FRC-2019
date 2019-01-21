@@ -6,6 +6,7 @@ package frc.lib.util;
  * @author FRC 1778 Chill Out
  */
 public class ModuleSignal {
+
   private double drivePower;
   private double turnAngle;
 

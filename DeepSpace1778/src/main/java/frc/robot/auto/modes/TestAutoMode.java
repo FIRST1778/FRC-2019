@@ -11,6 +11,7 @@ import frc.robot.auto.actions.RunOnceAction;
  * @author FRC 1778 Chill Out
  */
 public class TestAutoMode extends AutoModeBase {
+
   private int teamSelectedPosition;
 
   public TestAutoMode(int driverStationPosition) {

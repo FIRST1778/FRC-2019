@@ -9,6 +9,7 @@ import frc.robot.auto.AutoModeEndedException;
  * @author FRC 1778 Chill Out
  */
 public class DoNothingMode extends AutoModeBase {
+
   @Override
   protected void routine() throws AutoModeEndedException {}
 }

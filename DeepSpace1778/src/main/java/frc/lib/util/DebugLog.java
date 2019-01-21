@@ -22,10 +22,15 @@ import java.util.zip.ZipEntry;
  * @author FRC 1778 Chill Out
  */
 public class DebugLog {
+
   private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
   private static StringWriter sw = new StringWriter();
   private static File logFile = new File("/home/lvuser/crashLog.csv");
   private static Date compileDate = getClassBuildTime();
+
+  public static void setFile(File file) {
+    logFile = file;
+  }
 
   public static void logRobotStartup() {
     logMarker("Robot started");

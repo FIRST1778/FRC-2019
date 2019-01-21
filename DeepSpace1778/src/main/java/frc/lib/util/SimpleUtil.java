@@ -6,6 +6,7 @@ package frc.lib.util;
  * @author FRC 1778 Chill Out
  */
 public class SimpleUtil {
+
   public static double limit(double value, double max) {
     return limit(value, -max, max);
   }

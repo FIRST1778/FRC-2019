@@ -7,6 +7,7 @@ package frc.robot.auto.actions;
  * @author FRC 254 The Cheesy Poofs
  */
 public abstract class RunOnceAction implements Action {
+
   @Override
   public boolean isFinished() {
     return true;

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
  * @author FRC 1778 Chill Out
  */
 public class Constants {
+
   public static ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
   public static ShuffleboardTab teleopTab = Shuffleboard.getTab("TeleOp");
 

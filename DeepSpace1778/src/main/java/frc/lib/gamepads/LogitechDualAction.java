@@ -6,6 +6,7 @@ package frc.lib.gamepads;
  * @author FRC 1778 Chill Out
  */
 public class LogitechDualAction {
+
   public static final int DPAD = 0;
   public static final int B1 = 1;
   public static final int B2 = 2;
@@ -26,6 +27,7 @@ public class LogitechDualAction {
    * @author FRC 1778 Chill Out
    */
   public class Axis {
+
     public static final int LEFT_X = 0;
     public static final int LEFT_Y = 1;
     public static final int RIGHT_X = 2;

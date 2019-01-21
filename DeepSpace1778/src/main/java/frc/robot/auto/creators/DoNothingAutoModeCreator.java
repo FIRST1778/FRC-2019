@@ -9,6 +9,7 @@ import frc.robot.auto.modes.DoNothingMode;
  * @author FRC 1778 Chill Out
  */
 public class DoNothingAutoModeCreator implements AutoModeCreator {
+
   private DoNothingMode auto = new DoNothingMode();
 
   @Override

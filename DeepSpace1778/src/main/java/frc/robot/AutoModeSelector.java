@@ -15,6 +15,7 @@ import java.util.Optional;
  * @author FRC 1778 Chill Out
  */
 public class AutoModeSelector {
+
   enum StartingPosition {
     LEFT,
     CENTER,

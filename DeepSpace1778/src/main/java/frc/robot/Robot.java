@@ -79,7 +79,11 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     try {
       DebugLog.logTeleopInit();
-
+      DebugLog.logNote(
+          "Driver Controller: "
+              + controls.getDriverControllerType().toString()
+              + ", Operator Controller: "
+              + controls.getOperatorControllerType().toString());
       swerve.zeroSensors();
 
       if (autoModeExecutor != null) {

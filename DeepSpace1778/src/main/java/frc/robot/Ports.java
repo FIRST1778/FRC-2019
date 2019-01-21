@@ -20,16 +20,15 @@ public class Ports {
   public static final int LEFT_BACK_TURN_ID = 6;
   public static final int RIGHT_BACK_TURN_ID = 10;
 
-  public static final int ELEVATOR_MASTER_ID = -1;
-  public static final int ELEVATOR_SLAVE_ID = -1;
+  public static final int ELEVATOR_MASTER_ID = 21;
+  public static final int ELEVATOR_SLAVE_ID = 22;
 
-  public static final int ARTICULATOR_ID = -1;
-  public static final int CLIMBER_PISTON_ID = -1;
+  public static final int MANIPULATOR_PIVOT_ID = 31;
+  public static final int CARGO_COLLECTOR_ID = 33;
+  public static final int HATCH_PANEL_PICKUP_ID = 34;
 
-  public static final int LEFT_COLLECTOR_ID = -1;
-  public static final int RIGHT_COLLECTOR_ID = -1;
-  public static final int HATCH_PANEL_VACUUM_ID = -1;
-  public static final int CLIMBER_ROLLER_ID = -1;
+  public static final int CLIMBER_PISTON_ID = 41;
+  public static final int CLIMBER_ROLLER_ID = 42;
 
   // Sensors
   public static final SPI.Port NAVX_SPI = SPI.Port.kMXP;

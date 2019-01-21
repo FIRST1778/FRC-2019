@@ -12,7 +12,9 @@ import edu.wpi.first.wpilibj.SPI;
  * @author FRC 254 The Cheesy Poofs
  */
 public class NavX {
+
   protected class Callback implements ITimestampedDataSubscriber {
+
     @Override
     public void timestampedDataReceived(
         long systemTimestamp, long sensorTimestamp, AHRSUpdateBase update, Object context) {

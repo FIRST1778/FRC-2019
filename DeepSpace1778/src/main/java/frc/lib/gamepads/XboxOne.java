@@ -6,6 +6,7 @@ package frc.lib.gamepads;
  * @author FRC 1778 Chill Out
  */
 public class XboxOne {
+
   public static final int DPAD = 0;
   public static final int A = 1;
   public static final int B = 2;
@@ -24,6 +25,7 @@ public class XboxOne {
    * @author FRC 1778 Chill Out
    */
   public class Axis {
+
     public static final int LEFT_X = 0;
     public static final int LEFT_Y = 1;
     public static final int LEFT_TRIGGER = 2;

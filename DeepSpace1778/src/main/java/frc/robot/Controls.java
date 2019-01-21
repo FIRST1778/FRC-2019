@@ -83,6 +83,14 @@ public class Controls {
     return operatorController;
   }
 
+  public ControllerType getDriverControllerType() {
+    return DRIVER_CONTROLLER_TYPE;
+  }
+
+  public ControllerType getOperatorControllerType() {
+    return OPERATOR_CONTROLLER_TYPE;
+  }
+
   // Driver Controls
   public double getTranslationY() {
     switch (DRIVER_CONTROLLER_TYPE) {
