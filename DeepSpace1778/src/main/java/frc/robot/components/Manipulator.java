@@ -17,9 +17,10 @@ import frc.robot.Ports;
  */
 public class Manipulator extends Subsystem {
 
-  private static Manipulator instance = new Manipulator();
+  private static Manipulator instance;
 
-  private static final double ENCODER_TICKS_PER_INCH = 1024.0; // TODO: Measure for robot
+  private static boolean initialized;
+
   private static final double ZERO_ANGLE_OFFSET = 0.0; // TODO: Measure for robot
 
   private TalonSRX manipulatorPivot;
@@ -32,35 +33,47 @@ public class Manipulator extends Subsystem {
   private boolean shuffleboardInitialized;
 
   public static Manipulator getInstance() {
+    return getInstance(true);
+  }
+
+  public static Manipulator getInstance(boolean hardware) {
+    if (!initialized) {
+      initialized = true;
+      instance = new Manipulator(hardware);
+    }
+
     return instance;
   }
 
-  private Manipulator() {
-    pivotConfiguration = new TalonSrxFactory.Configuration();
-    pivotConfiguration.feedbackDevice = FeedbackDevice.Analog;
-    pivotConfiguration.invertSensorPhase = false;
-    pivotConfiguration.forwardLimitSwitch = LimitSwitchSource.FeedbackConnector;
-    pivotConfiguration.forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
-    pivotConfiguration.reverseLimitSwitch = LimitSwitchSource.FeedbackConnector;
-    pivotConfiguration.reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
-    pivotConfiguration.pidKp = 0.0;
-    pivotConfiguration.pidKi = 0.0;
-    pivotConfiguration.pidKd = 0.0;
-    pivotConfiguration.pidKf = 0.0;
-    pivotConfiguration.continuousCurrentLimit = 20;
-    pivotConfiguration.peakCurrentLimit = 15;
-    pivotConfiguration.peakCurrentLimitDuration = 100;
-    pivotConfiguration.enableCurrentLimit = true;
+  private Manipulator(boolean hardware) {
+    if (hardware) {
+      pivotConfiguration = new TalonSrxFactory.Configuration();
+      pivotConfiguration.feedbackDevice = FeedbackDevice.Analog;
+      pivotConfiguration.invertSensorPhase = false;
+      pivotConfiguration.forwardLimitSwitch = LimitSwitchSource.FeedbackConnector;
+      pivotConfiguration.forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
+      pivotConfiguration.reverseLimitSwitch = LimitSwitchSource.FeedbackConnector;
+      pivotConfiguration.reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
+      pivotConfiguration.pidKp = 0.0;
+      pivotConfiguration.pidKi = 0.0;
+      pivotConfiguration.pidKd = 0.0;
+      pivotConfiguration.pidKf = 0.0;
+      pivotConfiguration.continuousCurrentLimit = 20;
+      pivotConfiguration.peakCurrentLimit = 15;
+      pivotConfiguration.peakCurrentLimitDuration = 100;
+      pivotConfiguration.enableCurrentLimit = true;
 
-    intakeConfiguration = new TalonSrxFactory.Configuration();
-    intakeConfiguration.continuousCurrentLimit = 20;
-    intakeConfiguration.peakCurrentLimit = 25;
-    intakeConfiguration.peakCurrentLimitDuration = 100;
-    intakeConfiguration.enableCurrentLimit = true;
+      intakeConfiguration = new TalonSrxFactory.Configuration();
+      intakeConfiguration.continuousCurrentLimit = 20;
+      intakeConfiguration.peakCurrentLimit = 25;
+      intakeConfiguration.peakCurrentLimitDuration = 100;
+      intakeConfiguration.enableCurrentLimit = true;
 
-    manipulatorPivot = TalonSrxFactory.createTalon(Ports.MANIPULATOR_PIVOT_ID, pivotConfiguration);
-    cargoCollector = TalonSrxFactory.createTalon(Ports.MANIPULATOR_PIVOT_ID, intakeConfiguration);
-    vacuum = TalonSrxFactory.createTalon(Ports.MANIPULATOR_PIVOT_ID, intakeConfiguration);
+      manipulatorPivot =
+          TalonSrxFactory.createTalon(Ports.MANIPULATOR_PIVOT_ID, pivotConfiguration);
+      cargoCollector = TalonSrxFactory.createTalon(Ports.MANIPULATOR_PIVOT_ID, intakeConfiguration);
+      vacuum = TalonSrxFactory.createTalon(Ports.MANIPULATOR_PIVOT_ID, intakeConfiguration);
+    }
   }
 
   @Override

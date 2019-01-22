@@ -21,7 +21,9 @@ import frc.robot.Ports;
  */
 public class Elevator extends Subsystem {
 
-  private static Elevator instance = new Elevator();
+  private static Elevator instance;
+
+  private static boolean initialized;
 
   public enum HeightSetPoints {
     ROCKET_CARGO_HIGH(80.0),
@@ -62,7 +64,7 @@ public class Elevator extends Subsystem {
     public double feedForward;
   }
 
-  private enum ControlState {
+  public enum ControlState {
     OPEN_LOOP,
     MOTION_MAGIC,
     CLOSED_LOOP_POSITION
@@ -72,8 +74,7 @@ public class Elevator extends Subsystem {
 
   private GamePiece gamePieceTransported = GamePiece.NONE;
 
-  private static final double ENCODER_TICKS_PER_INCH = 1024.0; // TODO: Measure for robot
-  private static final double HOME_DISTANCE_FROM_GROUND = 5.0; // TODO: Measure for robot
+  private static final double ENCODER_TICKS_PER_INCH = 100; // TODO: Measure for robot
 
   private TalonSRX masterElevator;
   private TalonSRX slaveElevator;
@@ -85,30 +86,41 @@ public class Elevator extends Subsystem {
   private boolean shuffleboardInitialized;
 
   public static Elevator getInstance() {
+    return getInstance(true);
+  }
+
+  public static Elevator getInstance(boolean hardware) {
+    if (!initialized) {
+      initialized = true;
+      instance = new Elevator(hardware);
+    }
+
     return instance;
   }
 
-  private Elevator() {
-    masterConfiguration = new TalonSrxFactory.Configuration();
-    masterConfiguration.feedbackDevice = FeedbackDevice.QuadEncoder;
-    masterConfiguration.invertSensorPhase = false;
-    masterConfiguration.forwardLimitSwitch = LimitSwitchSource.FeedbackConnector;
-    masterConfiguration.forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
-    masterConfiguration.reverseLimitSwitch = LimitSwitchSource.FeedbackConnector;
-    masterConfiguration.reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
-    masterConfiguration.pidKp = 0.0;
-    masterConfiguration.pidKi = 0.0;
-    masterConfiguration.pidKd = 0.0;
-    masterConfiguration.pidKf = 0.0;
-    masterConfiguration.motionCruiseVelocity = 600;
-    masterConfiguration.motionAcceleration = 300;
-    masterConfiguration.continuousCurrentLimit = 15;
-    masterConfiguration.peakCurrentLimit = 20;
-    masterConfiguration.peakCurrentLimitDuration = 100;
-    masterConfiguration.enableCurrentLimit = true;
+  private Elevator(boolean hardware) {
+    if (hardware) {
+      masterConfiguration = new TalonSrxFactory.Configuration();
+      masterConfiguration.feedbackDevice = FeedbackDevice.QuadEncoder;
+      masterConfiguration.invertSensorPhase = true;
+      masterConfiguration.forwardLimitSwitch = LimitSwitchSource.FeedbackConnector;
+      masterConfiguration.forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
+      masterConfiguration.reverseLimitSwitch = LimitSwitchSource.FeedbackConnector;
+      masterConfiguration.reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
+      masterConfiguration.pidKp = 2.0;
+      masterConfiguration.pidKi = 0.0;
+      masterConfiguration.pidKd = 0.0;
+      masterConfiguration.pidKf = 0.0;
+      masterConfiguration.motionCruiseVelocity = 600;
+      masterConfiguration.motionAcceleration = 300;
+      masterConfiguration.continuousCurrentLimit = 15;
+      masterConfiguration.peakCurrentLimit = 20;
+      masterConfiguration.peakCurrentLimitDuration = 100;
+      masterConfiguration.enableCurrentLimit = true;
 
-    masterElevator = TalonSrxFactory.createTalon(Ports.ELEVATOR_MASTER_ID, masterConfiguration);
-    slaveElevator = TalonSrxFactory.createSlaveTalon(Ports.ELEVATOR_SLAVE_ID, masterElevator);
+      masterElevator = TalonSrxFactory.createTalon(Ports.ELEVATOR_MASTER_ID, masterConfiguration);
+      slaveElevator = TalonSrxFactory.createSlaveTalon(Ports.ELEVATOR_SLAVE_ID, masterElevator);
+    }
   }
 
   @Override
@@ -121,7 +133,7 @@ public class Elevator extends Subsystem {
           Constants.autoTab
               .add("Elevator Height (in)", 0)
               .withWidget(BuiltInWidgets.kTextView)
-              .withPosition(4, 0)
+              .withPosition(4, 4)
               .withSize(1, 1)
               .getEntry();
 
@@ -196,10 +208,10 @@ public class Elevator extends Subsystem {
   }
 
   public double getHeightFromEncoderPosition(int encoderPosition) {
-    return (encoderPosition / ENCODER_TICKS_PER_INCH) + HOME_DISTANCE_FROM_GROUND;
+    return encoderPosition / ENCODER_TICKS_PER_INCH;
   }
 
   public int getEncoderPositionFromHeight(double height) {
-    return (int) ((height - HOME_DISTANCE_FROM_GROUND) * ENCODER_TICKS_PER_INCH);
+    return (int) (height * ENCODER_TICKS_PER_INCH);
   }
 }

@@ -17,7 +17,9 @@ import java.util.List;
  */
 public class SwerveDrive extends Subsystem {
 
-  private static SwerveDrive instance = new SwerveDrive();
+  private static SwerveDrive instance;
+
+  private static boolean initialized;
 
   public SwerveModule leftFront;
   public SwerveModule rightFront;
@@ -44,24 +46,35 @@ public class SwerveDrive extends Subsystem {
   private boolean shuffleboardInitialized;
 
   public static SwerveDrive getinstance() {
+    return getinstance(true);
+  }
+
+  public static SwerveDrive getinstance(boolean hardware) {
+    if (!initialized) {
+      initialized = true;
+      instance = new SwerveDrive(hardware);
+    }
+
     return instance;
   }
 
-  private SwerveDrive() {
-    leftFront =
-        new SwerveModule(
-            Ports.LEFT_FRONT_ID, Ports.LEFT_FRONT_TURN_ID, Constants.LEFT_FRONT_ANGLE_OFFSET);
-    rightFront =
-        new SwerveModule(
-            Ports.RIGHT_FRONT_ID, Ports.RIGHT_FRONT_TURN_ID, Constants.RIGHT_FRONT_ANGLE_OFFSET);
-    leftBack =
-        new SwerveModule(
-            Ports.LEFT_BACK_ID, Ports.LEFT_BACK_TURN_ID, Constants.LEFT_BACK_ANGLE_OFFSET);
-    rightBack =
-        new SwerveModule(
-            Ports.RIGHT_BACK_ID, Ports.RIGHT_BACK_TURN_ID, Constants.RIGHT_BACK_ANGLE_OFFSET);
+  private SwerveDrive(boolean hardware) {
+    if (hardware) {
+      leftFront =
+          new SwerveModule(
+              Ports.LEFT_FRONT_ID, Ports.LEFT_FRONT_TURN_ID, Constants.LEFT_FRONT_ANGLE_OFFSET);
+      rightFront =
+          new SwerveModule(
+              Ports.RIGHT_FRONT_ID, Ports.RIGHT_FRONT_TURN_ID, Constants.RIGHT_FRONT_ANGLE_OFFSET);
+      leftBack =
+          new SwerveModule(
+              Ports.LEFT_BACK_ID, Ports.LEFT_BACK_TURN_ID, Constants.LEFT_BACK_ANGLE_OFFSET);
+      rightBack =
+          new SwerveModule(
+              Ports.RIGHT_BACK_ID, Ports.RIGHT_BACK_TURN_ID, Constants.RIGHT_BACK_ANGLE_OFFSET);
 
-    navX = new NavX(Ports.NAVX_SPI);
+      navX = new NavX(Ports.NAVX_SPI);
+    }
   }
 
   @Override

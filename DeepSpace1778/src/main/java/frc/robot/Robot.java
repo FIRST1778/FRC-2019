@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import frc.lib.util.DebugLog;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeExecutor;
+import frc.robot.components.Elevator;
+import frc.robot.components.Elevator.ControlState;
+import frc.robot.components.Elevator.HeightSetPoints;
 import frc.robot.components.SwerveDrive;
 import java.util.Optional;
 
@@ -25,6 +28,7 @@ public class Robot extends TimedRobot {
 
   private SwerveDrive swerve = SwerveDrive.getinstance();
   private Controls controls = Controls.getInstance();
+  private Elevator elevator = Elevator.getInstance();
 
   private NetworkTableEntry totalPdpVoltage;
 
@@ -108,6 +112,8 @@ public class Robot extends TimedRobot {
     try {
       sendTelemetry();
 
+      elevator.resetEncoderIfLimitSwitchReached();
+
       autoModeSelector.updateModeCreator();
 
       Optional<AutoModeBase> autoMode =
@@ -124,6 +130,8 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     try {
       sendTelemetry();
+
+      elevator.resetEncoderIfLimitSwitchReached();
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }
@@ -164,6 +172,18 @@ public class Robot extends TimedRobot {
       } else {
         swerve.stop();
       }
+
+      elevator.setControlType(ControlState.CLOSED_LOOP_POSITION);
+
+      if (controls.getLiftToHome()) {
+        elevator.setTargetHeight(HeightSetPoints.LIFT_LEVEL_FLOOR);
+      } else if (controls.getLiftToFeederStation()) {
+        elevator.setTargetHeight(HeightSetPoints.FEEDER_STATION);
+      } else if (controls.getLiftToCargoShipCargo()) {
+        elevator.setTargetHeight(HeightSetPoints.CARGO_SHIP_CARGO);
+      }
+
+      elevator.resetEncoderIfLimitSwitchReached();
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }
@@ -174,12 +194,17 @@ public class Robot extends TimedRobot {
     try {
       sendTelemetry();
 
+      elevator.setControlType(ControlState.CLOSED_LOOP_POSITION);
+      elevator.setTargetHeight(10);
+
       // swerve.setAllTurnPowers(1);
       swerve.setAllToAngle(0);
       System.out.println("leftFront angle: " + swerve.leftFront.getAbsAngle());
       System.out.println("rightFront angle: " + swerve.rightFront.getAbsAngle());
       System.out.println("leftBack angle: " + swerve.leftBack.getAbsAngle());
       System.out.println("rightBack angle: " + swerve.rightBack.getAbsAngle());
+
+      elevator.resetEncoderIfLimitSwitchReached();
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }
@@ -189,6 +214,7 @@ public class Robot extends TimedRobot {
 
   private void sendTelemetry() {
     swerve.sendTelemetry();
+    elevator.sendTelemetry();
     if (shuffleboardInitialized) {
       totalPdpVoltage.setDouble(RobotController.getBatteryVoltage());
     } else {

@@ -17,7 +17,9 @@ import frc.robot.Ports;
  */
 public class Climber extends Subsystem {
 
-  private static Climber instance = new Climber();
+  private static Climber instance;
+
+  private static boolean initialized;
 
   private static final double ENCODER_TICKS_PER_INCH = 1024.0; // TODO: Measure for robot
 
@@ -30,34 +32,45 @@ public class Climber extends Subsystem {
   private boolean shuffleboardInitialized;
 
   public static Climber getInstance() {
+    return getInstance(true);
+  }
+
+  public static Climber getInstance(boolean hardware) {
+    if (!initialized) {
+      initialized = true;
+      instance = new Climber(hardware);
+    }
+
     return instance;
   }
 
-  private Climber() {
-    pistonConfiguration = new TalonSrxFactory.Configuration();
-    pistonConfiguration.feedbackDevice = FeedbackDevice.QuadEncoder;
-    pistonConfiguration.invertSensorPhase = false;
-    pistonConfiguration.forwardLimitSwitch = LimitSwitchSource.FeedbackConnector;
-    pistonConfiguration.forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
-    pistonConfiguration.reverseLimitSwitch = LimitSwitchSource.FeedbackConnector;
-    pistonConfiguration.reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
-    pistonConfiguration.pidKp = 0.0;
-    pistonConfiguration.pidKi = 0.0;
-    pistonConfiguration.pidKd = 0.0;
-    pistonConfiguration.pidKf = 0.0;
-    pistonConfiguration.continuousCurrentLimit = 20;
-    pistonConfiguration.peakCurrentLimit = 15;
-    pistonConfiguration.peakCurrentLimitDuration = 100;
-    pistonConfiguration.enableCurrentLimit = true;
+  private Climber(boolean hardware) {
+    if (hardware) {
+      pistonConfiguration = new TalonSrxFactory.Configuration();
+      pistonConfiguration.feedbackDevice = FeedbackDevice.QuadEncoder;
+      pistonConfiguration.invertSensorPhase = false;
+      pistonConfiguration.forwardLimitSwitch = LimitSwitchSource.FeedbackConnector;
+      pistonConfiguration.forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
+      pistonConfiguration.reverseLimitSwitch = LimitSwitchSource.FeedbackConnector;
+      pistonConfiguration.reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
+      pistonConfiguration.pidKp = 0.0;
+      pistonConfiguration.pidKi = 0.0;
+      pistonConfiguration.pidKd = 0.0;
+      pistonConfiguration.pidKf = 0.0;
+      pistonConfiguration.continuousCurrentLimit = 20;
+      pistonConfiguration.peakCurrentLimit = 15;
+      pistonConfiguration.peakCurrentLimitDuration = 100;
+      pistonConfiguration.enableCurrentLimit = true;
 
-    rollerConfiguration = new TalonSrxFactory.Configuration();
-    rollerConfiguration.continuousCurrentLimit = 20;
-    rollerConfiguration.peakCurrentLimit = 25;
-    rollerConfiguration.peakCurrentLimitDuration = 100;
-    rollerConfiguration.enableCurrentLimit = true;
+      rollerConfiguration = new TalonSrxFactory.Configuration();
+      rollerConfiguration.continuousCurrentLimit = 20;
+      rollerConfiguration.peakCurrentLimit = 25;
+      rollerConfiguration.peakCurrentLimitDuration = 100;
+      rollerConfiguration.enableCurrentLimit = true;
 
-    linearPiston = TalonSrxFactory.createTalon(Ports.CLIMBER_PISTON_ID, pistonConfiguration);
-    poweredRoller = TalonSrxFactory.createTalon(Ports.CLIMBER_ROLLER_ID, rollerConfiguration);
+      linearPiston = TalonSrxFactory.createTalon(Ports.CLIMBER_PISTON_ID, pistonConfiguration);
+      poweredRoller = TalonSrxFactory.createTalon(Ports.CLIMBER_ROLLER_ID, rollerConfiguration);
+    }
   }
 
   @Override

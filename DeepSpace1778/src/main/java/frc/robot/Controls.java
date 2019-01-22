@@ -191,4 +191,48 @@ public class Controls {
   }
 
   // Operator Controls
+  public boolean getLiftToHome() {
+    switch (OPERATOR_CONTROLLER_TYPE) {
+      case LOGITECH_DUAL_ACTION:
+        return operatorController.getRawButton(LogitechDualAction.LEFT_BUMPER);
+      case LOGITECH_F310:
+        return operatorController.getRawButton(LogitechF310.LEFT_BUMPER);
+      case XBOX_ONE:
+        return operatorController.getRawButton(XboxOne.LEFT_BUMPER);
+      case XBOX_ONE_ELITE:
+        return operatorController.getRawButton(XboxOneElite.LEFT_BUMPER);
+      default:
+        return false;
+    }
+  }
+
+  public boolean getLiftToFeederStation() {
+    switch (OPERATOR_CONTROLLER_TYPE) {
+      case LOGITECH_DUAL_ACTION:
+        return operatorController.getRawButton(LogitechDualAction.B1);
+      case LOGITECH_F310:
+        return operatorController.getRawButton(LogitechF310.A);
+      case XBOX_ONE:
+        return operatorController.getRawButton(XboxOne.A);
+      case XBOX_ONE_ELITE:
+        return operatorController.getRawButton(XboxOneElite.A);
+      default:
+        return false;
+    }
+  }
+
+  public boolean getLiftToCargoShipCargo() {
+    switch (OPERATOR_CONTROLLER_TYPE) {
+      case LOGITECH_DUAL_ACTION:
+        return operatorController.getRawButton(LogitechDualAction.B1);
+      case LOGITECH_F310:
+        return operatorController.getRawButton(LogitechF310.B);
+      case XBOX_ONE:
+        return operatorController.getRawButton(XboxOne.B);
+      case XBOX_ONE_ELITE:
+        return operatorController.getRawButton(XboxOneElite.B);
+      default:
+        return false;
+    }
+  }
 }
