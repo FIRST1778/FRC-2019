@@ -206,6 +206,51 @@ public class Controls {
     }
   }
 
+  public boolean getLiftToRocketCargoHigh() {
+    switch (OPERATOR_CONTROLLER_TYPE) {
+      case LOGITECH_DUAL_ACTION:
+        return operatorController.getRawButton(LogitechDualAction.B4);
+      case LOGITECH_F310:
+        return operatorController.getRawButton(LogitechF310.X);
+      case XBOX_ONE:
+        return operatorController.getRawButton(XboxOne.X);
+      case XBOX_ONE_ELITE:
+        return operatorController.getRawButton(XboxOneElite.X);
+      default:
+        return false;
+    }
+  }
+
+  public boolean getLiftToRocketCargoMedium() {
+    switch (OPERATOR_CONTROLLER_TYPE) {
+      case LOGITECH_DUAL_ACTION:
+        return operatorController.getRawButton(LogitechDualAction.B3);
+      case LOGITECH_F310:
+        return operatorController.getRawButton(LogitechF310.Y);
+      case XBOX_ONE:
+        return operatorController.getRawButton(XboxOne.Y);
+      case XBOX_ONE_ELITE:
+        return operatorController.getRawButton(XboxOneElite.Y);
+      default:
+        return false;
+    }
+  }
+
+  public boolean getLiftToCargoShipCargo() {
+    switch (OPERATOR_CONTROLLER_TYPE) {
+      case LOGITECH_DUAL_ACTION:
+        return operatorController.getRawButton(LogitechDualAction.B2);
+      case LOGITECH_F310:
+        return operatorController.getRawButton(LogitechF310.B);
+      case XBOX_ONE:
+        return operatorController.getRawButton(XboxOne.B);
+      case XBOX_ONE_ELITE:
+        return operatorController.getRawButton(XboxOneElite.B);
+      default:
+        return false;
+    }
+  }
+
   public boolean getLiftToFeederStation() {
     switch (OPERATOR_CONTROLLER_TYPE) {
       case LOGITECH_DUAL_ACTION:
@@ -221,18 +266,23 @@ public class Controls {
     }
   }
 
-  public boolean getLiftToCargoShipCargo() {
+  public double getCargoIntake() {
     switch (OPERATOR_CONTROLLER_TYPE) {
       case LOGITECH_DUAL_ACTION:
-        return operatorController.getRawButton(LogitechDualAction.B1);
+        return operatorController.getRawButton(LogitechDualAction.LEFT_BUMPER)
+            ? 1.0
+            : (operatorController.getRawButton(LogitechDualAction.LEFT_BUMPER) ? -1.0 : 0);
       case LOGITECH_F310:
-        return operatorController.getRawButton(LogitechF310.B);
+        return operatorController.getRawAxis(LogitechF310.Axis.LEFT_TRIGGER)
+            - operatorController.getRawAxis(LogitechF310.Axis.RIGHT_TRIGGER);
       case XBOX_ONE:
-        return operatorController.getRawButton(XboxOne.B);
+        return operatorController.getRawAxis(XboxOne.Axis.LEFT_TRIGGER)
+            - operatorController.getRawAxis(XboxOne.Axis.RIGHT_TRIGGER);
       case XBOX_ONE_ELITE:
-        return operatorController.getRawButton(XboxOneElite.B);
+        return operatorController.getRawAxis(XboxOneElite.Axis.LEFT_TRIGGER)
+            - operatorController.getRawAxis(XboxOneElite.Axis.RIGHT_TRIGGER);
       default:
-        return false;
+        return 0;
     }
   }
 }

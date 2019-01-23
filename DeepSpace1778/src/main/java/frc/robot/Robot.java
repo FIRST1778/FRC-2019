@@ -11,6 +11,7 @@ import frc.robot.auto.AutoModeExecutor;
 import frc.robot.components.Elevator;
 import frc.robot.components.Elevator.ControlState;
 import frc.robot.components.Elevator.HeightSetPoints;
+import frc.robot.components.Manipulator;
 import frc.robot.components.SwerveDrive;
 import java.util.Optional;
 
@@ -29,6 +30,7 @@ public class Robot extends TimedRobot {
   private SwerveDrive swerve = SwerveDrive.getinstance();
   private Controls controls = Controls.getInstance();
   private Elevator elevator = Elevator.getInstance();
+  private Manipulator manipulator = Manipulator.getInstance();
 
   private NetworkTableEntry totalPdpVoltage;
 
@@ -51,6 +53,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     try {
       DebugLog.logDisabledInit();
+      elevator.setControlType(ControlState.OPEN_LOOP);
 
       if (autoModeExecutor != null) {
         autoModeExecutor.stop();
@@ -68,6 +71,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     try {
       DebugLog.logAutoInit();
+      elevator.setControlType(ControlState.MOTION_MAGIC);
 
       autoModeExecutor.start();
       DebugLog.logNote(
@@ -89,6 +93,7 @@ public class Robot extends TimedRobot {
               + ", Operator Controller: "
               + controls.getOperatorControllerType().toString());
       swerve.zeroSensors();
+      elevator.setControlType(ControlState.MOTION_MAGIC);
 
       if (autoModeExecutor != null) {
         autoModeExecutor.stop();
@@ -111,8 +116,6 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
     try {
       sendTelemetry();
-
-      elevator.resetEncoderIfLimitSwitchReached();
 
       autoModeSelector.updateModeCreator();
 
@@ -173,15 +176,19 @@ public class Robot extends TimedRobot {
         swerve.stop();
       }
 
-      elevator.setControlType(ControlState.CLOSED_LOOP_POSITION);
-
       if (controls.getLiftToHome()) {
         elevator.setTargetHeight(HeightSetPoints.LIFT_LEVEL_FLOOR);
+      } else if (controls.getLiftToRocketCargoHigh()) {
+        elevator.setTargetHeight(HeightSetPoints.ROCKET_CARGO_HIGH);
+      } else if (controls.getLiftToRocketCargoMedium()) {
+        elevator.setTargetHeight(HeightSetPoints.ROCKET_CARGO_MED);
       } else if (controls.getLiftToFeederStation()) {
         elevator.setTargetHeight(HeightSetPoints.FEEDER_STATION);
       } else if (controls.getLiftToCargoShipCargo()) {
         elevator.setTargetHeight(HeightSetPoints.CARGO_SHIP_CARGO);
       }
+
+      manipulator.setCargoIntake(controls.getCargoIntake());
 
       elevator.resetEncoderIfLimitSwitchReached();
     } catch (Throwable t) {
@@ -194,7 +201,7 @@ public class Robot extends TimedRobot {
     try {
       sendTelemetry();
 
-      elevator.setControlType(ControlState.CLOSED_LOOP_POSITION);
+      elevator.setControlType(ControlState.MOTION_MAGIC);
       elevator.setTargetHeight(10);
 
       // swerve.setAllTurnPowers(1);

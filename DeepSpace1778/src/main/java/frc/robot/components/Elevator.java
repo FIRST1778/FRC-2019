@@ -74,7 +74,7 @@ public class Elevator extends Subsystem {
 
   private GamePiece gamePieceTransported = GamePiece.NONE;
 
-  private static final double ENCODER_TICKS_PER_INCH = 100; // TODO: Measure for robot
+  private static final double ENCODER_TICKS_PER_INCH = 29.85; // TODO: Measure for robot
 
   private TalonSRX masterElevator;
   private TalonSRX slaveElevator;
@@ -102,6 +102,7 @@ public class Elevator extends Subsystem {
     if (hardware) {
       masterConfiguration = new TalonSrxFactory.Configuration();
       masterConfiguration.feedbackDevice = FeedbackDevice.QuadEncoder;
+      masterConfiguration.invert = false;
       masterConfiguration.invertSensorPhase = true;
       masterConfiguration.forwardLimitSwitch = LimitSwitchSource.FeedbackConnector;
       masterConfiguration.forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
@@ -111,8 +112,8 @@ public class Elevator extends Subsystem {
       masterConfiguration.pidKi = 0.0;
       masterConfiguration.pidKd = 0.0;
       masterConfiguration.pidKf = 0.0;
-      masterConfiguration.motionCruiseVelocity = 600;
-      masterConfiguration.motionAcceleration = 300;
+      masterConfiguration.motionCruiseVelocity = (int) ENCODER_TICKS_PER_INCH * 20;
+      masterConfiguration.motionAcceleration = (int) ENCODER_TICKS_PER_INCH * 40;
       masterConfiguration.continuousCurrentLimit = 15;
       masterConfiguration.peakCurrentLimit = 20;
       masterConfiguration.peakCurrentLimitDuration = 100;
@@ -149,10 +150,13 @@ public class Elevator extends Subsystem {
   @Override
   public void zeroSensors() {}
 
-  public void resetEncoderIfLimitSwitchReached() {
-    if (masterElevator.getSensorCollection().isRevLimitSwitchClosed()) {
+  public boolean resetEncoderIfLimitSwitchReached() {
+    boolean limitSwitchTriggered = masterElevator.getSensorCollection().isRevLimitSwitchClosed();
+    if (limitSwitchTriggered) {
       resetEncoders();
     }
+
+    return limitSwitchTriggered;
   }
 
   public void setBrakeMode(boolean brake) {
@@ -169,6 +173,7 @@ public class Elevator extends Subsystem {
   }
 
   public void setTarget(double target) {
+    masterElevator.set(ControlMode.PercentOutput, 0);
     switch (controlState) {
       case CLOSED_LOOP_POSITION:
         masterElevator.set(
