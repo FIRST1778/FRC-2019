@@ -37,6 +37,9 @@ public class SwerveModule {
   private static TalonSrxFactory.Configuration driveConfiguration;
   private static TalonSrxFactory.Configuration turnConfiguration;
 
+  // Note: Current Limit to not exceed Battery
+  // See software ref.
+
   public SwerveModule(int driveTalonID, int turnTalonID, double angleOffset) {
     driveConfiguration = new TalonSrxFactory.Configuration();
     driveConfiguration.feedbackDevice = FeedbackDevice.QuadEncoder;
@@ -46,9 +49,9 @@ public class SwerveModule {
     driveConfiguration.pidKd = 0.0;
     driveConfiguration.pidKf = 0.0;
     driveConfiguration.pidIntegralZone = 18;
-    driveConfiguration.continuousCurrentLimit = 30;
-    driveConfiguration.peakCurrentLimit = 50;
-    driveConfiguration.peakCurrentLimitDuration = 100;
+    driveConfiguration.continuousCurrentLimit = 10;
+    driveConfiguration.peakCurrentLimit = 10;
+    driveConfiguration.peakCurrentLimitDuration = 10;
     driveConfiguration.enableCurrentLimit = true;
     driveConfiguration.openLoopRampTimeSeconds = 0.25;
 
@@ -63,8 +66,8 @@ public class SwerveModule {
     turnConfiguration.pidKf = 0.0;
     turnConfiguration.pidIntegralZone = 200;
     turnConfiguration.continuousCurrentLimit = 10;
-    turnConfiguration.peakCurrentLimit = 15;
-    turnConfiguration.peakCurrentLimitDuration = 100;
+    turnConfiguration.peakCurrentLimit = 10;
+    turnConfiguration.peakCurrentLimitDuration = 10;
     turnConfiguration.enableCurrentLimit = true;
     turnConfiguration.openLoopRampTimeSeconds = 2.0;
 
