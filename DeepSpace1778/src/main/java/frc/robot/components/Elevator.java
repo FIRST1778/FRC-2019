@@ -47,7 +47,7 @@ public class Elevator extends Subsystem {
       return heightInches;
     }
 
-    public int getHeightEncoderTicks() {
+    public double getHeightEncoderTicks() {
       return Elevator.getInstance().getEncoderPositionFromHeight(heightInches);
     }
   }
@@ -212,11 +212,11 @@ public class Elevator extends Subsystem {
     }
   }
 
-  public double getHeightFromEncoderPosition(int encoderPosition) {
+  public double getHeightFromEncoderPosition(double encoderPosition) {
     return encoderPosition / ENCODER_TICKS_PER_INCH;
   }
 
-  public int getEncoderPositionFromHeight(double height) {
-    return (int) (height * ENCODER_TICKS_PER_INCH);
+  public double getEncoderPositionFromHeight(double height) {
+    return height * ENCODER_TICKS_PER_INCH;
   }
 }
