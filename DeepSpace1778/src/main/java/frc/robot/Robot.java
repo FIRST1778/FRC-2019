@@ -147,8 +147,8 @@ public class Robot extends TimedRobot {
 
       boolean slowMode = controls.getSlowMode();
       if (controls.getTranslationX() != 0
-          | controls.getTranslationY() != 0
-          | controls.getRotation() != 0) {
+          || controls.getTranslationY() != 0
+          || controls.getRotation() != 0) {
 
         if (controls.getFieldCentricToggle()) {
           double angle = Math.toRadians(swerve.getNavX().getAngle());

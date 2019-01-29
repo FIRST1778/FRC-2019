@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.SPI;
  */
 public class Ports {
 
-  // Talons
+  // NOTE: Talons
   public static final int LEFT_FRONT_ID = 7;
   public static final int RIGHT_FRONT_ID = 3;
   public static final int LEFT_BACK_ID = 8;
@@ -30,6 +30,6 @@ public class Ports {
   public static final int CLIMBER_PISTON_ID = 41;
   public static final int CLIMBER_ROLLER_ID = 42;
 
-  // Sensors
+  // NOTE: Sensors
   public static final SPI.Port NAVX_SPI = SPI.Port.kMXP;
 }

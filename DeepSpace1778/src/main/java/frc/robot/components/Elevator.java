@@ -41,7 +41,7 @@ public class Elevator extends Subsystem {
       this.heightInches = heightInches;
     }
 
-    private double heightInches;
+    private final double heightInches;
 
     public double getHeightInches() {
       return heightInches;
@@ -61,7 +61,7 @@ public class Elevator extends Subsystem {
       this.feedForward = feedForward;
     }
 
-    public double feedForward;
+    public final double feedForward;
   }
 
   public enum ControlState {
@@ -112,8 +112,8 @@ public class Elevator extends Subsystem {
       masterConfiguration.pidKi = 0.0;
       masterConfiguration.pidKd = 0.0;
       masterConfiguration.pidKf = 0.0;
-      masterConfiguration.motionCruiseVelocity = (int) ENCODER_TICKS_PER_INCH * 20;
-      masterConfiguration.motionAcceleration = (int) ENCODER_TICKS_PER_INCH * 40;
+      masterConfiguration.motionCruiseVelocity = (int) (ENCODER_TICKS_PER_INCH * 20);
+      masterConfiguration.motionAcceleration = (int) (ENCODER_TICKS_PER_INCH * 40);
       masterConfiguration.continuousCurrentLimit = 15;
       masterConfiguration.peakCurrentLimit = 20;
       masterConfiguration.peakCurrentLimitDuration = 100;
@@ -189,7 +189,7 @@ public class Elevator extends Subsystem {
             DemandType.ArbitraryFeedForward,
             gamePieceTransported.feedForward);
         break;
-      default: // Wanted fallthrough
+      default: // Intended fall-through
       case OPEN_LOOP:
         masterElevator.set(
             ControlMode.PercentOutput,

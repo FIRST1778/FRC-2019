@@ -16,6 +16,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  */
 public class TalonSrxFactory {
 
+  /**
+   * This creates and sets most of the convenient settings for a Talon SRX. This includes feedback
+   * devices, voltage limits, control modes, inversion, etc.
+   *
+   * @author FRC 1778 Chill Out
+   */
   public static class Configuration {
 
     public final int timeoutInMs = 10;

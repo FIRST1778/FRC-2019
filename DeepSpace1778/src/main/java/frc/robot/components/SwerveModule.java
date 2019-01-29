@@ -37,9 +37,6 @@ public class SwerveModule {
   private static TalonSrxFactory.Configuration driveConfiguration;
   private static TalonSrxFactory.Configuration turnConfiguration;
 
-  // Note: Current Limit to not exceed Battery
-  // See software ref.
-
   public SwerveModule(int driveTalonID, int turnTalonID, double angleOffset) {
     driveConfiguration = new TalonSrxFactory.Configuration();
     driveConfiguration.feedbackDevice = FeedbackDevice.QuadEncoder;
@@ -115,7 +112,7 @@ public class SwerveModule {
   }
 
   public double getDistanceInches() {
-    return (double) (driveMotor.getSelectedSensorPosition(0)) * INCHES_PER_ENCODER_PULSE;
+    return (double) driveMotor.getSelectedSensorPosition(0) * INCHES_PER_ENCODER_PULSE;
   }
 
   public void setDrivePower(double percent) {

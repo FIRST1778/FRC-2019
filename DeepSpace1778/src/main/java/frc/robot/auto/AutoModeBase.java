@@ -1,6 +1,7 @@
 package frc.robot.auto;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import frc.lib.util.DebugLog;
 import frc.robot.auto.actions.Action;
 
 /**
@@ -22,7 +23,8 @@ public abstract class AutoModeBase {
     try {
       routine();
     } catch (AutoModeEndedException e) {
-      DriverStation.reportError("AUTO MODE DONE!!!! ENDED EARLY!!!!", false);
+      DriverStation.reportError("AutoMode ended early!", false);
+      DebugLog.logThrowableCrash(e);
       return;
     }
 
@@ -60,7 +62,7 @@ public abstract class AutoModeBase {
       try {
         Thread.sleep(waitTime);
       } catch (InterruptedException e) {
-        e.printStackTrace();
+        DebugLog.logThrowableCrash(e);
       }
     }
 

@@ -1,9 +1,10 @@
 package frc.robot.components;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import frc.lib.util.ModuleSignal;
 import java.util.ArrayList;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SwerveDriveTest {
 
@@ -28,42 +29,26 @@ public class SwerveDriveTest {
     ArrayList<ModuleSignal> calculatedSignalsTwo = swerve.calculateModuleSignals(2.0, 0.0, 0.0);
 
     for (int i = 0; i < 4; i++) {
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " drive power",
+      assertEquals(
           wantedSignalsOneHalf.get(i).getDrivePower(),
           calculatedSignalsOneHalf.get(i).getDrivePower(),
           0.001);
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " turnAngle",
+      assertEquals(
           wantedSignalsOneHalf.get(i).getAngle(),
           calculatedSignalsOneHalf.get(i).getAngle(),
           0.001);
     }
 
     for (int i = 0; i < 4; i++) {
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " drive power",
-          wantedSignals.get(i).getDrivePower(),
-          calculatedSignalsOne.get(i).getDrivePower(),
-          0.001);
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " turnAngle",
-          wantedSignals.get(i).getAngle(),
-          calculatedSignalsOne.get(i).getAngle(),
-          0.001);
+      assertEquals(
+          wantedSignals.get(i).getDrivePower(), calculatedSignalsOne.get(i).getDrivePower(), 0.001);
+      assertEquals(wantedSignals.get(i).getAngle(), calculatedSignalsOne.get(i).getAngle(), 0.001);
     }
 
     for (int i = 0; i < 4; i++) {
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " drive power",
-          wantedSignals.get(i).getDrivePower(),
-          calculatedSignalsTwo.get(i).getDrivePower(),
-          0.001);
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " turnAngle",
-          wantedSignals.get(i).getAngle(),
-          calculatedSignalsTwo.get(i).getAngle(),
-          0.001);
+      assertEquals(
+          wantedSignals.get(i).getDrivePower(), calculatedSignalsTwo.get(i).getDrivePower(), 0.001);
+      assertEquals(wantedSignals.get(i).getAngle(), calculatedSignalsTwo.get(i).getAngle(), 0.001);
     }
   }
 
@@ -86,42 +71,26 @@ public class SwerveDriveTest {
     ArrayList<ModuleSignal> calculatedSignalsTwo = swerve.calculateModuleSignals(0.0, 2.0, 0.0);
 
     for (int i = 0; i < 4; i++) {
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " drive power",
+      assertEquals(
           wantedSignalsOneHalf.get(i).getDrivePower(),
           calculatedSignalsOneHalf.get(i).getDrivePower(),
           0.001);
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " turnAngle",
+      assertEquals(
           wantedSignalsOneHalf.get(i).getAngle(),
           calculatedSignalsOneHalf.get(i).getAngle(),
           0.001);
     }
 
     for (int i = 0; i < 4; i++) {
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " drive power",
-          wantedSignals.get(i).getDrivePower(),
-          calculatedSignalsOne.get(i).getDrivePower(),
-          0.001);
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " turnAngle",
-          wantedSignals.get(i).getAngle(),
-          calculatedSignalsOne.get(i).getAngle(),
-          0.001);
+      assertEquals(
+          wantedSignals.get(i).getDrivePower(), calculatedSignalsOne.get(i).getDrivePower(), 0.001);
+      assertEquals(wantedSignals.get(i).getAngle(), calculatedSignalsOne.get(i).getAngle(), 0.001);
     }
 
     for (int i = 0; i < 4; i++) {
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " drive power",
-          wantedSignals.get(i).getDrivePower(),
-          calculatedSignalsTwo.get(i).getDrivePower(),
-          0.001);
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " turnAngle",
-          wantedSignals.get(i).getAngle(),
-          calculatedSignalsTwo.get(i).getAngle(),
-          0.001);
+      assertEquals(
+          wantedSignals.get(i).getDrivePower(), calculatedSignalsTwo.get(i).getDrivePower(), 0.001);
+      assertEquals(wantedSignals.get(i).getAngle(), calculatedSignalsTwo.get(i).getAngle(), 0.001);
     }
   }
 
@@ -144,42 +113,26 @@ public class SwerveDriveTest {
     ArrayList<ModuleSignal> calculatedSignalsTwo = swerve.calculateModuleSignals(0.0, 0.0, 2.0);
 
     for (int i = 0; i < 4; i++) {
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " drive power",
+      assertEquals(
           wantedSignalsOneHalf.get(i).getDrivePower(),
           calculatedSignalsOneHalf.get(i).getDrivePower(),
           0.001);
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " turnAngle",
+      assertEquals(
           wantedSignalsOneHalf.get(i).getAngle(),
           calculatedSignalsOneHalf.get(i).getAngle(),
           0.001);
     }
 
     for (int i = 0; i < 4; i++) {
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " drive power",
-          wantedSignals.get(i).getDrivePower(),
-          calculatedSignalsOne.get(i).getDrivePower(),
-          0.001);
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " turnAngle",
-          wantedSignals.get(i).getAngle(),
-          calculatedSignalsOne.get(i).getAngle(),
-          0.001);
+      assertEquals(
+          wantedSignals.get(i).getDrivePower(), calculatedSignalsOne.get(i).getDrivePower(), 0.001);
+      assertEquals(wantedSignals.get(i).getAngle(), calculatedSignalsOne.get(i).getAngle(), 0.001);
     }
 
     for (int i = 0; i < 4; i++) {
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " drive power",
-          wantedSignals.get(i).getDrivePower(),
-          calculatedSignalsTwo.get(i).getDrivePower(),
-          0.001);
-      Assert.assertEquals(
-          "Wheel module #" + (i + 1) + " turnAngle",
-          wantedSignals.get(i).getAngle(),
-          calculatedSignalsTwo.get(i).getAngle(),
-          0.001);
+      assertEquals(
+          wantedSignals.get(i).getDrivePower(), calculatedSignalsTwo.get(i).getDrivePower(), 0.001);
+      assertEquals(wantedSignals.get(i).getAngle(), calculatedSignalsTwo.get(i).getAngle(), 0.001);
     }
   }
 }

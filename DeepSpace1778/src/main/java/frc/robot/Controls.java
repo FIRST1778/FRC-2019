@@ -96,17 +96,17 @@ public class Controls {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
         return SimpleUtil.handleDeadband(
-            driverController.getRawAxis(FreezyController.Axis.LEFT_Y), 0.05);
+            driverController.getRawAxis(FreezyController.AXIS_LEFT_Y), 0.05);
       case INTERLINK_ELITE_CONTROLLER:
-        return -driverController.getRawAxis(InterLinkElite.Axis.LEFT_Y);
+        return -driverController.getRawAxis(InterLinkElite.AXIS_LEFT_Y);
       case LOGITECH_DUAL_ACTION:
-        return -driverController.getRawAxis(LogitechDualAction.Axis.LEFT_Y);
+        return -driverController.getRawAxis(LogitechDualAction.AXIS_LEFT_Y);
       case LOGITECH_F310:
-        return -driverController.getRawAxis(LogitechF310.Axis.LEFT_Y);
+        return -driverController.getRawAxis(LogitechF310.AXIS_LEFT_Y);
       case XBOX_ONE:
-        return -driverController.getRawAxis(XboxOne.Axis.LEFT_Y);
+        return -driverController.getRawAxis(XboxOne.AXIS_LEFT_Y);
       case XBOX_ONE_ELITE:
-        return -driverController.getRawAxis(XboxOneElite.Axis.LEFT_Y);
+        return -driverController.getRawAxis(XboxOneElite.AXIS_LEFT_Y);
       default:
         return 0;
     }
@@ -116,17 +116,17 @@ public class Controls {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
         return SimpleUtil.handleDeadband(
-            -driverController.getRawAxis(FreezyController.Axis.LEFT_X), 0.05);
+            -driverController.getRawAxis(FreezyController.AXIS_LEFT_X), 0.05);
       case INTERLINK_ELITE_CONTROLLER:
-        return -driverController.getRawAxis(InterLinkElite.Axis.LEFT_X);
+        return -driverController.getRawAxis(InterLinkElite.AXIS_LEFT_X);
       case LOGITECH_DUAL_ACTION:
-        return -driverController.getRawAxis(LogitechDualAction.Axis.LEFT_X);
+        return -driverController.getRawAxis(LogitechDualAction.AXIS_LEFT_X);
       case LOGITECH_F310:
-        return -driverController.getRawAxis(LogitechF310.Axis.LEFT_X);
+        return -driverController.getRawAxis(LogitechF310.AXIS_LEFT_X);
       case XBOX_ONE:
-        return -driverController.getRawAxis(XboxOne.Axis.LEFT_X);
+        return -driverController.getRawAxis(XboxOne.AXIS_LEFT_X);
       case XBOX_ONE_ELITE:
-        return -driverController.getRawAxis(XboxOneElite.Axis.LEFT_X);
+        return -driverController.getRawAxis(XboxOneElite.AXIS_LEFT_X);
       default:
         return 0;
     }
@@ -136,17 +136,17 @@ public class Controls {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
         return SimpleUtil.handleDeadband(
-            -driverController.getRawAxis(FreezyController.Axis.RIGHT_X), 0.05);
+            -driverController.getRawAxis(FreezyController.AXIS_RIGHT_X), 0.05);
       case INTERLINK_ELITE_CONTROLLER:
-        return -driverController.getRawAxis(InterLinkElite.Axis.RIGHT_X);
+        return -driverController.getRawAxis(InterLinkElite.AXIS_RIGHT_X);
       case LOGITECH_DUAL_ACTION:
-        return -driverController.getRawAxis(LogitechDualAction.Axis.RIGHT_X);
+        return -driverController.getRawAxis(LogitechDualAction.AXIS_RIGHT_X);
       case LOGITECH_F310:
-        return -driverController.getRawAxis(LogitechF310.Axis.RIGHT_X);
+        return -driverController.getRawAxis(LogitechF310.AXIS_RIGHT_X);
       case XBOX_ONE:
-        return -driverController.getRawAxis(XboxOne.Axis.RIGHT_X);
+        return -driverController.getRawAxis(XboxOne.AXIS_RIGHT_X);
       case XBOX_ONE_ELITE:
-        return -driverController.getRawAxis(XboxOneElite.Axis.RIGHT_X);
+        return -driverController.getRawAxis(XboxOneElite.AXIS_RIGHT_X);
       default:
         return 0;
     }
@@ -180,11 +180,11 @@ public class Controls {
       case LOGITECH_DUAL_ACTION:
         return driverController.getRawButton(LogitechDualAction.LEFT_TRIGGER);
       case LOGITECH_F310:
-        return driverController.getRawAxis(LogitechF310.Axis.LEFT_TRIGGER) >= 0.5;
+        return driverController.getRawAxis(LogitechF310.AXIS_LEFT_TRIGGER) >= 0.5;
       case XBOX_ONE:
-        return driverController.getRawAxis(XboxOne.Axis.LEFT_TRIGGER) >= 0.5;
+        return driverController.getRawAxis(XboxOne.AXIS_LEFT_TRIGGER) >= 0.5;
       case XBOX_ONE_ELITE:
-        return driverController.getRawAxis(XboxOneElite.Axis.LEFT_TRIGGER) >= 0.5;
+        return driverController.getRawAxis(XboxOneElite.AXIS_LEFT_TRIGGER) >= 0.5;
       default:
         return false;
     }
@@ -273,14 +273,14 @@ public class Controls {
             ? 1.0
             : (operatorController.getRawButton(LogitechDualAction.LEFT_BUMPER) ? -1.0 : 0);
       case LOGITECH_F310:
-        return operatorController.getRawAxis(LogitechF310.Axis.LEFT_TRIGGER)
-            - operatorController.getRawAxis(LogitechF310.Axis.RIGHT_TRIGGER);
+        return operatorController.getRawAxis(LogitechF310.AXIS_LEFT_TRIGGER)
+            - operatorController.getRawAxis(LogitechF310.AXIS_RIGHT_TRIGGER);
       case XBOX_ONE:
-        return operatorController.getRawAxis(XboxOne.Axis.LEFT_TRIGGER)
-            - operatorController.getRawAxis(XboxOne.Axis.RIGHT_TRIGGER);
+        return operatorController.getRawAxis(XboxOne.AXIS_LEFT_TRIGGER)
+            - operatorController.getRawAxis(XboxOne.AXIS_RIGHT_TRIGGER);
       case XBOX_ONE_ELITE:
-        return operatorController.getRawAxis(XboxOneElite.Axis.LEFT_TRIGGER)
-            - operatorController.getRawAxis(XboxOneElite.Axis.RIGHT_TRIGGER);
+        return operatorController.getRawAxis(XboxOneElite.AXIS_LEFT_TRIGGER)
+            - operatorController.getRawAxis(XboxOneElite.AXIS_RIGHT_TRIGGER);
       default:
         return 0;
     }

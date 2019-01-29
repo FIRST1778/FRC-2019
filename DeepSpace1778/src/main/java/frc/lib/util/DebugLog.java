@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.jar.JarFile;
@@ -74,7 +75,8 @@ public class DebugLog {
 
   private static void logMarker(String mark, Throwable nullableException) {
     boolean newFile = !logFile.exists();
-    try (PrintWriter writer = new PrintWriter(new FileWriter(logFile, true))) {
+    try (PrintWriter writer =
+        new PrintWriter(new FileWriter(logFile, Charset.defaultCharset(), true))) {
       if (newFile) {
         writer.print("date,compileDate,match,info,exception");
         writer.println();
@@ -99,7 +101,7 @@ public class DebugLog {
 
       writer.println();
     } catch (IOException e) {
-      e.printStackTrace();
+      DriverStation.reportWarning("DebugLog failed to log marker", e.getStackTrace());
     }
   }
 
