@@ -47,7 +47,7 @@ public class SwerveModule {
     driveConfiguration.pidKf = 0.0;
     driveConfiguration.pidIntegralZone = 18;
     driveConfiguration.continuousCurrentLimit = 10;
-    driveConfiguration.peakCurrentLimit = 10;
+    driveConfiguration.peakCurrentLimit = 0;
     driveConfiguration.peakCurrentLimitDuration = 10;
     driveConfiguration.enableCurrentLimit = true;
     driveConfiguration.openLoopRampTimeSeconds = 0.25;
@@ -57,16 +57,16 @@ public class SwerveModule {
     turnConfiguration.invert = false;
     turnConfiguration.invertSensorPhase = true;
     turnConfiguration.neutralPowerMode = NeutralMode.Brake;
-    turnConfiguration.pidKp = 8.4; // 10.0;
-    turnConfiguration.pidKi = 0.04; // 0.0;
+    turnConfiguration.pidKp = 5.0; // 10.0;
+    turnConfiguration.pidKi = 0.01; // 0.0;
     turnConfiguration.pidKd = 0.0; // 50.0;
     turnConfiguration.pidKf = 0.0;
     turnConfiguration.pidIntegralZone = 200;
     turnConfiguration.continuousCurrentLimit = 10;
-    turnConfiguration.peakCurrentLimit = 10;
+    turnConfiguration.peakCurrentLimit = 0;
     turnConfiguration.peakCurrentLimitDuration = 10;
     turnConfiguration.enableCurrentLimit = true;
-    turnConfiguration.openLoopRampTimeSeconds = 2.0;
+    turnConfiguration.openLoopRampTimeSeconds = 0.25;
 
     driveMotor = TalonSrxFactory.createTalon(driveTalonID, driveConfiguration);
     turnMotor = TalonSrxFactory.createTalon(turnTalonID, turnConfiguration);

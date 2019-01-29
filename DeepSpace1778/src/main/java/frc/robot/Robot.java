@@ -8,10 +8,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import frc.lib.util.DebugLog;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeExecutor;
-import frc.robot.components.Elevator;
-import frc.robot.components.Elevator.ControlState;
-import frc.robot.components.Elevator.HeightSetPoints;
-import frc.robot.components.Manipulator;
 import frc.robot.components.SwerveDrive;
 import java.util.Optional;
 
@@ -29,8 +25,8 @@ public class Robot extends TimedRobot {
 
   private SwerveDrive swerve = SwerveDrive.getinstance();
   private Controls controls = Controls.getInstance();
-  private Elevator elevator = Elevator.getInstance();
-  private Manipulator manipulator = Manipulator.getInstance();
+  // private Elevator elevator = Elevator.getInstance();
+  // private Manipulator manipulator = Manipulator.getInstance();
 
   private NetworkTableEntry totalPdpVoltage;
 
@@ -53,7 +49,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     try {
       DebugLog.logDisabledInit();
-      elevator.setControlType(ControlState.OPEN_LOOP);
+      // elevator.setControlType(ControlState.OPEN_LOOP);
 
       if (autoModeExecutor != null) {
         autoModeExecutor.stop();
@@ -71,7 +67,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     try {
       DebugLog.logAutoInit();
-      elevator.setControlType(ControlState.MOTION_MAGIC);
+      // elevator.setControlType(ControlState.MOTION_MAGIC);
 
       autoModeExecutor.start();
       DebugLog.logNote(
@@ -93,7 +89,7 @@ public class Robot extends TimedRobot {
               + ", Operator Controller: "
               + controls.getOperatorControllerType().toString());
       swerve.zeroSensors();
-      elevator.setControlType(ControlState.MOTION_MAGIC);
+      // elevator.setControlType(ControlState.MOTION_MAGIC);
 
       if (autoModeExecutor != null) {
         autoModeExecutor.stop();
@@ -134,7 +130,7 @@ public class Robot extends TimedRobot {
     try {
       sendTelemetry();
 
-      elevator.resetEncoderIfLimitSwitchReached();
+      // elevator.resetEncoderIfLimitSwitchReached();
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }
@@ -145,7 +141,10 @@ public class Robot extends TimedRobot {
     try {
       sendTelemetry();
 
-      boolean slowMode = controls.getSlowMode();
+      if (controls.getResetFieldCentric()) {
+        swerve.getNavX().zeroYaw();
+      }
+
       if (controls.getTranslationX() != 0
           || controls.getTranslationY() != 0
           || controls.getRotation() != 0) {
@@ -153,30 +152,24 @@ public class Robot extends TimedRobot {
         if (controls.getFieldCentricToggle()) {
           double angle = Math.toRadians(swerve.getNavX().getAngle());
 
-          double forward = (slowMode ? 0.6 : 1.0) * controls.getTranslationY();
-          double strafe = (slowMode ? 0.6 : 1.0) * controls.getTranslationX();
+          double forward = controls.getTranslationY();
+          double strafe = controls.getTranslationX();
 
           double temp = (forward * Math.cos(angle)) + (strafe * Math.sin(angle));
           strafe = (-forward * Math.sin(angle)) + (strafe * Math.cos(angle));
           forward = temp;
 
-          swerve.setSignals(
-              swerve.calculateModuleSignals(
-                  (slowMode ? 0.6 : 1.0) * forward,
-                  (slowMode ? 0.6 : 1.0) * strafe,
-                  (slowMode ? 0.6 : 1.0) * controls.getRotation()));
+          swerve.setSignals(swerve.calculateModuleSignals(forward, strafe, controls.getRotation()));
         } else {
           swerve.setSignals(
               swerve.calculateModuleSignals(
-                  (slowMode ? 0.6 : 1.0) * controls.getTranslationY(),
-                  (slowMode ? 0.6 : 1.0) * controls.getTranslationX(),
-                  (slowMode ? 0.6 : 1.0) * controls.getRotation()));
+                  controls.getTranslationY(), controls.getTranslationX(), controls.getRotation()));
         }
       } else {
         swerve.stop();
       }
 
-      if (controls.getLiftToHome()) {
+      /*if (controls.getLiftToHome()) {
         elevator.setTargetHeight(HeightSetPoints.LIFT_LEVEL_FLOOR);
       } else if (controls.getLiftToRocketCargoHigh()) {
         elevator.setTargetHeight(HeightSetPoints.ROCKET_CARGO_HIGH);
@@ -191,6 +184,7 @@ public class Robot extends TimedRobot {
       manipulator.setCargoIntake(controls.getCargoIntake());
 
       elevator.resetEncoderIfLimitSwitchReached();
+      */
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }
@@ -201,8 +195,8 @@ public class Robot extends TimedRobot {
     try {
       sendTelemetry();
 
-      elevator.setControlType(ControlState.MOTION_MAGIC);
-      elevator.setTargetHeight(10);
+      // elevator.setControlType(ControlState.MOTION_MAGIC);
+      // elevator.setTargetHeight(10);
 
       // swerve.setAllTurnPowers(1);
       swerve.setAllToAngle(0);
@@ -211,7 +205,7 @@ public class Robot extends TimedRobot {
       System.out.println("leftBack angle: " + swerve.leftBack.getAbsAngle());
       System.out.println("rightBack angle: " + swerve.rightBack.getAbsAngle());
 
-      elevator.resetEncoderIfLimitSwitchReached();
+      // elevator.resetEncoderIfLimitSwitchReached();
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }
@@ -221,7 +215,7 @@ public class Robot extends TimedRobot {
 
   private void sendTelemetry() {
     swerve.sendTelemetry();
-    elevator.sendTelemetry();
+    // elevator.sendTelemetry();
     if (shuffleboardInitialized) {
       totalPdpVoltage.setDouble(RobotController.getBatteryVoltage());
     } else {

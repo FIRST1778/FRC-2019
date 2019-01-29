@@ -152,7 +152,7 @@ public class Controls {
     }
   }
 
-  public boolean getSlowMode() {
+  public boolean getResetFieldCentric() {
     switch (DRIVER_CONTROLLER_TYPE) {
       case FREEZY_CONTROLLER:
         return driverController.getRawButton(FreezyController.RIGHT_SHOULDER_SWITCH);
