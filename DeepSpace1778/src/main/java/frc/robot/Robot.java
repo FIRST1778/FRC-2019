@@ -120,8 +120,6 @@ public class Robot extends TimedRobot {
       if (autoMode.isPresent() && autoMode.get() != autoModeExecutor.getAutoMode()) {
         autoModeExecutor.setAutoMode(autoMode.get());
       }
-
-      swerve.resetEncoders();
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }

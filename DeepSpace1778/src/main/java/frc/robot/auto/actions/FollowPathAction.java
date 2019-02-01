@@ -1,16 +1,15 @@
 package frc.robot.auto.actions;
 
 import frc.lib.pathing.Path;
-import frc.lib.pathing.Trajectory;
 import frc.robot.Constants;
+import frc.robot.auto.AutoConstants;
 import frc.robot.components.SwerveDrive;
 
 public class FollowPathAction implements Action {
-  public static final double ALLOWABLE_ERROR = 3;
+  public static final double ALLOWABLE_ERROR = 1;
 
   private SwerveDrive swerve = SwerveDrive.getInstance();
   private Path path;
-  private Trajectory trajectory;
   private boolean hasReset = false;
   private double angleSetpoint;
 
@@ -22,7 +21,6 @@ public class FollowPathAction implements Action {
 
   public FollowPathAction(Path pathToFollow, double maxAcceleration, double maxVelocity) {
     path = pathToFollow;
-    trajectory = new Trajectory(pathToFollow, maxAcceleration, maxVelocity);
   }
 
   @Override
@@ -34,18 +32,19 @@ public class FollowPathAction implements Action {
       return false;
     }
 
-    return Math.abs(path.getLength() - currentDistance) < ALLOWABLE_ERROR;
+    boolean end = Math.abs(path.getLength() - currentDistance) < ALLOWABLE_ERROR;
+    return end;
   }
 
   @Override
   public void update() {
     double currentDistance = getAverageEncoderPositions();
-    double angleCorrection = swerve.getNavX().getAngle() * 0.01;
+    double angleCorrection = swerve.getNavX().getAngle() * AutoConstants.GYRO_AID_KP;
 
-    double pathDirection = path.getDirectionAtDistance(currentDistance) * (180.0 / Math.PI);
+    double pathDirection = path.getDirectionAtDistance(currentDistance) * (Math.PI / 180.0);
     swerve.setTurnSignals(
         swerve.calculateModuleSignals(
-            Math.cos(pathDirection), Math.sin(pathDirection), angleCorrection));
+            Math.cos(pathDirection), Math.sin(pathDirection), -angleCorrection));
   }
 
   @Override
@@ -57,9 +56,10 @@ public class FollowPathAction implements Action {
   public void start() {
     hasReset = false;
     swerve.resetEncoders();
+    System.out.println("Path length: " + path.getLength());
     swerve.setTargetDistances(path.getLength());
 
-    angleSetpoint = swerve.getNavX().getAngle();
+    angleSetpoint = -swerve.getNavX().getAngle();
   }
 
   private double getAverageEncoderPositions() {

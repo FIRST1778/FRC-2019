@@ -278,10 +278,10 @@ public class SwerveDrive extends Subsystem {
   }
 
   public void setTargetDistances(double distance) {
-    leftFront.setTargetDistance(distance);
-    rightFront.setTargetDistance(distance);
-    leftBack.setTargetDistance(distance);
-    rightBack.setTargetDistance(distance);
+    leftFront.setTargetDistance(distance / SwerveModule.INCHES_PER_ENCODER_PULSE);
+    rightFront.setTargetDistance(distance / SwerveModule.INCHES_PER_ENCODER_PULSE);
+    leftBack.setTargetDistance(distance / SwerveModule.INCHES_PER_ENCODER_PULSE);
+    rightBack.setTargetDistance(distance / SwerveModule.INCHES_PER_ENCODER_PULSE);
   }
 
   public void stop() {

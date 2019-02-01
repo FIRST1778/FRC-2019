@@ -7,8 +7,8 @@ public class Trajectory {
 
   public Trajectory(Path path, double maxAcceleration, double maxVelocity) {
     this.path = path;
-    this.maxAcceleration = maxAcceleration * 12;
-    this.maxVelocity = maxVelocity * 12;
+    this.maxAcceleration = maxAcceleration;
+    this.maxVelocity = maxVelocity;
   }
 
   public boolean isTrapezoidal() {

@@ -4,7 +4,6 @@ public abstract class PathSegment {
   public abstract double getDirection(double percentage);
 
   public double getDirectionAtDistance(double distance) {
-    assert distance > 0 : distance < getLength();
     return getDirection(distance / getLength());
   }
 

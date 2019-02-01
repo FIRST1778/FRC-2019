@@ -23,8 +23,6 @@ public class SwerveModule {
   private TalonSRX turnMotor;
   private TalonSRX driveMotor;
 
-  private boolean invertDriveMotor;
-
   private double zeroAngleOffset;
   private double targetAngle;
   private double lastDrivePower;
@@ -53,9 +51,9 @@ public class SwerveModule {
     driveConfiguration.enableCurrentLimit = true;
     driveConfiguration.openLoopRampTimeSeconds = 0.25;
     driveConfiguration.motionAcceleration =
-        (int) (Constants.SWERVE_MAX_ACCELERATION * INCHES_PER_ENCODER_PULSE);
+        (int) (Constants.SWERVE_MAX_ACCELERATION / INCHES_PER_ENCODER_PULSE);
     driveConfiguration.motionCruiseVelocity =
-        (int) (Constants.SWERVE_MAX_VELOCITY * INCHES_PER_ENCODER_PULSE);
+        (int) (Constants.SWERVE_MAX_VELOCITY / INCHES_PER_ENCODER_PULSE);
 
     turnConfiguration = new TalonSrxFactory.Configuration();
     turnConfiguration.feedbackDevice = FeedbackDevice.Analog;
@@ -117,9 +115,7 @@ public class SwerveModule {
   }
 
   public double getDistanceInches() {
-    return (invertDriveMotor ? -1 : 1)
-        * (double) driveMotor.getSelectedSensorPosition(0)
-        * INCHES_PER_ENCODER_PULSE;
+    return (double) driveMotor.getSelectedSensorPosition(0) * INCHES_PER_ENCODER_PULSE;
   }
 
   public void setDrivePower(double percent) {
@@ -182,7 +178,7 @@ public class SwerveModule {
   }
 
   public void setTargetDistance(double distance) {
-    driveMotor.set(ControlMode.MotionMagic, distance * INCHES_PER_ENCODER_PULSE);
+    driveMotor.set(ControlMode.MotionMagic, distance);
   }
 
   public void drivePath(EncoderFollower follower) {
