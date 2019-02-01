@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
   private AutoModeSelector autoModeSelector = new AutoModeSelector();
   private AutoModeExecutor autoModeExecutor;
 
-  private SwerveDrive swerve = SwerveDrive.getinstance();
+  private SwerveDrive swerve = SwerveDrive.getInstance();
   private Controls controls = Controls.getInstance();
   // private Elevator elevator = Elevator.getInstance();
   // private Manipulator manipulator = Manipulator.getInstance();
@@ -120,6 +120,8 @@ public class Robot extends TimedRobot {
       if (autoMode.isPresent() && autoMode.get() != autoModeExecutor.getAutoMode()) {
         autoModeExecutor.setAutoMode(autoMode.get());
       }
+
+      swerve.resetEncoders();
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }
@@ -143,6 +145,7 @@ public class Robot extends TimedRobot {
 
       if (controls.getResetFieldCentric()) {
         swerve.getNavX().zeroYaw();
+        swerve.resetEncoders();
       }
 
       if (controls.getTranslationX() != 0

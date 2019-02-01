@@ -91,7 +91,7 @@ public class Climber extends Subsystem {
 
   @Override
   public void resetEncoders() {
-    linearPiston.setSelectedSensorPosition(0, 0, pistonConfiguration.timeoutInMs);
+    linearPiston.setSelectedSensorPosition(0, 0, 0);
   }
 
   @Override

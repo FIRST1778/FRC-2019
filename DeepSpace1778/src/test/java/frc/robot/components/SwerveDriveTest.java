@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 public class SwerveDriveTest {
 
-  private SwerveDrive swerve = SwerveDrive.getinstance(false);
+  private SwerveDrive swerve = SwerveDrive.getInstance(false);
 
   @Test
   public void calculateModuleSignalsForwardsShouldMaxAtOne() {

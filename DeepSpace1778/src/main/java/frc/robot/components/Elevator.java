@@ -144,7 +144,7 @@ public class Elevator extends Subsystem {
 
   @Override
   public void resetEncoders() {
-    masterElevator.setSelectedSensorPosition(0, 0, masterConfiguration.timeoutInMs);
+    masterElevator.setSelectedSensorPosition(0, 0, 0);
   }
 
   @Override

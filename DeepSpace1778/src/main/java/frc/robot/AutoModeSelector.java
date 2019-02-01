@@ -5,6 +5,7 @@ import frc.lib.util.DebugLog;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.creators.AutoModeCreator;
 import frc.robot.auto.creators.DoNothingAutoModeCreator;
+import frc.robot.auto.creators.MotionTestCreator;
 import frc.robot.auto.creators.TestAutoModeCreator;
 import java.util.Optional;
 
@@ -24,7 +25,8 @@ public class AutoModeSelector {
 
   enum WantedMode {
     DO_NOTHING,
-    TEST_MODE
+    TEST_MODE,
+    MOTION_TEST
   }
 
   private WantedMode cachedWantedMode = null;
@@ -39,6 +41,7 @@ public class AutoModeSelector {
     modeChooser = new SendableChooser<>();
     modeChooser.addOption("Test", WantedMode.TEST_MODE);
     modeChooser.setDefaultOption("Do Nothing", WantedMode.DO_NOTHING);
+    modeChooser.setDefaultOption("Motion Test", WantedMode.MOTION_TEST);
     Constants.autoTab
         .add("Auto mode", modeChooser)
         .withWidget("ComboBox Chooser")
@@ -73,6 +76,8 @@ public class AutoModeSelector {
         return Optional.of(new TestAutoModeCreator());
       case DO_NOTHING:
         return Optional.of(new DoNothingAutoModeCreator());
+      case MOTION_TEST:
+        return Optional.of(new MotionTestCreator());
       default:
         break;
     }

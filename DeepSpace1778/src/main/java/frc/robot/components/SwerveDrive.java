@@ -45,11 +45,11 @@ public class SwerveDrive extends Subsystem {
 
   private boolean shuffleboardInitialized;
 
-  public static SwerveDrive getinstance() {
-    return getinstance(true);
+  public static SwerveDrive getInstance() {
+    return getInstance(true);
   }
 
-  public static SwerveDrive getinstance(boolean hardware) {
+  public static SwerveDrive getInstance(boolean hardware) {
     if (!initialized) {
       initialized = true;
       instance = new SwerveDrive(hardware);
@@ -81,13 +81,13 @@ public class SwerveDrive extends Subsystem {
   public void sendTelemetry() {
     if (shuffleboardInitialized) {
       leftFrontTurnAngleEntry.setDouble(leftFront.getCurrentAngle());
-      leftFrontDrivePowerEntry.setDouble(leftFront.getDrivePower());
+      leftFrontDrivePowerEntry.setDouble(leftFront.getDistanceInches());
       rightFrontTurnAngleEntry.setDouble(rightFront.getCurrentAngle());
-      rightFrontDrivePowerEntry.setDouble(rightFront.getDrivePower());
+      rightFrontDrivePowerEntry.setDouble(rightFront.getDistanceInches());
       leftBackTurnAngleEntry.setDouble(leftBack.getCurrentAngle());
-      leftBackDrivePowerEntry.setDouble(leftBack.getDrivePower());
+      leftBackDrivePowerEntry.setDouble(leftBack.getDistanceInches());
       rightBackTurnAngleEntry.setDouble(rightBack.getCurrentAngle());
-      rightBackDrivePowerEntry.setDouble(rightBack.getDrivePower());
+      rightBackDrivePowerEntry.setDouble(rightBack.getDistanceInches());
       bagMotorCurrentEntry.setDouble(
           +leftFront.getTurnMotor().getOutputCurrent()
               + rightFront.getTurnMotor().getOutputCurrent()
@@ -195,6 +195,22 @@ public class SwerveDrive extends Subsystem {
     return navX;
   }
 
+  public SwerveModule getLeftFrontModule() {
+    return leftFront;
+  }
+
+  public SwerveModule getRightFrontModule() {
+    return rightFront;
+  }
+
+  public SwerveModule getLeftBackModule() {
+    return leftBack;
+  }
+
+  public SwerveModule getRightBackModule() {
+    return rightBack;
+  }
+
   public ArrayList<ModuleSignal> calculateModuleSignals(
       double forward, double strafe, double rotation) {
     ArrayList<ModuleSignal> signals = new ArrayList<ModuleSignal>(4);
@@ -234,17 +250,24 @@ public class SwerveDrive extends Subsystem {
   }
 
   public void setSignals(List<ModuleSignal> signals) {
-    leftFront.setDrivePower(signals.get(0).getDrivePower());
-    rightFront.setDrivePower(signals.get(1).getDrivePower());
-    leftBack.setDrivePower(signals.get(2).getDrivePower());
-    rightBack.setDrivePower(signals.get(3).getDrivePower());
+    setTurnSignals(signals);
+    setDriveSignals(signals);
+  }
 
+  public void setTurnSignals(List<ModuleSignal> signals) {
     setAllTurnPowers(0.5);
 
     leftFront.setTargetAngle(signals.get(0).getAngle());
     rightFront.setTargetAngle(signals.get(1).getAngle());
     leftBack.setTargetAngle(signals.get(2).getAngle());
     rightBack.setTargetAngle(signals.get(3).getAngle());
+  }
+
+  public void setDriveSignals(List<ModuleSignal> signals) {
+    leftFront.setDrivePower(signals.get(0).getDrivePower());
+    rightFront.setDrivePower(signals.get(1).getDrivePower());
+    leftBack.setDrivePower(signals.get(2).getDrivePower());
+    rightBack.setDrivePower(signals.get(3).getDrivePower());
   }
 
   public void setAllToAngle(double angle) {
@@ -254,9 +277,15 @@ public class SwerveDrive extends Subsystem {
     rightBack.setTargetAngle(angle);
   }
 
+  public void setTargetDistances(double distance) {
+    leftFront.setTargetDistance(distance);
+    rightFront.setTargetDistance(distance);
+    leftBack.setTargetDistance(distance);
+    rightBack.setTargetDistance(distance);
+  }
+
   public void stop() {
     setAllDrivePowers(0, 0, 0, 0);
-    // setAllTurnPowers(0.0);
   }
 
   private void setAllDrivePowers(
