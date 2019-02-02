@@ -1,6 +1,7 @@
 package frc.lib.pathing;
 
 public abstract class PathSegment {
+
   public abstract double getDirection(double percentage);
 
   public double getDirectionAtDistance(double distance) {
@@ -33,6 +34,34 @@ public abstract class PathSegment {
     @Override
     protected PathSegment getFlipped() {
       return new RadialArc(length, -direction);
+    }
+  }
+
+  public static final class ArcedTranslation extends PathSegment {
+    private final double length;
+    private final double direction;
+
+    public ArcedTranslation(double forwardTranslation, double strafeTranslation) {
+      double radius =
+          ((strafeTranslation * strafeTranslation) + (forwardTranslation * forwardTranslation))
+              / (2 * strafeTranslation);
+      direction = Math.atan2(forwardTranslation, strafeTranslation);
+      length = radius * direction;
+    }
+
+    @Override
+    public double getDirection(double percentage) {
+      return percentage * direction;
+    }
+
+    @Override
+    public double getLength() {
+      return length;
+    }
+
+    @Override
+    protected PathSegment getFlipped() {
+      return new Line(length);
     }
   }
 

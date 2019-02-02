@@ -1,11 +1,11 @@
 package frc.robot.auto.actions;
 
 import frc.lib.pathing.Path;
-import frc.robot.Constants;
 import frc.robot.auto.AutoConstants;
 import frc.robot.components.SwerveDrive;
 
 public class FollowPathAction implements Action {
+
   public static final double ALLOWABLE_ERROR = 1;
 
   private SwerveDrive swerve = SwerveDrive.getInstance();
@@ -13,14 +13,9 @@ public class FollowPathAction implements Action {
   private boolean hasReset = false;
   private double angleSetpoint;
 
-  private double angleCorrection;
-
-  public FollowPathAction(Path pathToFollow) {
-    this(pathToFollow, Constants.SWERVE_MAX_ACCELERATION, Constants.SWERVE_MAX_VELOCITY);
-  }
-
-  public FollowPathAction(Path pathToFollow, double maxAcceleration, double maxVelocity) {
+  public FollowPathAction(Path pathToFollow, double angle) {
     path = pathToFollow;
+    angleSetpoint = angle;
   }
 
   @Override
@@ -39,12 +34,20 @@ public class FollowPathAction implements Action {
   @Override
   public void update() {
     double currentDistance = getAverageEncoderPositions();
-    double angleCorrection = swerve.getNavX().getAngle() * AutoConstants.GYRO_AID_KP;
+    double angle = swerve.getNavX().getAngle();
 
     double pathDirection = path.getDirectionAtDistance(currentDistance) * (Math.PI / 180.0);
-    swerve.setTurnSignals(
-        swerve.calculateModuleSignals(
-            Math.cos(pathDirection), Math.sin(pathDirection), -angleCorrection));
+
+    double forward = Math.cos(pathDirection);
+    double strafe = Math.sin(pathDirection);
+    double angleRadians = Math.toRadians(angle);
+    double temp = (forward * Math.cos(angleRadians)) + (strafe * Math.sin(angleRadians));
+    strafe = (-forward * Math.sin(angleRadians)) + (strafe * Math.cos(angleRadians));
+    forward = temp;
+
+    double angleCorrection = (angle - angleSetpoint) * AutoConstants.GYRO_AID_KP;
+
+    swerve.setTurnSignals(swerve.calculateModuleSignals(forward, strafe, -angleCorrection));
   }
 
   @Override

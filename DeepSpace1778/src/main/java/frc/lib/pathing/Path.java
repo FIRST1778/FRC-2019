@@ -1,21 +1,38 @@
 package frc.lib.pathing;
 
+/**
+ * Stores a set of PathSegments, allowing for multiple motions to be strung together into a single
+ * path. This is based upon FRC 2910 Jack in the Bot's 2018 code, with more capabilities
+ *
+ * @author FRC 1778 Chill Out
+ */
 public class Path extends PathSegment {
+
   private final double initialDirection;
   private final PathSegment[] segments;
   private final double length;
+  private final double maxAcceleration;
+  private final double maxVelocity;
 
   public Path(double initialDirection, PathSegment... segments) {
+    this(initialDirection, 0, 0, segments);
+  }
+
+  public Path(
+      double initialDirection,
+      double maxAcceleration,
+      double maxVelocity,
+      PathSegment... segments) {
     this.initialDirection = initialDirection;
     this.segments = segments;
+    this.maxAcceleration = maxAcceleration;
+    this.maxVelocity = maxVelocity;
 
-    {
-      double totalLength = 0;
-      for (PathSegment segment : segments) {
-        totalLength += segment.getLength();
-      }
-      this.length = totalLength;
+    double totalLength = 0;
+    for (PathSegment segment : segments) {
+      totalLength += segment.getLength();
     }
+    this.length = totalLength;
   }
 
   private double getDistanceAtSegment(int segment) {
@@ -51,6 +68,14 @@ public class Path extends PathSegment {
     return segments.length - 1;
   }
 
+  public double getDuration() {
+    if (((maxVelocity * maxVelocity) / maxAcceleration) < getLength()) {
+      return (maxVelocity / maxAcceleration) + (getLength() / maxVelocity);
+    } else {
+      return Math.sqrt(getLength() / maxAcceleration);
+    }
+  }
+
   @Override
   public double getLength() {
     return length;
@@ -78,6 +103,6 @@ public class Path extends PathSegment {
     for (int i = 0; i < segments.length; i++) {
       flippedSegments[i] = segments[i].getFlipped();
     }
-    return new Path(-initialDirection, flippedSegments);
+    return new Path(-initialDirection, this.maxAcceleration, this.maxVelocity, flippedSegments);
   }
 }

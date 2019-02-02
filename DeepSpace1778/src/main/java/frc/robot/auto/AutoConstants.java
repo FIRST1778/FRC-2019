@@ -9,5 +9,6 @@ import frc.robot.Constants;
  * @author FRC 1778 Chill Out
  */
 public class AutoConstants {
+
   public static final double GYRO_AID_KP = 0.02;
 }

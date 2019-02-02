@@ -2,6 +2,7 @@ package frc.robot.auto.modes;
 
 import frc.lib.pathing.Path;
 import frc.lib.pathing.PathSegment;
+import frc.robot.Constants;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeEndedException;
 import frc.robot.auto.actions.FollowPathAction;
@@ -16,7 +17,12 @@ public class MotionTest extends AutoModeBase {
   private int teamSelectedPosition;
 
   private Path path =
-      new Path(0, new PathSegment.RadialArc(48.0, 90.0), new PathSegment.RadialArc(48.0, -90.0));
+      new Path(
+          0,
+          Constants.SWERVE_MAX_ACCELERATION,
+          Constants.SWERVE_MAX_VELOCITY,
+          new PathSegment.ArcedTranslation(48.0, 36.0),
+          new PathSegment.Line(48.0));
 
   public MotionTest(int driverStationPosition) {
     teamSelectedPosition = driverStationPosition;
@@ -24,6 +30,6 @@ public class MotionTest extends AutoModeBase {
 
   @Override
   protected void routine() throws AutoModeEndedException {
-    runAction(new FollowPathAction(path));
+    runAction(new FollowPathAction(path, 180));
   }
 }

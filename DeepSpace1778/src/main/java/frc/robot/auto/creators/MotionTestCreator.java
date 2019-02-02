@@ -1,11 +1,10 @@
 package frc.robot.auto.creators;
 
 import frc.robot.auto.AutoModeBase;
-import frc.robot.auto.modes.DoNothingMode;
 import frc.robot.auto.modes.MotionTest;
 
 /**
- * A creator for the {@link DoNothingMode}.
+ * A creator for the {@link MotionTest}.
  *
  * @author FRC 1778 Chill Out
  */
