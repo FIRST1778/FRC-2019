@@ -15,7 +15,7 @@ public class TalonSrxFactoryTest {
 
   public static class ConfigurationTest {
 
-    TalonSrxFactory.Configuration configuration = new TalonSrxFactory.Configuration();
+    private TalonSrxFactory.Configuration configuration = new TalonSrxFactory.Configuration();
 
     @Test
     public void timeoutInMsShouldDefault() {

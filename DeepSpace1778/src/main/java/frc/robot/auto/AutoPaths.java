@@ -11,7 +11,7 @@ public class AutoPaths {
           -3.9499,
           Constants.SWERVE_MAX_ACCELERATION,
           Constants.SWERVE_MAX_VELOCITY,
-          new PathSegment.Line(140),
-          new PathSegment.RadialArc(105.14, 40.1621),
-          new PathSegment.Line(39.93));
+          new PathSegment.Line(140, 0),
+          new PathSegment.RadialArc(105.14, 40.1621, 0),
+          new PathSegment.Line(39.93, 0));
 }

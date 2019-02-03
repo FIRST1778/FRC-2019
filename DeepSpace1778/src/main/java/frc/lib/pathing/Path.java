@@ -11,6 +11,7 @@ public class Path extends PathSegment {
   private final double initialDirection;
   private final PathSegment[] segments;
   private final double length;
+  private final double endAngle;
   private final double maxAcceleration;
   private final double maxVelocity;
 
@@ -33,6 +34,7 @@ public class Path extends PathSegment {
       totalLength += segment.getLength();
     }
     this.length = totalLength;
+    this.endAngle = segments[segments.length - 1].getAngle();
   }
 
   private double getDistanceAtSegment(int segment) {
@@ -76,9 +78,20 @@ public class Path extends PathSegment {
     }
   }
 
+  public double getAngleAtDistance(double distance) {
+    int currentSegment = getSegmentAtDistance(distance);
+
+    return segments[currentSegment].getAngle();
+  }
+
   @Override
   public double getLength() {
     return length;
+  }
+
+  @Override
+  public double getAngle() {
+    return endAngle;
   }
 
   @Override

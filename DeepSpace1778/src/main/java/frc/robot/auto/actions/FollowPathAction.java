@@ -1,21 +1,50 @@
 package frc.robot.auto.actions;
 
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import frc.lib.pathing.Path;
-import frc.robot.auto.AutoConstants;
+import frc.lib.util.SimpleUtil;
 import frc.robot.components.SwerveDrive;
 
 public class FollowPathAction implements Action {
 
-  public static final double ALLOWABLE_ERROR = 1;
+  public static final double ALLOWABLE_ERROR = 3;
 
   private SwerveDrive swerve = SwerveDrive.getInstance();
   private Path path;
   private boolean hasReset = false;
-  private double angleSetpoint;
 
-  public FollowPathAction(Path pathToFollow, double angle) {
+  private PIDController anglePid =
+      new PIDController(
+          0.03,
+          0.0,
+          0.0,
+          new PIDSource() {
+            @Override
+            public void setPIDSourceType(PIDSourceType pidSource) {}
+
+            @Override
+            public double pidGet() {
+              return swerve.getNavX().getAngle();
+            }
+
+            @Override
+            public PIDSourceType getPIDSourceType() {
+              return PIDSourceType.kDisplacement;
+            }
+          },
+          output -> angleCorrection = output);
+
+  private double angleCorrection;
+
+  public FollowPathAction(Path pathToFollow) {
     path = pathToFollow;
-    angleSetpoint = angle;
+
+    anglePid.setInputRange(0, 360);
+    anglePid.setOutputRange(-1.0, 1.0);
+    anglePid.setContinuous(true);
+    anglePid.enable();
   }
 
   @Override
@@ -37,6 +66,7 @@ public class FollowPathAction implements Action {
     double angle = swerve.getNavX().getAngle();
 
     double pathDirection = path.getDirectionAtDistance(currentDistance) * (Math.PI / 180.0);
+    anglePid.setSetpoint(path.getAngleAtDistance(currentDistance));
 
     double forward = Math.cos(pathDirection);
     double strafe = Math.sin(pathDirection);
@@ -45,9 +75,7 @@ public class FollowPathAction implements Action {
     strafe = (-forward * Math.sin(angleRadians)) + (strafe * Math.cos(angleRadians));
     forward = temp;
 
-    double angleCorrection = (angle - angleSetpoint) * AutoConstants.GYRO_AID_KP;
-
-    swerve.setTurnSignals(swerve.calculateModuleSignals(forward, strafe, -angleCorrection));
+    swerve.setTurnSignals(swerve.calculateModuleSignals(forward, strafe, angleCorrection));
   }
 
   @Override
@@ -59,17 +87,21 @@ public class FollowPathAction implements Action {
   public void start() {
     hasReset = false;
     swerve.resetEncoders();
-    System.out.println("Path length: " + path.getLength());
+    System.out.println(
+        "Path length: " + path.getLength() + ", Direction: " + path.getDirection(1.0));
     swerve.setTargetDistances(path.getLength());
-
-    angleSetpoint = -swerve.getNavX().getAngle();
   }
 
   private double getAverageEncoderPositions() {
-    return (swerve.getLeftFrontModule().getDistanceInches()
-            + swerve.getRightFrontModule().getDistanceInches()
-            + swerve.getLeftBackModule().getDistanceInches()
-            + swerve.getRightBackModule().getDistanceInches())
-        / 4.0;
+    double encoderLeftFront = swerve.getLeftFrontModule().getDistanceInches();
+    double encoderRightFront = swerve.getRightFrontModule().getDistanceInches();
+    double encoderLeftBack = swerve.getLeftBackModule().getDistanceInches();
+    double encoderRightBack = swerve.getRightBackModule().getDistanceInches();
+
+    double outlier =
+        SimpleUtil.min(encoderLeftFront, encoderRightFront, encoderLeftBack, encoderRightBack);
+
+    double sumOfAll = encoderLeftFront + encoderRightFront + encoderLeftBack + encoderRightBack;
+    return (sumOfAll - outlier) / 3.0;
   }
 }

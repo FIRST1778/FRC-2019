@@ -27,11 +27,7 @@ public class SwerveModule {
   private double targetAngle;
   private double lastDrivePower;
 
-  private static final double ENCODER_PULSES_PER_REV = 20 * 8 * (60 / 8); // am-3314a (CIM)encoders
-  private static final double INCHES_PER_REV = 5.9 * Math.PI; // 5.9-in diameter wheel (worn)
-
-  public static final double INCHES_PER_ENCODER_PULSE = INCHES_PER_REV / ENCODER_PULSES_PER_REV;
-  public static final double RPM_TO_UNIT_PER_100MS = ENCODER_PULSES_PER_REV / (60 * 10);
+  public static final double INCHES_PER_ENCODER_PULSE = 60.0 / 3029.75;
 
   private static TalonSrxFactory.Configuration driveConfiguration;
   private static TalonSrxFactory.Configuration turnConfiguration;
