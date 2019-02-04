@@ -74,7 +74,7 @@ public class Elevator extends Subsystem {
 
   private GamePiece gamePieceTransported = GamePiece.NONE;
 
-  private static final double ENCODER_TICKS_PER_INCH = 29.85; // TODO: Measure for robot
+  private static final double INCHES_PER_ENCODER_PULSE = 1.0 / 29.85; // TODO: Measure for robot
 
   private TalonSRX masterElevator;
   private TalonSRX slaveElevator;
@@ -112,8 +112,8 @@ public class Elevator extends Subsystem {
       masterConfiguration.pidKi = 0.0;
       masterConfiguration.pidKd = 0.0;
       masterConfiguration.pidKf = 0.0;
-      masterConfiguration.motionCruiseVelocity = (int) (ENCODER_TICKS_PER_INCH * 20);
-      masterConfiguration.motionAcceleration = (int) (ENCODER_TICKS_PER_INCH * 40);
+      masterConfiguration.motionCruiseVelocity = (int) (20.0 / INCHES_PER_ENCODER_PULSE / 10.0);
+      masterConfiguration.motionAcceleration = (int) (40.0 / INCHES_PER_ENCODER_PULSE / 10.0);
       masterConfiguration.continuousCurrentLimit = 15;
       masterConfiguration.peakCurrentLimit = 20;
       masterConfiguration.peakCurrentLimitDuration = 100;
@@ -213,10 +213,10 @@ public class Elevator extends Subsystem {
   }
 
   public double getHeightFromEncoderPosition(double encoderPosition) {
-    return encoderPosition / ENCODER_TICKS_PER_INCH;
+    return encoderPosition * INCHES_PER_ENCODER_PULSE;
   }
 
   public double getEncoderPositionFromHeight(double height) {
-    return height * ENCODER_TICKS_PER_INCH;
+    return height / INCHES_PER_ENCODER_PULSE;
   }
 }

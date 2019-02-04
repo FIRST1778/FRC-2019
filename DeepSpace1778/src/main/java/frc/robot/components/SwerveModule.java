@@ -6,9 +6,6 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import frc.lib.driver.TalonSrxFactory;
 import frc.robot.Constants;
-import jaci.pathfinder.Pathfinder;
-import jaci.pathfinder.Trajectory;
-import jaci.pathfinder.followers.EncoderFollower;
 
 /**
  * Each instance of SwerveModule handles the two (2) Talon SRX controllers used to drive one (1) CIM
@@ -47,9 +44,9 @@ public class SwerveModule {
     driveConfiguration.enableCurrentLimit = true;
     driveConfiguration.openLoopRampTimeSeconds = 0.25;
     driveConfiguration.motionAcceleration =
-        (int) (Constants.SWERVE_MAX_ACCELERATION / INCHES_PER_ENCODER_PULSE);
+        (int) (Constants.SWERVE_MAX_ACCELERATION / INCHES_PER_ENCODER_PULSE / 10.0);
     driveConfiguration.motionCruiseVelocity =
-        (int) (Constants.SWERVE_MAX_VELOCITY / INCHES_PER_ENCODER_PULSE);
+        (int) (Constants.SWERVE_MAX_VELOCITY / INCHES_PER_ENCODER_PULSE / 10.0);
 
     turnConfiguration = new TalonSrxFactory.Configuration();
     turnConfiguration.feedbackDevice = FeedbackDevice.Analog;
@@ -110,8 +107,8 @@ public class SwerveModule {
     return ((double) turnMotor.getSelectedSensorPosition(0) * (360.0 / 1024.0)) - zeroAngleOffset;
   }
 
-  public double getDistanceInches() {
-    return (double) driveMotor.getSelectedSensorPosition(0) * INCHES_PER_ENCODER_PULSE;
+  public double getDriveDistanceInches() {
+    return getDistanceFromEncoderPosition(driveMotor.getSelectedSensorPosition(0));
   }
 
   public void setDrivePower(double percent) {
@@ -177,29 +174,19 @@ public class SwerveModule {
     driveMotor.set(ControlMode.MotionMagic, distance);
   }
 
-  public void drivePath(EncoderFollower follower) {
-
-    if (!follower.isFinished()) {
-
-      Trajectory.Segment seg = follower.getSegment();
-      double fakeDistance = seg.position;
-      double speed = follower.calculate((int) fakeDistance);
-      double heading = follower.getHeading();
-
-      setDrivePower(speed);
-
-      double gyroAngle = SwerveDrive.getInstance().getNavX().getAngle();
-      gyroAngle = Math.IEEEremainder(gyroAngle, 360);
-
-      setTargetAngle(Pathfinder.r2d(heading) + gyroAngle);
-    }
-  }
-
   public void setBrakeMode(boolean brake) {
     driveMotor.setNeutralMode(brake ? NeutralMode.Brake : NeutralMode.Coast);
   }
 
   public void resetDriveEncoder() {
     driveMotor.setSelectedSensorPosition(0, 0, 0);
+  }
+
+  public double getDistanceFromEncoderPosition(double encoderPosition) {
+    return encoderPosition * INCHES_PER_ENCODER_PULSE;
+  }
+
+  public double getEncoderPositionFromDistance(double distance) {
+    return distance / INCHES_PER_ENCODER_PULSE;
   }
 }

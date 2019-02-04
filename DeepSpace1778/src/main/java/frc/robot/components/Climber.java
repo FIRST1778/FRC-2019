@@ -21,7 +21,7 @@ public class Climber extends Subsystem {
 
   private static boolean initialized;
 
-  private static final double ENCODER_TICKS_PER_INCH = 1024.0; // TODO: Measure for robot
+  private static final double INCHES_PER_ENCODER_PULSE = 1.0 / 1024.0; // TODO: Measure for robot
 
   private TalonSRX linearPiston;
   private TalonSRX poweredRoller;
@@ -106,10 +106,10 @@ public class Climber extends Subsystem {
   }
 
   public double getHeightFromEncoderPosition(int encoderPosition) {
-    return encoderPosition / ENCODER_TICKS_PER_INCH;
+    return encoderPosition * INCHES_PER_ENCODER_PULSE;
   }
 
-  public int getEncoderPositionFromHeight(double height) {
-    return (int) (height * ENCODER_TICKS_PER_INCH);
+  public double getEncoderPositionFromHeight(double height) {
+    return height / INCHES_PER_ENCODER_PULSE;
   }
 }

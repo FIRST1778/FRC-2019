@@ -12,6 +12,7 @@ public class Constants {
 
   public static ShuffleboardTab autoTab = Shuffleboard.getTab("Autonomous");
   public static ShuffleboardTab teleopTab = Shuffleboard.getTab("TeleOp");
+  public static ShuffleboardTab debugTab = Shuffleboard.getTab("Debug");
 
   public static final double LEFT_FRONT_ANGLE_OFFSET = 325.55;
   public static final double RIGHT_FRONT_ANGLE_OFFSET = 29.88;

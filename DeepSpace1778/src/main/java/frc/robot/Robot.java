@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.lib.util.DebugLog;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeExecutor;
@@ -49,6 +50,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     try {
       DebugLog.logDisabledInit();
+      Shuffleboard.selectTab("Debug");
       // elevator.setControlType(ControlState.OPEN_LOOP);
 
       if (autoModeExecutor != null) {
@@ -67,6 +69,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     try {
       DebugLog.logAutoInit();
+      Shuffleboard.selectTab("Autonomous");
       // elevator.setControlType(ControlState.MOTION_MAGIC);
 
       autoModeExecutor.start();
@@ -83,6 +86,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     try {
       DebugLog.logTeleopInit();
+      Shuffleboard.selectTab("TeleOp");
       DebugLog.logNote(
           "Driver Controller: "
               + controls.getDriverControllerType().toString()
@@ -102,6 +106,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     try {
+      Shuffleboard.selectTab("Debug");
       DebugLog.logTestInit();
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
@@ -221,11 +226,11 @@ public class Robot extends TimedRobot {
       totalPdpVoltage.setDouble(RobotController.getBatteryVoltage());
     } else {
       totalPdpVoltage =
-          Constants.teleopTab
+          Constants.debugTab
               .add("Battery Voltage", 0)
               .withWidget(BuiltInWidgets.kGraph)
               .withPosition(0, 2)
-              .withSize(4, 5)
+              .withSize(4, 2)
               .getEntry();
       shuffleboardInitialized = true;
     }

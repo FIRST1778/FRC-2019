@@ -1,10 +1,8 @@
 package frc.robot.auto.modes;
 
-import frc.lib.pathing.Path;
-import frc.lib.pathing.PathSegment;
-import frc.robot.Constants;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeEndedException;
+import frc.robot.auto.AutoPaths;
 import frc.robot.auto.actions.FollowPathAction;
 import frc.robot.auto.actions.RunOnceAction;
 import frc.robot.components.SwerveDrive;
@@ -17,30 +15,6 @@ import frc.robot.components.SwerveDrive;
 public class MotionTest extends AutoModeBase {
 
   private int teamSelectedPosition;
-
-  private Path pathToRocketNearSide =
-      new Path(
-          -90,
-          Constants.SWERVE_MAX_ACCELERATION,
-          Constants.SWERVE_MAX_VELOCITY,
-          new PathSegment.Line(24, 0),
-          new PathSegment.ArcedTranslation(24, 24, 0),
-          new PathSegment.Line(60, 330),
-          new PathSegment.Line(54, 330));
-
-  private Path pathToFeederStation =
-      new Path(
-          180,
-          Constants.SWERVE_MAX_ACCELERATION,
-          Constants.SWERVE_MAX_VELOCITY,
-          new PathSegment.Line(24, 330),
-          new PathSegment.Line(96, 180));
-  private Path feederStationToRocketNearSide =
-      new Path(
-          0,
-          Constants.SWERVE_MAX_ACCELERATION,
-          Constants.SWERVE_MAX_VELOCITY,
-          new PathSegment.Line(24, 180));
 
   public MotionTest(int driverStationPosition) {
     teamSelectedPosition = driverStationPosition;
@@ -55,8 +29,8 @@ public class MotionTest extends AutoModeBase {
             SwerveDrive.getInstance().zeroSensors();
           }
         });
-    runAction(new FollowPathAction(pathToRocketNearSide));
-    runAction(new FollowPathAction(pathToFeederStation));
-    runAction(new FollowPathAction(feederStationToRocketNearSide));
+    runAction(new FollowPathAction(AutoPaths.START_RIGHT_TO_RIGHT_ROCKET_NEAR_SIDE));
+    runAction(new FollowPathAction(AutoPaths.RIGHT_ROCKET_NEAR_SIDE_TO_RIGHT_FEEDER_STATION));
+    runAction(new FollowPathAction(AutoPaths.RIGHT_FEEDER_STATION_TO_RIGHT_ROCKET_NEAR_SIDE));
   }
 }

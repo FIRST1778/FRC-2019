@@ -81,13 +81,13 @@ public class SwerveDrive extends Subsystem {
   public void sendTelemetry() {
     if (shuffleboardInitialized) {
       leftFrontTurnAngleEntry.setDouble(leftFront.getCurrentAngle());
-      leftFrontDrivePowerEntry.setDouble(leftFront.getDistanceInches());
+      leftFrontDrivePowerEntry.setDouble(leftFront.getDriveDistanceInches());
       rightFrontTurnAngleEntry.setDouble(rightFront.getCurrentAngle());
-      rightFrontDrivePowerEntry.setDouble(rightFront.getDistanceInches());
+      rightFrontDrivePowerEntry.setDouble(rightFront.getDriveDistanceInches());
       leftBackTurnAngleEntry.setDouble(leftBack.getCurrentAngle());
-      leftBackDrivePowerEntry.setDouble(leftBack.getDistanceInches());
+      leftBackDrivePowerEntry.setDouble(leftBack.getDriveDistanceInches());
       rightBackTurnAngleEntry.setDouble(rightBack.getCurrentAngle());
-      rightBackDrivePowerEntry.setDouble(rightBack.getDistanceInches());
+      rightBackDrivePowerEntry.setDouble(rightBack.getDriveDistanceInches());
       bagMotorCurrentEntry.setDouble(
           +leftFront.getTurnMotor().getOutputCurrent()
               + rightFront.getTurnMotor().getOutputCurrent()
@@ -100,14 +100,14 @@ public class SwerveDrive extends Subsystem {
               + rightBack.getDriveMotor().getOutputCurrent());
     } else {
       leftFrontTurnAngleEntry =
-          Constants.teleopTab
+          Constants.debugTab
               .add("Left Front Angle", 0)
               .withWidget(BuiltInWidgets.kTextView)
               .withPosition(0, 0)
               .withSize(1, 1)
               .getEntry();
       leftFrontDrivePowerEntry =
-          Constants.teleopTab
+          Constants.debugTab
               .add("Left Front", 0)
               .withWidget(BuiltInWidgets.kTextView)
               .withPosition(0, 1)
@@ -115,14 +115,14 @@ public class SwerveDrive extends Subsystem {
               .getEntry();
 
       rightFrontTurnAngleEntry =
-          Constants.teleopTab
+          Constants.debugTab
               .add("Right Front Angle", 0)
               .withWidget(BuiltInWidgets.kTextView)
               .withPosition(1, 0)
               .withSize(1, 1)
               .getEntry();
       rightFrontDrivePowerEntry =
-          Constants.teleopTab
+          Constants.debugTab
               .add("Right Front", 0)
               .withWidget(BuiltInWidgets.kTextView)
               .withPosition(1, 1)
@@ -130,14 +130,14 @@ public class SwerveDrive extends Subsystem {
               .getEntry();
 
       leftBackTurnAngleEntry =
-          Constants.teleopTab
+          Constants.debugTab
               .add("Left Back Angle", 0)
               .withWidget(BuiltInWidgets.kTextView)
               .withPosition(2, 0)
               .withSize(1, 1)
               .getEntry();
       leftBackDrivePowerEntry =
-          Constants.teleopTab
+          Constants.debugTab
               .add("Left Back", 0)
               .withWidget(BuiltInWidgets.kTextView)
               .withPosition(2, 1)
@@ -145,14 +145,14 @@ public class SwerveDrive extends Subsystem {
               .getEntry();
 
       rightBackTurnAngleEntry =
-          Constants.teleopTab
+          Constants.debugTab
               .add("Right Back Angle", 0)
               .withWidget(BuiltInWidgets.kTextView)
               .withPosition(3, 0)
               .withSize(1, 1)
               .getEntry();
       rightBackDrivePowerEntry =
-          Constants.teleopTab
+          Constants.debugTab
               .add("Right Back", 0)
               .withWidget(BuiltInWidgets.kTextView)
               .withPosition(3, 1)
@@ -160,7 +160,7 @@ public class SwerveDrive extends Subsystem {
               .getEntry();
 
       bagMotorCurrentEntry =
-          Constants.teleopTab
+          Constants.debugTab
               .add("BAG Current", 0)
               .withWidget(BuiltInWidgets.kGraph)
               .withPosition(4, 0)
@@ -168,7 +168,7 @@ public class SwerveDrive extends Subsystem {
               .getEntry();
 
       cimMotorCurrentEntry =
-          Constants.teleopTab
+          Constants.debugTab
               .add("CIM Current", 0)
               .withWidget(BuiltInWidgets.kGraph)
               .withPosition(7, 0)

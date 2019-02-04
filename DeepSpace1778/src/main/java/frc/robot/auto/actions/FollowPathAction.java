@@ -15,26 +15,24 @@ public class FollowPathAction implements Action {
   private Path path;
   private boolean hasReset = false;
 
+  private PIDSource navXSource =
+      new PIDSource() {
+        @Override
+        public void setPIDSourceType(PIDSourceType pidSource) {}
+
+        @Override
+        public double pidGet() {
+          return swerve.getNavX().getAngle();
+        }
+
+        @Override
+        public PIDSourceType getPIDSourceType() {
+          return PIDSourceType.kDisplacement;
+        }
+      };
+
   private PIDController anglePid =
-      new PIDController(
-          0.03,
-          0.0,
-          0.0,
-          new PIDSource() {
-            @Override
-            public void setPIDSourceType(PIDSourceType pidSource) {}
-
-            @Override
-            public double pidGet() {
-              return swerve.getNavX().getAngle();
-            }
-
-            @Override
-            public PIDSourceType getPIDSourceType() {
-              return PIDSourceType.kDisplacement;
-            }
-          },
-          output -> angleCorrection = output);
+      new PIDController(0.03, 0.0, 0.0, navXSource, output -> angleCorrection = output);
 
   private double angleCorrection;
 
@@ -93,15 +91,13 @@ public class FollowPathAction implements Action {
   }
 
   private double getAverageEncoderPositions() {
-    double encoderLeftFront = swerve.getLeftFrontModule().getDistanceInches();
-    double encoderRightFront = swerve.getRightFrontModule().getDistanceInches();
-    double encoderLeftBack = swerve.getLeftBackModule().getDistanceInches();
-    double encoderRightBack = swerve.getRightBackModule().getDistanceInches();
-
-    double outlier =
-        SimpleUtil.min(encoderLeftFront, encoderRightFront, encoderLeftBack, encoderRightBack);
-
-    double sumOfAll = encoderLeftFront + encoderRightFront + encoderLeftBack + encoderRightBack;
-    return (sumOfAll - outlier) / 3.0;
+    return SimpleUtil.meanWithoutLowestOutliers(
+        new double[] {
+          swerve.getLeftFrontModule().getDriveDistanceInches(),
+          swerve.getRightFrontModule().getDriveDistanceInches(),
+          swerve.getLeftBackModule().getDriveDistanceInches(),
+          swerve.getRightBackModule().getDriveDistanceInches()
+        },
+        2);
   }
 }
