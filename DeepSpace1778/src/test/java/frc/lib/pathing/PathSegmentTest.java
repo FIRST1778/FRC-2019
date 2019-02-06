@@ -3,109 +3,111 @@ package frc.lib.pathing;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class PathSegmentTest {
 
   public static class RadialArcTest {
-    private PathSegment radialArc = new PathSegment.RadialArc(2, 90, 0);
-    private PathSegment flippedRadialArc = radialArc.getFlipped();
+    private PathSegment path = new PathSegment.RadialArc(1, 90, 0);
+    private PathSegment flippedPath = path.getFlipped();
 
     @Test
+    @DisplayName("The path's direction should stretch evenly along the path")
     public void directionShouldStretchAlongLength() {
-      assertThat(0.0, is(radialArc.getDirection(0.0)));
-      assertThat(45.0, is(radialArc.getDirection(0.5)));
-      assertThat(90.0, is(radialArc.getDirection(1.0)));
+      assertThat(path.getDirection(0.0), is(0.0));
+      assertThat(path.getDirection(0.5), is(45.0));
+      assertThat(path.getDirection(1.0), is(90.0));
 
-      assertThat(-0.0, is(flippedRadialArc.getDirection(0.0)));
-      assertThat(-45.0, is(flippedRadialArc.getDirection(0.5)));
-      assertThat(-90.0, is(flippedRadialArc.getDirection(1.0)));
+      assertThat(flippedPath.getDirection(0.0), is(-0.0));
+      assertThat(flippedPath.getDirection(0.5), is(-45.0));
+      assertThat(flippedPath.getDirection(1.0), is(-90.0));
     }
 
     @Test
+    @DisplayName("The path's direction at any distance should stretch evenly along the path")
     public void directionAtDistanceShouldMatchPercentage() {
-      assertThat(0.0, is(radialArc.getDirectionAtDistance(0.0)));
-      assertThat(45.0, is(radialArc.getDirectionAtDistance(1.0)));
-      assertThat(90.0, is(radialArc.getDirectionAtDistance(2.0)));
+      assertThat(path.getDirectionAtDistance(0.0), is(0.0));
+      assertThat(path.getDirectionAtDistance(0.5), is(45.0));
+      assertThat(path.getDirectionAtDistance(1.0), is(90.0));
 
-      assertThat(-0.0, is(flippedRadialArc.getDirectionAtDistance(0.0)));
-      assertThat(-45.0, is(flippedRadialArc.getDirectionAtDistance(1.0)));
-      assertThat(-90.0, is(flippedRadialArc.getDirectionAtDistance(2.0)));
+      assertThat(flippedPath.getDirectionAtDistance(0.0), is(-0.0));
+      assertThat(flippedPath.getDirectionAtDistance(0.5), is(-45.0));
+      assertThat(flippedPath.getDirectionAtDistance(1.0), is(-90.0));
     }
 
     @Test
+    @DisplayName("The path's length should match what it is initialized with")
     public void lengthShouldEqualInput() {
-      assertThat(2.0, is(radialArc.getLength()));
+      assertThat(path.getLength(), is(1.0));
 
-      assertThat(2.0, is(flippedRadialArc.getLength()));
+      assertThat(flippedPath.getLength(), is(1.0));
     }
   }
 
-  public static class ArcedTranslation {
-    private PathSegment arcedTranslation = new PathSegment.ArcedTranslation(1, 1, 0);
-    private PathSegment flippedArcedTranslation = arcedTranslation.getFlipped();
+  public static class ArcedTranslationTest {
+    private PathSegment path = new PathSegment.ArcedTranslation(1, 1, 0);
+    private PathSegment flippedPath = path.getFlipped();
 
     @Test
+    @DisplayName("The path's direction should stretch evenly along the path")
     public void directionShouldStretchAlongLength() {
-      assertThat(0.0, is(arcedTranslation.getDirection(0.0)));
-      assertThat(0.0, is(arcedTranslation.getDirection(0.5)));
-      assertThat(0.0, is(arcedTranslation.getDirection(1.0)));
+      assertThat(path.getDirection(0.0), is(0.0));
+      assertThat(path.getDirection(0.5), is(45.0));
+      assertThat(path.getDirection(1.0), is(90.0));
 
-      assertThat(0.0, is(flippedArcedTranslation.getDirection(0.0)));
-      assertThat(0.0, is(flippedArcedTranslation.getDirection(0.5)));
-      assertThat(0.0, is(flippedArcedTranslation.getDirection(1.0)));
+      assertThat(flippedPath.getDirection(0.0), is(-0.0));
+      assertThat(flippedPath.getDirection(0.5), is(-45.0));
+      assertThat(flippedPath.getDirection(1.0), is(-90.0));
     }
 
     @Test
+    @DisplayName("The path's direction at any distance should stretch evenly along the path")
     public void directionAtDistanceShouldMatchPercentage() {
-      assertThat(0.0, is(arcedTranslation.getDirectionAtDistance(0.0)));
-      assertThat(0.0, is(arcedTranslation.getDirectionAtDistance(1.0)));
-      assertThat(90.0, is(arcedTranslation.getDirectionAtDistance(2.0)));
+      assertThat(path.getDirectionAtDistance(0.0), is(0.0));
+      assertThat(path.getDirectionAtDistance(path.getLength() * 0.5), is(45.0));
+      assertThat(path.getDirectionAtDistance(path.getLength()), is(90.0));
 
-      assertThat(0.0, is(flippedArcedTranslation.getDirectionAtDistance(0.0)));
-      assertThat(0.0, is(flippedArcedTranslation.getDirectionAtDistance(1.0)));
-      assertThat(0.0, is(flippedArcedTranslation.getDirectionAtDistance(2.0)));
-    }
-
-    @Test
-    public void lengthShouldEqualInput() {
-      assertThat(2.0, is(arcedTranslation.getLength()));
-
-      assertThat(2.0, is(flippedArcedTranslation.getLength()));
+      assertThat(flippedPath.getDirectionAtDistance(0.0), is(-0.0));
+      assertThat(flippedPath.getDirectionAtDistance(flippedPath.getLength() * 0.5), is(-45.0));
+      assertThat(flippedPath.getDirectionAtDistance(flippedPath.getLength()), is(-90.0));
     }
   }
 
   public static class LineTest {
-    private PathSegment line = new PathSegment.Line(2, 0);
-    private PathSegment flippedLine = line.getFlipped();
+    private PathSegment path = new PathSegment.Line(2, 0);
+    private PathSegment flippedPath = path.getFlipped();
 
     @Test
+    @DisplayName("The path's direction at any percentage should be zero")
     public void directionShouldStretchAlongLength() {
-      assertThat(0.0, is(line.getDirection(0.0)));
-      assertThat(0.0, is(line.getDirection(0.5)));
-      assertThat(0.0, is(line.getDirection(1.0)));
+      assertThat(path.getDirection(0.0), is(0.0));
+      assertThat(path.getDirection(0.5), is(0.0));
+      assertThat(path.getDirection(1.0), is(0.0));
 
-      assertThat(0.0, is(flippedLine.getDirection(0.0)));
-      assertThat(0.0, is(flippedLine.getDirection(0.5)));
-      assertThat(0.0, is(flippedLine.getDirection(1.0)));
+      assertThat(flippedPath.getDirection(0.0), is(0.0));
+      assertThat(flippedPath.getDirection(0.5), is(0.0));
+      assertThat(flippedPath.getDirection(1.0), is(0.0));
     }
 
     @Test
+    @DisplayName("The path's direction at any distance should be zero")
     public void directionAtDistanceShouldMatchPercentage() {
-      assertThat(0.0, is(line.getDirectionAtDistance(0.0)));
-      assertThat(0.0, is(line.getDirectionAtDistance(1.0)));
-      assertThat(0.0, is(line.getDirectionAtDistance(2.0)));
+      assertThat(path.getDirectionAtDistance(0.0), is(0.0));
+      assertThat(path.getDirectionAtDistance(1.0), is(0.0));
+      assertThat(path.getDirectionAtDistance(2.0), is(0.0));
 
-      assertThat(0.0, is(flippedLine.getDirectionAtDistance(0.0)));
-      assertThat(0.0, is(flippedLine.getDirectionAtDistance(1.0)));
-      assertThat(0.0, is(flippedLine.getDirectionAtDistance(2.0)));
+      assertThat(flippedPath.getDirectionAtDistance(0.0), is(0.0));
+      assertThat(flippedPath.getDirectionAtDistance(1.0), is(0.0));
+      assertThat(flippedPath.getDirectionAtDistance(2.0), is(0.0));
     }
 
     @Test
+    @DisplayName("The path's length should match what it is initialized with")
     public void lengthShouldEqualInput() {
-      assertThat(2.0, is(line.getLength()));
+      assertThat(path.getLength(), is(2.0));
 
-      assertThat(2.0, is(flippedLine.getLength()));
+      assertThat(flippedPath.getLength(), is(2.0));
     }
   }
 }
