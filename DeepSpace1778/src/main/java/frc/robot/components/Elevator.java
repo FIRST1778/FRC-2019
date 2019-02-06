@@ -189,8 +189,8 @@ public class Elevator extends Subsystem {
             DemandType.ArbitraryFeedForward,
             gamePieceTransported.feedForward);
         break;
-      default: // Intended fall-through
       case OPEN_LOOP:
+      default:
         masterElevator.set(
             ControlMode.PercentOutput,
             target,

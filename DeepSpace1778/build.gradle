@@ -57,7 +57,9 @@ dependencies {
 
 compileJava { dependsOn 'spotlessApply' }
 
-test { useJUnitPlatform { excludeTags 'slow' } }
+test {
+  useJUnitPlatform { excludeTags 'slow' }
+  testLogging.showStandardStreams = true}
 
 spotless {
   java { googleJavaFormat("1.7") }

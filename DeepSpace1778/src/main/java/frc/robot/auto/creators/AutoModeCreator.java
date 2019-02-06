@@ -1,5 +1,6 @@
 package frc.robot.auto.creators;
 
+import frc.robot.AutoModeSelector.StartingPosition;
 import frc.robot.auto.AutoModeBase;
 
 /**
@@ -9,5 +10,6 @@ import frc.robot.auto.AutoModeBase;
  * @author FRC 1778 Chill Out
  */
 public interface AutoModeCreator {
-  AutoModeBase getStateDependentAutoMode(int teamDriverStationLocation);
+  AutoModeBase getStateDependentAutoMode(
+      int teamDriverStationLocation, StartingPosition startingPosition);
 }

@@ -50,7 +50,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     try {
       DebugLog.logDisabledInit();
-      Shuffleboard.selectTab("Debug");
+      Shuffleboard.selectTab("Autonomous");
       // elevator.setControlType(ControlState.OPEN_LOOP);
 
       if (autoModeExecutor != null) {
@@ -87,11 +87,6 @@ public class Robot extends TimedRobot {
     try {
       DebugLog.logTeleopInit();
       Shuffleboard.selectTab("TeleOp");
-      DebugLog.logNote(
-          "Driver Controller: "
-              + controls.getDriverControllerType().toString()
-              + ", Operator Controller: "
-              + controls.getOperatorControllerType().toString());
       swerve.zeroSensors();
       // elevator.setControlType(ControlState.MOTION_MAGIC);
 
