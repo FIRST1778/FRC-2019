@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -115,8 +114,7 @@ public class Robot extends TimedRobot {
 
       autoModeSelector.updateModeCreator();
 
-      Optional<AutoModeBase> autoMode =
-          autoModeSelector.getAutoMode(DriverStation.getInstance().getLocation());
+      Optional<AutoModeBase> autoMode = autoModeSelector.getAutoMode();
       if (autoMode.isPresent() && autoMode.get() != autoModeExecutor.getAutoMode()) {
         autoModeExecutor.setAutoMode(autoMode.get());
       }

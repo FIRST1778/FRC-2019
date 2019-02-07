@@ -12,7 +12,7 @@ public abstract class PathSegment {
 
   public abstract double getLength();
 
-  protected abstract PathSegment getFlipped();
+  public abstract PathSegment getFlipped();
 
   public static final class RadialArc extends PathSegment {
     private final double length;
@@ -41,7 +41,7 @@ public abstract class PathSegment {
     }
 
     @Override
-    protected PathSegment getFlipped() {
+    public PathSegment getFlipped() {
       return new RadialArc(length, -direction, -endAngle);
     }
   }
@@ -76,7 +76,7 @@ public abstract class PathSegment {
     }
 
     @Override
-    protected PathSegment getFlipped() {
+    public PathSegment getFlipped() {
       return new RadialArc(length, -direction, -endAngle);
     }
   }
@@ -106,7 +106,7 @@ public abstract class PathSegment {
     }
 
     @Override
-    protected PathSegment getFlipped() {
+    public PathSegment getFlipped() {
       return new Line(length, endAngle);
     }
   }

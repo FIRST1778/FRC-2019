@@ -12,10 +12,10 @@ import frc.robot.auto.actions.Action;
  */
 public abstract class AutoModeBase {
 
-  protected double updateRate = 1.0 / 50.0;
-  protected boolean active = false;
+  private double updateRate = 1.0 / 50.0;
+  private boolean active = false;
 
-  protected abstract void routine() throws AutoModeEndedException;
+  public abstract void routine() throws AutoModeEndedException;
 
   public void run() {
     active = true;

@@ -22,6 +22,9 @@ public class AutoPaths {
           new PathSegment.Line(60, 330),
           new PathSegment.Line(54, 330));
 
+  public static final Path START_LEFT_TO_LEFT_ROCKET_NEAR_SIDE =
+      START_RIGHT_TO_RIGHT_ROCKET_NEAR_SIDE.getFlipped();
+
   public static final Path RIGHT_ROCKET_NEAR_SIDE_TO_RIGHT_FEEDER_STATION =
       new Path(
           180,
@@ -30,6 +33,9 @@ public class AutoPaths {
           new PathSegment.Line(24, 330),
           new PathSegment.Line(96, 180));
 
+  public static final Path LEFT_ROCKET_NEAR_SIDE_TO_LEFT_FEEDER_STATION =
+      RIGHT_ROCKET_NEAR_SIDE_TO_RIGHT_FEEDER_STATION.getFlipped();
+
   public static final Path RIGHT_FEEDER_STATION_TO_RIGHT_ROCKET_NEAR_SIDE =
       new Path(
           0,
@@ -37,4 +43,40 @@ public class AutoPaths {
           Constants.SWERVE_MAX_VELOCITY,
           new PathSegment.Line(24, 180),
           new PathSegment.Line(96, 330));
+
+  public static final Path LEFT_FEEDER_STATION_TO_LEFT_ROCKET_NEAR_SIDE =
+      RIGHT_FEEDER_STATION_TO_RIGHT_ROCKET_NEAR_SIDE.getFlipped();
+
+  public static final Path RIGHT_FEEDER_STATION_TO_RIGHT_CARGO_BAY_NEAR =
+      new Path(
+          0,
+          Constants.SWERVE_MAX_ACCELERATION,
+          Constants.SWERVE_MAX_VELOCITY,
+          new PathSegment.Line(24, 180),
+          new PathSegment.Line(48, 90));
+
+  public static final Path LEFT_FEEDER_STATION_TO_LEFT_CARGO_BAY_NEAR =
+      RIGHT_FEEDER_STATION_TO_RIGHT_CARGO_BAY_NEAR.getFlipped();
+
+  public static final Path RIGHT_FEEDER_STATION_TO_RIGHT_CARGO_BAY_CENTER =
+      new Path(
+          0,
+          Constants.SWERVE_MAX_ACCELERATION,
+          Constants.SWERVE_MAX_VELOCITY,
+          new PathSegment.Line(24, 180),
+          new PathSegment.Line(60, 90));
+
+  public static final Path LEFT_FEEDER_STATION_TO_LEFT_CARGO_BAY_CENTER =
+      RIGHT_FEEDER_STATION_TO_RIGHT_CARGO_BAY_CENTER.getFlipped();
+
+  public static final Path RIGHT_FEEDER_STATION_TO_RIGHT_CARGO_BAY_FAR =
+      new Path(
+          0,
+          Constants.SWERVE_MAX_ACCELERATION,
+          Constants.SWERVE_MAX_VELOCITY,
+          new PathSegment.Line(24, 180),
+          new PathSegment.Line(72, 90));
+
+  public static final Path LEFT_FEEDER_STATION_TO_LEFT_CARGO_BAY_FAR =
+      RIGHT_FEEDER_STATION_TO_RIGHT_CARGO_BAY_FAR.getFlipped();
 }

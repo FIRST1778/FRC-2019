@@ -12,16 +12,10 @@ import frc.robot.components.SwerveDrive;
  *
  * @author FRC 1778 Chill Out
  */
-public class MotionTest extends AutoModeBase {
-
-  private int teamSelectedPosition;
-
-  public MotionTest(int driverStationPosition) {
-    teamSelectedPosition = driverStationPosition;
-  }
+public class MotionTestMode extends AutoModeBase {
 
   @Override
-  protected void routine() throws AutoModeEndedException {
+  public void routine() throws AutoModeEndedException {
     runAction(
         new RunOnceAction() {
           @Override

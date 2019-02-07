@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.SPI;
  */
 public class NavX {
 
-  protected class Callback implements ITimestampedDataSubscriber {
+  private class Callback implements ITimestampedDataSubscriber {
 
     @Override
     public void timestampedDataReceived(
@@ -33,13 +33,13 @@ public class NavX {
     }
   }
 
-  protected AHRS ahrs;
+  private AHRS ahrs;
 
-  protected double angleAdjustment;
-  protected double yawDegrees;
-  protected double yawRateDegreesPerSecond;
-  protected final long invalidTimestamp = -1;
-  protected long lastSensorTimestampMs;
+  private double angleAdjustment;
+  private double yawDegrees;
+  private double yawRateDegreesPerSecond;
+  private final long invalidTimestamp = -1;
+  private long lastSensorTimestampMs;
 
   public NavX(SPI.Port spiPortId) {
     ahrs = new AHRS(spiPortId, (byte) 200);
@@ -71,7 +71,7 @@ public class NavX {
     return -ahrs.getAngle();
   }
 
-  protected synchronized double getRawYawDegrees() {
+  private synchronized double getRawYawDegrees() {
     return yawDegrees;
   }
 

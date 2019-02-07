@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Test;
 public class PathTest {
 
   @Test
-  @DisplayName(
-      "The path's duration should be calculated bsaed on accerleration and velocity inputs")
+  @DisplayName("The path's duration should be calculated based on acceleration and velocity inputs")
   public void testPathDuration() {
     Path tenFeetForwards =
         new Path(
@@ -19,7 +18,6 @@ public class PathTest {
             Constants.SWERVE_MAX_ACCELERATION,
             Constants.SWERVE_MAX_VELOCITY,
             new PathSegment.Line(120, 0));
-    System.out.println(tenFeetForwards.getDuration());
-    assertThat(true, is(true));
+    assertThat(tenFeetForwards.getDuration(), is(14.0));
   }
 }
