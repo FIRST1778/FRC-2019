@@ -47,6 +47,18 @@ public class AutoPaths {
   public static final Path LEFT_FEEDER_STATION_TO_LEFT_ROCKET_NEAR_SIDE =
       RIGHT_FEEDER_STATION_TO_RIGHT_ROCKET_NEAR_SIDE.getFlipped();
 
+  public static final Path RIGHT_FEEDER_STATION_TO_RIGHT_ROCKET_FAR_SIDE =
+      new Path(
+          0,
+          Constants.SWERVE_MAX_ACCELERATION,
+          Constants.SWERVE_MAX_VELOCITY,
+          new PathSegment.Line(24, 180),
+          new PathSegment.ArcedTranslation(96, 24, 210),
+          new PathSegment.ArcedTranslation(-24, 24, 210));
+
+  public static final Path LEFT_FEEDER_STATION_TO_LEFT_ROCKET_FAR_SIDE =
+      RIGHT_FEEDER_STATION_TO_RIGHT_ROCKET_FAR_SIDE.getFlipped();
+
   public static final Path RIGHT_FEEDER_STATION_TO_RIGHT_CARGO_BAY_NEAR =
       new Path(
           0,
