@@ -41,8 +41,8 @@ public class AutoPaths {
           0,
           Constants.SWERVE_MAX_ACCELERATION,
           Constants.SWERVE_MAX_VELOCITY,
-          new PathSegment.Line(24, 180),
-          new PathSegment.Line(96, 330));
+          new PathSegment.ArcedTranslation(-24, -12, 180));
+  // new PathSegment.Line(96, 330));
 
   public static final Path LEFT_FEEDER_STATION_TO_LEFT_ROCKET_NEAR_SIDE =
       RIGHT_FEEDER_STATION_TO_RIGHT_ROCKET_NEAR_SIDE.getFlipped();
@@ -65,7 +65,8 @@ public class AutoPaths {
           Constants.SWERVE_MAX_ACCELERATION,
           Constants.SWERVE_MAX_VELOCITY,
           new PathSegment.Line(24, 180),
-          new PathSegment.Line(48, 90));
+          new PathSegment.Line(24, 90),
+          new PathSegment.ArcedTranslation(96, 96, 90));
 
   public static final Path LEFT_FEEDER_STATION_TO_LEFT_CARGO_BAY_NEAR =
       RIGHT_FEEDER_STATION_TO_RIGHT_CARGO_BAY_NEAR.getFlipped();

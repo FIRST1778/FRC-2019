@@ -42,7 +42,7 @@ public abstract class PathSegment {
 
     @Override
     public PathSegment getFlipped() {
-      return new RadialArc(length, -direction, -endAngle);
+      return new RadialArc(length, -direction, 360.0 - endAngle);
     }
   }
 
@@ -77,7 +77,7 @@ public abstract class PathSegment {
 
     @Override
     public PathSegment getFlipped() {
-      return new RadialArc(length, -direction, -endAngle);
+      return new RadialArc(length, -direction, 360.0 - endAngle);
     }
   }
 
@@ -107,7 +107,7 @@ public abstract class PathSegment {
 
     @Override
     public PathSegment getFlipped() {
-      return new Line(length, endAngle);
+      return new Line(length, 360.0 - endAngle);
     }
   }
 }

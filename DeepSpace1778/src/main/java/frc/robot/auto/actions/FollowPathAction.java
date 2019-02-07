@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import frc.lib.pathing.Path;
 import frc.lib.util.SimpleUtil;
+import frc.robot.auto.AutoConstants;
 import frc.robot.components.SwerveDrive;
 
 public class FollowPathAction implements Action {
@@ -32,7 +33,12 @@ public class FollowPathAction implements Action {
       };
 
   private PIDController anglePid =
-      new PIDController(0.03, 0.0, 0.0, navXSource, output -> angleCorrection = output);
+      new PIDController(
+          AutoConstants.GYRO_AID_KP,
+          AutoConstants.GYRO_AID_KI,
+          AutoConstants.GYRO_AID_KD,
+          navXSource,
+          output -> angleCorrection = output);
 
   private double angleCorrection;
 

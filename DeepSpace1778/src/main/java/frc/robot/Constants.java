@@ -24,6 +24,6 @@ public class Constants {
   public static final double VEHICLE_DIAGONAL =
       Math.sqrt(
           (VEHICLE_WHEELBASE * VEHICLE_WHEELBASE) + (VEHICLE_TRACKWIDTH * VEHICLE_TRACKWIDTH));
-  public static final double SWERVE_MAX_ACCELERATION = 5.0;
-  public static final double SWERVE_MAX_VELOCITY = 10.0;
+  public static final double SWERVE_MAX_ACCELERATION = 66.0;
+  public static final double SWERVE_MAX_VELOCITY = 120.0;
 }
