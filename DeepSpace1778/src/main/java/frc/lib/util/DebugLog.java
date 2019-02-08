@@ -74,9 +74,10 @@ public class DebugLog {
   }
 
   private static void logMarker(String mark, Throwable nullableException) {
+    boolean newFile = !logFile.exists();
     try (PrintWriter writer =
         new PrintWriter(new FileWriter(logFile, Charset.defaultCharset(), true))) {
-      if (!logFile.exists()) {
+      if (newFile) {
         writer.print("date,compileDate,match,info,exception");
         writer.println();
       }

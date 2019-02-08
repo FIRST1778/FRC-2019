@@ -1,7 +1,6 @@
 package frc.robot;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import frc.robot.AutoModeSelector.StartingPosition;
@@ -52,7 +51,7 @@ public class AutoModeSelectorTest {
             WantedSecondTarget.NEAR_SIDE_ROCKET,
             false);
     System.out.println(mode.get().getClass().getName());
-    assertThat(mode.get().getClass(), is(DualNearSideRocketMode.class));
+    assertThat(mode.get().getClass()).isEqualTo(DualNearSideRocketMode.class);
 
     mode =
         autoModeSelector.getModeForParams(
@@ -62,7 +61,7 @@ public class AutoModeSelectorTest {
             WantedSecondTarget.NEAR_SIDE_ROCKET,
             false);
     System.out.println(mode.get().getClass().getName());
-    assertThat(mode.get().getClass(), is(DualNearSideRocketMode.class));
+    assertThat(mode.get().getClass()).isEqualTo(DualNearSideRocketMode.class);
   }
 
   @Test
@@ -76,7 +75,7 @@ public class AutoModeSelectorTest {
             WantedSecondTarget.CARGO_BAY,
             false);
     System.out.println(mode.get().getClass().getName());
-    assertThat(mode.get().getClass(), is(NearSideRocketAndCargoBay.class));
+    assertThat(mode.get().getClass()).isEqualTo(NearSideRocketAndCargoBay.class);
 
     mode =
         autoModeSelector.getModeForParams(
@@ -86,6 +85,6 @@ public class AutoModeSelectorTest {
             WantedSecondTarget.CARGO_BAY,
             false);
     System.out.println(mode.get().getClass().getName());
-    assertThat(mode.get().getClass(), is(NearSideRocketAndCargoBay.class));
+    assertThat(mode.get().getClass()).isEqualTo(NearSideRocketAndCargoBay.class);
   }
 }

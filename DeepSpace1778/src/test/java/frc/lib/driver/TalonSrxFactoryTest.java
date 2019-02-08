@@ -1,7 +1,6 @@
 package frc.lib.driver;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
@@ -21,52 +20,53 @@ public class TalonSrxFactoryTest {
     @Test
     @DisplayName("Default configuration should match CTRE defaults")
     public void configurationMatchesDefault() {
-      assertThat(configuration.timeoutInMs, is(10));
-      assertThat(configuration.profileSlotId, is(0));
-      assertThat(configuration.openLoopRampTimeSeconds, is(0.0));
-      assertThat(configuration.closedLoopRampTimeSeconds, is(0.0));
-      assertThat(configuration.forwardPeakOutput, is(1.0));
-      assertThat(configuration.reversePeakOutput, is(-1.0));
-      assertThat(configuration.forwardNominalOutput, is(0.0));
-      assertThat(configuration.reverseNominalOutput, is(0.0));
-      assertThat(configuration.neutralDeadband, is(0.04));
-      assertThat(configuration.voltageCompensationSaturation, is(0.0));
-      assertThat(configuration.voltageMeasurementWindowFilter, is(32));
-      assertThat(configuration.feedbackDevice, is(FeedbackDevice.QuadEncoder));
-      assertThat(configuration.feedbackCoefficient, is(1.0));
-      assertThat(configuration.velocityMeasurementPeriod, is(VelocityMeasPeriod.Period_100Ms));
-      assertThat(configuration.velocityMeasurementWindow, is(64));
-      assertThat(configuration.forwardLimitSwitch, is(LimitSwitchSource.Deactivated));
-      assertThat(configuration.forwardLimitSwitchNormal, is(LimitSwitchNormal.NormallyOpen));
-      assertThat(configuration.reverseLimitSwitch, is(LimitSwitchSource.Deactivated));
-      assertThat(configuration.reverseLimitSwitchNormal, is(LimitSwitchNormal.NormallyOpen));
-      assertThat(configuration.forwardSoftLimitThreshold, is(0));
-      assertThat(configuration.reverseSoftLimitThreshold, is(0));
-      assertThat(configuration.enableForwardSoftLimit, is(false));
-      assertThat(configuration.enableReverseSoftLimit, is(false));
-      assertThat(configuration.pidKp, is(0.0));
-      assertThat(configuration.pidKi, is(0.0));
-      assertThat(configuration.pidKd, is(0.0));
-      assertThat(configuration.pidKf, is(0.0));
-      assertThat(configuration.pidIntegralZone, is(0));
-      assertThat(configuration.allowableClosedLoopError, is(0));
-      assertThat(configuration.pidMaxIntegralAccumulator, is(0.0));
-      assertThat(configuration.closedLoopPeakOutput, is(1.0));
-      assertThat(configuration.closedLoopPeriod, is(1));
-      assertThat(configuration.pidInvertPolarity, is(false));
-      assertThat(configuration.motionCruiseVelocity, is(0));
-      assertThat(configuration.motionAcceleration, is(0));
-      assertThat(configuration.motionProfileTrajectoryPeriod, is(0));
-      assertThat(configuration.peakCurrentLimit, is(0));
-      assertThat(configuration.peakCurrentLimitDuration, is(0));
-      assertThat(configuration.continuousCurrentLimit, is(0));
-      assertThat(configuration.statusFrame, is(StatusFrameEnhanced.Status_1_General));
-      assertThat(configuration.statusFramePeriod, is(10));
-      assertThat(configuration.enableVoltageCompensation, is(false));
-      assertThat(configuration.enableCurrentLimit, is(false));
-      assertThat(configuration.invertSensorPhase, is(false));
-      assertThat(configuration.invert, is(false));
-      assertThat(configuration.neutralPowerMode, is(NeutralMode.Brake));
+      assertThat(configuration.timeoutInMs).isEqualTo(10);
+      assertThat(configuration.profileSlotId).isEqualTo(0);
+      assertThat(configuration.openLoopRampTimeSeconds).isEqualTo(0.0);
+      assertThat(configuration.closedLoopRampTimeSeconds).isEqualTo(0.0);
+      assertThat(configuration.forwardPeakOutput).isEqualTo(1.0);
+      assertThat(configuration.reversePeakOutput).isEqualTo(-1.0);
+      assertThat(configuration.forwardNominalOutput).isEqualTo(0.0);
+      assertThat(configuration.reverseNominalOutput).isEqualTo(0.0);
+      assertThat(configuration.neutralDeadband).isEqualTo(0.04);
+      assertThat(configuration.voltageCompensationSaturation).isEqualTo(0.0);
+      assertThat(configuration.voltageMeasurementWindowFilter).isEqualTo(32);
+      assertThat(configuration.feedbackDevice).isEqualTo(FeedbackDevice.QuadEncoder);
+      assertThat(configuration.feedbackCoefficient).isEqualTo(1.0);
+      assertThat(configuration.velocityMeasurementPeriod)
+          .isEqualTo(VelocityMeasPeriod.Period_100Ms);
+      assertThat(configuration.velocityMeasurementWindow).isEqualTo(64);
+      assertThat(configuration.forwardLimitSwitch).isEqualTo(LimitSwitchSource.Deactivated);
+      assertThat(configuration.forwardLimitSwitchNormal).isEqualTo(LimitSwitchNormal.NormallyOpen);
+      assertThat(configuration.reverseLimitSwitch).isEqualTo(LimitSwitchSource.Deactivated);
+      assertThat(configuration.reverseLimitSwitchNormal).isEqualTo(LimitSwitchNormal.NormallyOpen);
+      assertThat(configuration.forwardSoftLimitThreshold).isEqualTo(0);
+      assertThat(configuration.reverseSoftLimitThreshold).isEqualTo(0);
+      assertThat(configuration.enableForwardSoftLimit).isEqualTo(false);
+      assertThat(configuration.enableReverseSoftLimit).isEqualTo(false);
+      assertThat(configuration.pidKp).isEqualTo(0.0);
+      assertThat(configuration.pidKi).isEqualTo(0.0);
+      assertThat(configuration.pidKd).isEqualTo(0.0);
+      assertThat(configuration.pidKf).isEqualTo(0.0);
+      assertThat(configuration.pidIntegralZone).isEqualTo(0);
+      assertThat(configuration.allowableClosedLoopError).isEqualTo(0);
+      assertThat(configuration.pidMaxIntegralAccumulator).isEqualTo(0.0);
+      assertThat(configuration.closedLoopPeakOutput).isEqualTo(1.0);
+      assertThat(configuration.closedLoopPeriod).isEqualTo(1);
+      assertThat(configuration.pidInvertPolarity).isEqualTo(false);
+      assertThat(configuration.motionCruiseVelocity).isEqualTo(0);
+      assertThat(configuration.motionAcceleration).isEqualTo(0);
+      assertThat(configuration.motionProfileTrajectoryPeriod).isEqualTo(0);
+      assertThat(configuration.peakCurrentLimit).isEqualTo(0);
+      assertThat(configuration.peakCurrentLimitDuration).isEqualTo(0);
+      assertThat(configuration.continuousCurrentLimit).isEqualTo(0);
+      assertThat(configuration.statusFrame).isEqualTo(StatusFrameEnhanced.Status_1_General);
+      assertThat(configuration.statusFramePeriod).isEqualTo(10);
+      assertThat(configuration.enableVoltageCompensation).isEqualTo(false);
+      assertThat(configuration.enableCurrentLimit).isEqualTo(false);
+      assertThat(configuration.invertSensorPhase).isEqualTo(false);
+      assertThat(configuration.invert).isEqualTo(false);
+      assertThat(configuration.neutralPowerMode).isEqualTo(NeutralMode.Brake);
     }
   }
 }
