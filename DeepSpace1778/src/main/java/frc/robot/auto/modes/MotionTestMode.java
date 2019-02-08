@@ -1,8 +1,10 @@
 package frc.robot.auto.modes;
 
+import frc.lib.pathing.Path;
+import frc.lib.pathing.PathSegment;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeEndedException;
-import frc.robot.auto.AutoPaths;
+import frc.robot.auto.actions.AlignWithTargetAction;
 import frc.robot.auto.actions.FollowPathAction;
 import frc.robot.auto.actions.RunOnceAction;
 import frc.robot.components.SwerveDrive;
@@ -23,8 +25,7 @@ public class MotionTestMode extends AutoModeBase {
             SwerveDrive.getInstance().zeroSensors();
           }
         });
-    runAction(new FollowPathAction(AutoPaths.START_RIGHT_TO_RIGHT_ROCKET_NEAR_SIDE));
-    runAction(new FollowPathAction(AutoPaths.RIGHT_ROCKET_NEAR_SIDE_TO_RIGHT_FEEDER_STATION));
-    runAction(new FollowPathAction(AutoPaths.RIGHT_FEEDER_STATION_TO_RIGHT_ROCKET_NEAR_SIDE));
+    runAction(new AlignWithTargetAction());
+    runAction(new FollowPathAction(new Path(0.0, new PathSegment.Line(12.0, 0.0))));
   }
 }

@@ -10,8 +10,6 @@ import frc.robot.components.SwerveDrive;
 
 public class FollowPathAction implements Action {
 
-  public static final double ALLOWABLE_ERROR = 3;
-
   private SwerveDrive swerve = SwerveDrive.getInstance();
   private Path path;
   private boolean hasReset = false;
@@ -60,7 +58,7 @@ public class FollowPathAction implements Action {
       return false;
     }
 
-    boolean end = Math.abs(path.getLength() - currentDistance) < ALLOWABLE_ERROR;
+    boolean end = Math.abs(path.getLength() - currentDistance) < 0.0;
     return end;
   }
 

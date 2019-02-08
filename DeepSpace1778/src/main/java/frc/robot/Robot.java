@@ -1,6 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -27,6 +29,9 @@ public class Robot extends TimedRobot {
   private Controls controls = Controls.getInstance();
   // private Elevator elevator = Elevator.getInstance();
   // private Manipulator manipulator = Manipulator.getInstance();
+
+  public static NetworkTable limelightTable =
+      NetworkTableInstance.getDefault().getTable("/limelight");
 
   private NetworkTableEntry totalPdpVoltage;
 
