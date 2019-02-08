@@ -9,6 +9,7 @@ import frc.robot.auto.modes.DoNothingMode;
 import frc.robot.auto.modes.DualNearSideRocketMode;
 import frc.robot.auto.modes.MotionTestMode;
 import frc.robot.auto.modes.NearSideRocketAndCargoBay;
+import frc.robot.auto.modes.NearSideRocketMode;
 import java.util.Optional;
 
 /**
@@ -173,6 +174,7 @@ public class AutoModeSelector {
       case RUN_SELECTED_AUTO:
         switch (position) {
           case LEFT:
+          case RIGHT:
             switch (firstTarget) {
               case NEAR_SIDE_ROCKET:
                 switch (secondTarget) {
@@ -187,6 +189,9 @@ public class AutoModeSelector {
                     mode =
                         Optional.of(
                             new NearSideRocketAndCargoBay(position, cargoBaySelectedPosition));
+                    break;
+                  case NOTHING:
+                    mode = Optional.of(new NearSideRocketMode(position));
                     break;
                   default:
                     mode = Optional.empty();
@@ -206,6 +211,10 @@ public class AutoModeSelector {
                   case CARGO_BAY:
                     mode = Optional.empty();
                     invalidMessage = "DualCargoBay is not implemented yet";
+                    break;
+                  case NOTHING:
+                    mode = Optional.empty();
+                    invalidMessage = "SingleCargoBayMode is not implemented yet";
                     break;
                   default:
                     mode = Optional.empty();
@@ -232,51 +241,6 @@ public class AutoModeSelector {
                   case FAR_SIDE_ROCKET:
                     mode = Optional.empty();
                     invalidMessage = "Can not target rocket when starting from center";
-                    break;
-                  case CARGO_BAY:
-                    mode = Optional.empty();
-                    invalidMessage = "DualCargoBay is not implemented yet";
-                    break;
-                  default:
-                    mode = Optional.empty();
-                    break;
-                }
-                break;
-              default:
-                mode = Optional.empty();
-                break;
-            }
-            break;
-          case RIGHT:
-            switch (firstTarget) {
-              case NEAR_SIDE_ROCKET:
-                switch (secondTarget) {
-                  case NEAR_SIDE_ROCKET:
-                    mode = Optional.of(new DualNearSideRocketMode(position));
-                    break;
-                  case FAR_SIDE_ROCKET:
-                    mode = Optional.empty();
-                    invalidMessage = "NearSideRocketAndFarSideRocket is not implemented yet";
-                    break;
-                  case CARGO_BAY:
-                    mode =
-                        Optional.of(
-                            new NearSideRocketAndCargoBay(position, cargoBaySelectedPosition));
-                    break;
-                  default:
-                    mode = Optional.empty();
-                    break;
-                }
-                break;
-              case CARGO_BAY:
-                switch (secondTarget) {
-                  case NEAR_SIDE_ROCKET:
-                    mode = Optional.empty();
-                    invalidMessage = "CargoBayAndNearSideRocket is not implemented yet";
-                    break;
-                  case FAR_SIDE_ROCKET:
-                    mode = Optional.empty();
-                    invalidMessage = "CargoBayAndFarSideRocket is not implemented yet";
                     break;
                   case CARGO_BAY:
                     mode = Optional.empty();
