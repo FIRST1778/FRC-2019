@@ -2,6 +2,7 @@ package frc.robot.components;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 
 public class ElevatorTest {
@@ -25,14 +26,14 @@ public class ElevatorTest {
 
   @Test
   public void heightFromEncoderPositionTest() {
-    assertThat(elevator.getHeightFromEncoderPosition(0)).isEqualTo(0.0);
+    assertThat(elevator.getHeightFromEncoderPosition(0)).isEqualTo(0.0, Offset.offset(0.001));
     assertThat(
             elevator.getHeightFromEncoderPosition(
                 Elevator.HeightSetPoints.ROCKET_CARGO_HIGH.getHeightEncoderTicks()))
-        .isEqualTo(80.0);
+        .isEqualTo(80.0, Offset.offset(0.001));
     assertThat(
             elevator.getHeightFromEncoderPosition(
                 Elevator.HeightSetPoints.FEEDER_STATION.getHeightEncoderTicks()))
-        .isEqualTo(30.0);
+        .isEqualTo(30.0, Offset.offset(0.001));
   }
 }

@@ -22,8 +22,6 @@ public class AlignWithTargetAction implements Action {
     translationX = Robot.limelightTable.getEntry("tx").getDouble(0.0);
     widthOfTarget = Robot.limelightTable.getEntry("thor").getDouble(0.0);
 
-    System.out.println("Width: " + widthOfTarget);
-
     swerve.setSignals(
         swerve.calculateModuleSignals((320.0 - widthOfTarget) / 640.0, -translationX * 0.035, 0.0));
   }

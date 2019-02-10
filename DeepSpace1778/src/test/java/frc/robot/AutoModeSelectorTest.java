@@ -50,7 +50,6 @@ public class AutoModeSelectorTest {
             WantedFirstTarget.NEAR_SIDE_ROCKET,
             WantedSecondTarget.NEAR_SIDE_ROCKET,
             false);
-    System.out.println(mode.get().getClass().getName());
     assertThat(mode.get().getClass()).isEqualTo(DualNearSideRocketMode.class);
 
     mode =
@@ -60,7 +59,6 @@ public class AutoModeSelectorTest {
             WantedFirstTarget.NEAR_SIDE_ROCKET,
             WantedSecondTarget.NEAR_SIDE_ROCKET,
             false);
-    System.out.println(mode.get().getClass().getName());
     assertThat(mode.get().getClass()).isEqualTo(DualNearSideRocketMode.class);
   }
 
@@ -74,7 +72,6 @@ public class AutoModeSelectorTest {
             WantedFirstTarget.NEAR_SIDE_ROCKET,
             WantedSecondTarget.CARGO_BAY,
             false);
-    System.out.println(mode.get().getClass().getName());
     assertThat(mode.get().getClass()).isEqualTo(NearSideRocketAndCargoBay.class);
 
     mode =
@@ -84,7 +81,6 @@ public class AutoModeSelectorTest {
             WantedFirstTarget.NEAR_SIDE_ROCKET,
             WantedSecondTarget.CARGO_BAY,
             false);
-    System.out.println(mode.get().getClass().getName());
     assertThat(mode.get().getClass()).isEqualTo(NearSideRocketAndCargoBay.class);
   }
 }

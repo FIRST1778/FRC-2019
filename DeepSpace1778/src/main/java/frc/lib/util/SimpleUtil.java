@@ -43,4 +43,28 @@ public class SimpleUtil {
 
     return sum / (values.length - numberOfLowestOutliers);
   }
+
+  public static double getContinuousInRange(double input, double maxRange) {
+    input %= maxRange;
+    if (Math.abs(input) > maxRange / 2) {
+      if (input > 0) {
+        return input - maxRange;
+      } else {
+        return input + maxRange;
+      }
+    }
+    return input;
+  }
+
+  public static double mod(double a, double n) {
+    return a < 0 ? (a % n + n) % n : a % n;
+  }
+
+  public static double euclideanModulo(double a, double n) {
+    return n < 0 ? euclideanModulo(a, -n) : mod(a, n);
+  }
+
+  public static double flooredMod(double a, double n) {
+    return n < 0 ? -flooredMod(-a, -n) : mod(a, n);
+  }
 }

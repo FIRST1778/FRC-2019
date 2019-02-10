@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -204,10 +205,6 @@ public class Robot extends TimedRobot {
 
       // swerve.setAllTurnPowers(1);
       swerve.setAllToAngle(0);
-      System.out.println("leftFront angle: " + swerve.leftFront.getAbsAngle());
-      System.out.println("rightFront angle: " + swerve.rightFront.getAbsAngle());
-      System.out.println("leftBack angle: " + swerve.leftBack.getAbsAngle());
-      System.out.println("rightBack angle: " + swerve.rightBack.getAbsAngle());
 
       // elevator.resetEncoderIfLimitSwitchReached();
     } catch (Throwable t) {

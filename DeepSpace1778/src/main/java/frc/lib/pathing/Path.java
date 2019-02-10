@@ -1,5 +1,7 @@
 package frc.lib.pathing;
 
+import frc.lib.util.SimpleUtil;
+
 /**
  * Stores a set of PathSegments, allowing for multiple motions to be strung together into a single
  * path. This is based upon FRC 2910 Jack in the Bot's 2018 code, with more capabilities
@@ -15,14 +17,15 @@ public class Path extends PathSegment {
   private final double maxAcceleration;
   private final double maxVelocity;
 
-  public Path(double initialDirection, PathSegment... segments) {
-    this(initialDirection, 0, 0, segments);
+  public Path(double initialDirection, double startAngle, PathSegment... segments) {
+    this(initialDirection, 0, 0, startAngle, segments);
   }
 
   public Path(
       double initialDirection,
       double maxAcceleration,
       double maxVelocity,
+      double startAngle,
       PathSegment... segments) {
     this.initialDirection = initialDirection;
     this.segments = segments;
@@ -34,7 +37,13 @@ public class Path extends PathSegment {
       totalLength += segment.getLength();
     }
     this.length = totalLength;
-    this.endAngle = segments[segments.length - 1].getAngle();
+    this.endAngle = segments[segments.length - 1].getEndAngle();
+    this.startAngle = startAngle;
+
+    segments[0].startAngle = startAngle;
+    for (int i = 1; i < segments.length; i++) {
+      segments[i].startAngle = segments[i - 1].getEndAngle();
+    }
   }
 
   private double getDistanceAtSegment(int segment) {
@@ -78,20 +87,35 @@ public class Path extends PathSegment {
     }
   }
 
-  public double getAngleAtDistance(double distance) {
-    int currentSegment = getSegmentAtDistance(distance);
-
-    return segments[currentSegment].getAngle();
-  }
-
   @Override
   public double getLength() {
     return length;
   }
 
   @Override
-  public double getAngle() {
+  public double getEndAngle() {
     return endAngle;
+  }
+
+  // @Override
+  public double getAngle(double percentage) {
+    return getAngleAtDistance(percentage * getLength());
+  }
+
+  // @Override
+  public double getAngleAtDistance(double distance) {
+    int currentSegment = getSegmentAtDistance(distance);
+
+    double deltaAngle =
+        segments[currentSegment].getEndAngle() - segments[currentSegment].startAngle;
+    deltaAngle = Math.abs(deltaAngle) > 180 ? deltaAngle - 360 : deltaAngle;
+
+    return SimpleUtil.flooredMod(
+        (deltaAngle
+                * (distance - getDistanceAtSegment(currentSegment))
+                / segments[currentSegment].getLength())
+            + segments[currentSegment].startAngle,
+        360.0);
   }
 
   @Override
@@ -116,6 +140,11 @@ public class Path extends PathSegment {
     for (int i = 0; i < segments.length; i++) {
       flippedSegments[i] = segments[i].getFlipped();
     }
-    return new Path(-initialDirection, this.maxAcceleration, this.maxVelocity, flippedSegments);
+    return new Path(
+        -initialDirection,
+        this.maxAcceleration,
+        this.maxVelocity,
+        360 - this.startAngle,
+        flippedSegments);
   }
 }

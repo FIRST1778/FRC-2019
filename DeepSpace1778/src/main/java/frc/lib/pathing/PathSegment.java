@@ -2,13 +2,15 @@ package frc.lib.pathing;
 
 public abstract class PathSegment {
 
+  public double startAngle;
+
   public abstract double getDirection(double percentage);
 
   public double getDirectionAtDistance(double distance) {
     return getDirection(distance / getLength());
   }
 
-  public abstract double getAngle();
+  public abstract double getEndAngle();
 
   public abstract double getLength();
 
@@ -36,13 +38,15 @@ public abstract class PathSegment {
     }
 
     @Override
-    public double getAngle() {
+    public double getEndAngle() {
       return endAngle;
     }
 
     @Override
     public PathSegment getFlipped() {
-      return new RadialArc(length, -direction, 360.0 - endAngle);
+      PathSegment flipped = new RadialArc(length, -direction, 360.0 - endAngle);
+      flipped.startAngle = 360.0 - startAngle;
+      return flipped;
     }
   }
 
@@ -71,13 +75,15 @@ public abstract class PathSegment {
     }
 
     @Override
-    public double getAngle() {
+    public double getEndAngle() {
       return endAngle;
     }
 
     @Override
     public PathSegment getFlipped() {
-      return new RadialArc(length, -direction, 360.0 - endAngle);
+      PathSegment flipped = new RadialArc(length, -direction, 360.0 - endAngle);
+      flipped.startAngle = 360.0 - startAngle;
+      return flipped;
     }
   }
 
@@ -101,13 +107,15 @@ public abstract class PathSegment {
     }
 
     @Override
-    public double getAngle() {
+    public double getEndAngle() {
       return endAngle;
     }
 
     @Override
     public PathSegment getFlipped() {
-      return new Line(length, 360.0 - endAngle);
+      PathSegment flipped = new Line(length, 360.0 - endAngle);
+      flipped.startAngle = 360.0 - startAngle;
+      return flipped;
     }
   }
 }

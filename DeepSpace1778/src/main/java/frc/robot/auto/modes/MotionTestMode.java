@@ -2,6 +2,7 @@ package frc.robot.auto.modes;
 
 import frc.lib.pathing.Path;
 import frc.lib.pathing.PathSegment;
+import frc.robot.Constants;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeEndedException;
 import frc.robot.auto.actions.AlignWithTargetAction;
@@ -26,6 +27,13 @@ public class MotionTestMode extends AutoModeBase {
           }
         });
     runAction(new AlignWithTargetAction());
-    runAction(new FollowPathAction(new Path(0.0, new PathSegment.Line(12.0, 0.0))));
+    runAction(
+        new FollowPathAction(
+            new Path(
+                0.0,
+                Constants.SWERVE_MAX_ACCELERATION,
+                Constants.SWERVE_MAX_VELOCITY,
+                0.0,
+                new PathSegment.Line(12.0, 0.0))));
   }
 }

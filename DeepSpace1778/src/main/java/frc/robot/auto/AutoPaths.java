@@ -17,6 +17,7 @@ public class AutoPaths {
           -90,
           Constants.SWERVE_MAX_ACCELERATION,
           Constants.SWERVE_MAX_VELOCITY,
+          0.0,
           new PathSegment.Line(24, 0),
           new PathSegment.ArcedTranslation(24, 24, 0),
           new PathSegment.Line(60, 330),
@@ -30,6 +31,7 @@ public class AutoPaths {
           180,
           Constants.SWERVE_MAX_ACCELERATION,
           Constants.SWERVE_MAX_VELOCITY,
+          330.0,
           new PathSegment.Line(24, 330),
           new PathSegment.Line(96, 180));
 
@@ -41,6 +43,7 @@ public class AutoPaths {
           0,
           Constants.SWERVE_MAX_ACCELERATION,
           Constants.SWERVE_MAX_VELOCITY,
+          180.0,
           new PathSegment.ArcedTranslation(-24, -12, 180));
   // new PathSegment.Line(96, 330));
 
@@ -52,6 +55,7 @@ public class AutoPaths {
           0,
           Constants.SWERVE_MAX_ACCELERATION,
           Constants.SWERVE_MAX_VELOCITY,
+          180.0,
           new PathSegment.Line(24, 180),
           new PathSegment.ArcedTranslation(96, 24, 210),
           new PathSegment.ArcedTranslation(-24, 24, 210));
@@ -64,6 +68,7 @@ public class AutoPaths {
           0,
           Constants.SWERVE_MAX_ACCELERATION,
           Constants.SWERVE_MAX_VELOCITY,
+          180.0,
           new PathSegment.Line(24, 180),
           new PathSegment.Line(24, 90),
           new PathSegment.ArcedTranslation(96, 96, 90));
@@ -76,6 +81,7 @@ public class AutoPaths {
           0,
           Constants.SWERVE_MAX_ACCELERATION,
           Constants.SWERVE_MAX_VELOCITY,
+          180.0,
           new PathSegment.Line(24, 180),
           new PathSegment.Line(60, 90));
 
@@ -87,6 +93,7 @@ public class AutoPaths {
           0,
           Constants.SWERVE_MAX_ACCELERATION,
           Constants.SWERVE_MAX_VELOCITY,
+          180.0,
           new PathSegment.Line(24, 180),
           new PathSegment.Line(72, 90));
 

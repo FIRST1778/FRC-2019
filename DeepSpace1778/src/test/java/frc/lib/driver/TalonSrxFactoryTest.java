@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
+import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,17 +23,17 @@ public class TalonSrxFactoryTest {
     public void configurationMatchesDefault() {
       assertThat(configuration.timeoutInMs).isEqualTo(10);
       assertThat(configuration.profileSlotId).isEqualTo(0);
-      assertThat(configuration.openLoopRampTimeSeconds).isEqualTo(0.0);
-      assertThat(configuration.closedLoopRampTimeSeconds).isEqualTo(0.0);
-      assertThat(configuration.forwardPeakOutput).isEqualTo(1.0);
-      assertThat(configuration.reversePeakOutput).isEqualTo(-1.0);
-      assertThat(configuration.forwardNominalOutput).isEqualTo(0.0);
-      assertThat(configuration.reverseNominalOutput).isEqualTo(0.0);
-      assertThat(configuration.neutralDeadband).isEqualTo(0.04);
-      assertThat(configuration.voltageCompensationSaturation).isEqualTo(0.0);
+      assertThat(configuration.openLoopRampTimeSeconds).isEqualTo(0.0, Offset.offset(0.001));
+      assertThat(configuration.closedLoopRampTimeSeconds).isEqualTo(0.0, Offset.offset(0.001));
+      assertThat(configuration.forwardPeakOutput).isEqualTo(1.0, Offset.offset(0.001));
+      assertThat(configuration.reversePeakOutput).isEqualTo(-1.0, Offset.offset(0.001));
+      assertThat(configuration.forwardNominalOutput).isEqualTo(0.0, Offset.offset(0.001));
+      assertThat(configuration.reverseNominalOutput).isEqualTo(0.0, Offset.offset(0.001));
+      assertThat(configuration.neutralDeadband).isEqualTo(0.04, Offset.offset(0.001));
+      assertThat(configuration.voltageCompensationSaturation).isEqualTo(0.0, Offset.offset(0.001));
       assertThat(configuration.voltageMeasurementWindowFilter).isEqualTo(32);
       assertThat(configuration.feedbackDevice).isEqualTo(FeedbackDevice.QuadEncoder);
-      assertThat(configuration.feedbackCoefficient).isEqualTo(1.0);
+      assertThat(configuration.feedbackCoefficient).isEqualTo(1.0, Offset.offset(0.001));
       assertThat(configuration.velocityMeasurementPeriod)
           .isEqualTo(VelocityMeasPeriod.Period_100Ms);
       assertThat(configuration.velocityMeasurementWindow).isEqualTo(64);
@@ -44,14 +45,14 @@ public class TalonSrxFactoryTest {
       assertThat(configuration.reverseSoftLimitThreshold).isEqualTo(0);
       assertThat(configuration.enableForwardSoftLimit).isEqualTo(false);
       assertThat(configuration.enableReverseSoftLimit).isEqualTo(false);
-      assertThat(configuration.pidKp).isEqualTo(0.0);
-      assertThat(configuration.pidKi).isEqualTo(0.0);
-      assertThat(configuration.pidKd).isEqualTo(0.0);
-      assertThat(configuration.pidKf).isEqualTo(0.0);
+      assertThat(configuration.pidKp).isEqualTo(0.0, Offset.offset(0.001));
+      assertThat(configuration.pidKi).isEqualTo(0.0, Offset.offset(0.001));
+      assertThat(configuration.pidKd).isEqualTo(0.0, Offset.offset(0.001));
+      assertThat(configuration.pidKf).isEqualTo(0.0, Offset.offset(0.001));
       assertThat(configuration.pidIntegralZone).isEqualTo(0);
       assertThat(configuration.allowableClosedLoopError).isEqualTo(0);
-      assertThat(configuration.pidMaxIntegralAccumulator).isEqualTo(0.0);
-      assertThat(configuration.closedLoopPeakOutput).isEqualTo(1.0);
+      assertThat(configuration.pidMaxIntegralAccumulator).isEqualTo(0.0, Offset.offset(0.001));
+      assertThat(configuration.closedLoopPeakOutput).isEqualTo(1.0, Offset.offset(0.001));
       assertThat(configuration.closedLoopPeriod).isEqualTo(1);
       assertThat(configuration.pidInvertPolarity).isEqualTo(false);
       assertThat(configuration.motionCruiseVelocity).isEqualTo(0);

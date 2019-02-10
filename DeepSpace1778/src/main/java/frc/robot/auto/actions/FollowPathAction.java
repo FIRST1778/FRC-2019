@@ -58,7 +58,7 @@ public class FollowPathAction implements Action {
       return false;
     }
 
-    boolean end = Math.abs(path.getLength() - currentDistance) < 0.0;
+    boolean end = Math.abs(path.getLength() - currentDistance) < 1.0;
     return end;
   }
 
@@ -89,9 +89,8 @@ public class FollowPathAction implements Action {
   public void start() {
     hasReset = false;
     swerve.resetEncoders();
-    System.out.println(
-        "Path length: " + path.getLength() + ", Direction: " + path.getDirection(1.0));
-    swerve.setTargetDistances(path.getLength());
+    double length = path.getLength();
+    swerve.setTargetDistances(length, length, length, length);
   }
 
   private double getAverageEncoderPositions() {

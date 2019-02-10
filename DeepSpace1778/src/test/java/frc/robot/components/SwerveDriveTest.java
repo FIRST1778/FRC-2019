@@ -31,21 +31,23 @@ public class SwerveDriveTest {
 
     for (int i = 0; i < 4; i++) {
       assertThat(calculatedSignalsOneHalf.get(i).getDrivePower())
-          .isEqualTo(wantedSignalsOneHalf.get(i).getDrivePower());
+          .isEqualTo(wantedSignalsOneHalf.get(i).getDrivePower(), Offset.offset(0.001));
       assertThat(calculatedSignalsOneHalf.get(i).getAngle())
-          .isEqualTo(wantedSignalsOneHalf.get(i).getAngle());
+          .isEqualTo(wantedSignalsOneHalf.get(i).getAngle(), Offset.offset(0.001));
     }
 
     for (int i = 0; i < 4; i++) {
       assertThat(calculatedSignalsOne.get(i).getDrivePower())
-          .isEqualTo(wantedSignals.get(i).getDrivePower());
-      assertThat(calculatedSignalsOne.get(i).getAngle()).isEqualTo(wantedSignals.get(i).getAngle());
+          .isEqualTo(wantedSignals.get(i).getDrivePower(), Offset.offset(0.001));
+      assertThat(calculatedSignalsOne.get(i).getAngle())
+          .isEqualTo(wantedSignals.get(i).getAngle(), Offset.offset(0.001));
     }
 
     for (int i = 0; i < 4; i++) {
       assertThat(calculatedSignalsTwo.get(i).getDrivePower())
-          .isEqualTo(wantedSignals.get(i).getDrivePower());
-      assertThat(calculatedSignalsTwo.get(i).getAngle()).isEqualTo(wantedSignals.get(i).getAngle());
+          .isEqualTo(wantedSignals.get(i).getDrivePower(), Offset.offset(0.001));
+      assertThat(calculatedSignalsTwo.get(i).getAngle())
+          .isEqualTo(wantedSignals.get(i).getAngle(), Offset.offset(0.001));
     }
   }
 
@@ -69,21 +71,23 @@ public class SwerveDriveTest {
 
     for (int i = 0; i < 4; i++) {
       assertThat(calculatedSignalsOneHalf.get(i).getDrivePower())
-          .isEqualTo(wantedSignalsOneHalf.get(i).getDrivePower());
+          .isEqualTo(wantedSignalsOneHalf.get(i).getDrivePower(), Offset.offset(0.001));
       assertThat(calculatedSignalsOneHalf.get(i).getAngle())
-          .isEqualTo(wantedSignalsOneHalf.get(i).getAngle());
+          .isEqualTo(wantedSignalsOneHalf.get(i).getAngle(), Offset.offset(0.001));
     }
 
     for (int i = 0; i < 4; i++) {
       assertThat(calculatedSignalsOne.get(i).getDrivePower())
-          .isEqualTo(wantedSignals.get(i).getDrivePower());
-      assertThat(calculatedSignalsOne.get(i).getAngle()).isEqualTo(wantedSignals.get(i).getAngle());
+          .isEqualTo(wantedSignals.get(i).getDrivePower(), Offset.offset(0.001));
+      assertThat(calculatedSignalsOne.get(i).getAngle())
+          .isEqualTo(wantedSignals.get(i).getAngle(), Offset.offset(0.001));
     }
 
     for (int i = 0; i < 4; i++) {
       assertThat(calculatedSignalsTwo.get(i).getDrivePower())
-          .isEqualTo(wantedSignals.get(i).getDrivePower());
-      assertThat(calculatedSignalsTwo.get(i).getAngle()).isEqualTo(wantedSignals.get(i).getAngle());
+          .isEqualTo(wantedSignals.get(i).getDrivePower(), Offset.offset(0.001));
+      assertThat(calculatedSignalsTwo.get(i).getAngle())
+          .isEqualTo(wantedSignals.get(i).getAngle(), Offset.offset(0.001));
     }
   }
 
