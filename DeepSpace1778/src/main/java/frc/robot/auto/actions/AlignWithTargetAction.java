@@ -13,7 +13,7 @@ public class AlignWithTargetAction implements Action {
 
   @Override
   public boolean isFinished() {
-    return !hasTarget || widthOfTarget >= 250;
+    return widthOfTarget >= 250;
   }
 
   @Override
@@ -29,8 +29,13 @@ public class AlignWithTargetAction implements Action {
   @Override
   public void done() {
     swerve.stop();
+    Robot.limelightTable.getEntry("camMode").setDouble(1.0);
+    Robot.limelightTable.getEntry("ledMode").setDouble(1.0);
   }
 
   @Override
-  public void start() {}
+  public void start() {
+    Robot.limelightTable.getEntry("camMode").setDouble(0.0);
+    Robot.limelightTable.getEntry("ledMode").setDouble(0.0);
+  }
 }
