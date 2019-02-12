@@ -71,7 +71,7 @@ public class Path extends PathSegment {
       double lowerBound = getDistanceAtSegment(i);
       double upperBound = getDistanceAtSegment(i + 1);
 
-      if (lowerBound < distance && distance < upperBound) {
+      if (lowerBound < distance && distance <= upperBound) {
         return i;
       }
     }

@@ -30,22 +30,32 @@ public class PathTest {
             0,
             Constants.SWERVE_MAX_ACCELERATION,
             Constants.SWERVE_MAX_VELOCITY,
-            45.0,
-            new PathSegment.Line(60, 45),
-            new PathSegment.RadialArc(60, 48, 270));
+            0.0,
+            new PathSegment.Line(60, 0),
+            new PathSegment.Line(60, 0),
+            new PathSegment.Line(60, 330),
+            new PathSegment.Line(60, 330));
 
     Path flippedPath = path.getFlipped();
 
-    assertThat(path.getAngleAtDistance(0.0)).isEqualTo(45.0, Offset.offset(0.001));
-    assertThat(path.getAngleAtDistance(30.0)).isEqualTo(45.0, Offset.offset(0.001));
-    assertThat(path.getAngleAtDistance(60.0)).isEqualTo(45.0, Offset.offset(0.001));
-    assertThat(path.getAngleAtDistance(90.0)).isEqualTo(337.5, Offset.offset(0.001));
-    assertThat(path.getAngleAtDistance(120.0)).isEqualTo(270.0, Offset.offset(0.001));
+    assertThat(path.getAngle(0.0)).isEqualTo(0.0, Offset.offset(0.001));
+    assertThat(path.getAngle(0.125)).isEqualTo(0.0, Offset.offset(0.001));
+    assertThat(path.getAngle(0.25)).isEqualTo(0.0, Offset.offset(0.001));
+    assertThat(path.getAngle(0.375)).isEqualTo(0.0, Offset.offset(0.001));
+    assertThat(path.getAngle(0.5)).isEqualTo(0.0, Offset.offset(0.001));
+    assertThat(path.getAngle(0.625)).isEqualTo(345.0, Offset.offset(0.001));
+    assertThat(path.getAngle(0.75)).isEqualTo(330.0, Offset.offset(0.001));
+    assertThat(path.getAngle(0.875)).isEqualTo(330.0, Offset.offset(0.001));
+    assertThat(path.getAngle(1.0)).isEqualTo(330.0, Offset.offset(0.001));
 
-    assertThat(flippedPath.getAngleAtDistance(0.0)).isEqualTo(315.0, Offset.offset(0.001));
-    assertThat(flippedPath.getAngleAtDistance(30.0)).isEqualTo(315.0, Offset.offset(0.001));
-    assertThat(flippedPath.getAngleAtDistance(60.0)).isEqualTo(315.0, Offset.offset(0.001));
-    assertThat(flippedPath.getAngleAtDistance(90.0)).isEqualTo(22.5, Offset.offset(0.001));
-    assertThat(flippedPath.getAngleAtDistance(120.0)).isEqualTo(90.0, Offset.offset(0.001));
+    assertThat(flippedPath.getAngle(0.0)).isEqualTo(0.0, Offset.offset(0.001));
+    assertThat(flippedPath.getAngle(0.125)).isEqualTo(0.0, Offset.offset(0.001));
+    assertThat(flippedPath.getAngle(0.25)).isEqualTo(0.0, Offset.offset(0.001));
+    assertThat(flippedPath.getAngle(0.375)).isEqualTo(0.0, Offset.offset(0.001));
+    assertThat(flippedPath.getAngle(0.5)).isEqualTo(0.0, Offset.offset(0.001));
+    assertThat(flippedPath.getAngle(0.625)).isEqualTo(15.0, Offset.offset(0.001));
+    assertThat(flippedPath.getAngle(0.75)).isEqualTo(30.0, Offset.offset(0.001));
+    assertThat(flippedPath.getAngle(0.875)).isEqualTo(30.0, Offset.offset(0.001));
+    assertThat(flippedPath.getAngle(1.0)).isEqualTo(30.0, Offset.offset(0.001));
   }
 }
