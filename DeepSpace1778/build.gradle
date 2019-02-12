@@ -59,7 +59,7 @@ dependencies {
 compileJava { dependsOn 'spotlessApply' }
 
 test {
-  useJUnitPlatform { /* excludeTags 'slow' */}
+  useJUnitPlatform { excludeTags 'slow', 'robot-dependent'}
   testLogging.showStandardStreams = true}
 
 spotless {

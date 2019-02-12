@@ -5,11 +5,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import frc.robot.Constants;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class PathTest {
 
   @Test
+  @Tag("robot-dependent")
   @DisplayName("The path's duration should be calculated based on acceleration and velocity inputs")
   public void testPathDuration() {
     Path tenFeetForwards =
@@ -28,8 +30,8 @@ public class PathTest {
     Path path =
         new Path(
             0,
-            Constants.SWERVE_MAX_ACCELERATION,
-            Constants.SWERVE_MAX_VELOCITY,
+            0,
+            0,
             0.0,
             new PathSegment.Line(60, 0),
             new PathSegment.Line(60, 0),

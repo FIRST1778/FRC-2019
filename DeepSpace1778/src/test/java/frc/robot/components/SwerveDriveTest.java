@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import frc.lib.util.ModuleSignal;
 import java.util.ArrayList;
 import org.assertj.core.data.Offset;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class SwerveDriveTest {
@@ -92,6 +93,7 @@ public class SwerveDriveTest {
   }
 
   @Test
+  @Tag("robot-dependent")
   public void calculateModuleSignalsRotateShouldMaxAtOne() {
     ArrayList<ModuleSignal> wantedSignalsOneHalf = new ArrayList<ModuleSignal>(4);
     wantedSignalsOneHalf.add(new ModuleSignal(0.5, 125.882));
