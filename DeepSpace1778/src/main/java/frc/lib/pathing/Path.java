@@ -97,12 +97,10 @@ public class Path extends PathSegment {
     return endAngle;
   }
 
-  // @Override
   public double getAngle(double percentage) {
     return getAngleAtDistance(percentage * getLength());
   }
 
-  // @Override
   public double getAngleAtDistance(double distance) {
     int currentSegment = getSegmentAtDistance(distance);
 

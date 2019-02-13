@@ -26,7 +26,7 @@ public class MotionTestMode extends AutoModeBase {
             SwerveDrive.getInstance().zeroSensors();
           }
         });
-    runAction(new AlignWithTargetAction());
+    runAction(new AlignWithTargetAction(0.0));
     runAction(
         new FollowPathAction(
             new Path(

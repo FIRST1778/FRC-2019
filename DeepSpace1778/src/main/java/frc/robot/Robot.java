@@ -43,6 +43,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     try {
       DebugLog.logRobotInit();
+      limelightTable.getEntry("camMode").setDouble(1.0);
+      limelightTable.getEntry("ledMode").setDouble(1.0);
 
       autoModeSelector.updateModeCreator();
     } catch (Throwable t) {

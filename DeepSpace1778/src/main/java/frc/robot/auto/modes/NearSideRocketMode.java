@@ -34,12 +34,13 @@ public class NearSideRocketMode extends AutoModeBase {
     switch (startingPosition) {
       case LEFT:
         runAction(new FollowPathAction(AutoPaths.START_LEFT_TO_LEFT_ROCKET_NEAR_SIDE));
+        runAction(new AlignWithTargetAction(30.0));
         break;
       default:
       case RIGHT:
         runAction(new FollowPathAction(AutoPaths.START_RIGHT_TO_RIGHT_ROCKET_NEAR_SIDE));
+        runAction(new AlignWithTargetAction(330.0));
         break;
     }
-    runAction(new AlignWithTargetAction());
   }
 }
