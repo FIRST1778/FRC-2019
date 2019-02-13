@@ -108,7 +108,7 @@ public class Path extends PathSegment {
         segments[currentSegment].getEndAngle() - segments[currentSegment].startAngle;
     deltaAngle = Math.abs(deltaAngle) > 180 ? deltaAngle - 360 : deltaAngle;
 
-    return SimpleUtil.flooredMod(
+    return SimpleUtil.flooredModulo(
         (deltaAngle
                 * (distance - getDistanceAtSegment(currentSegment))
                 / segments[currentSegment].getLength())
@@ -142,7 +142,7 @@ public class Path extends PathSegment {
         -initialDirection,
         this.maxAcceleration,
         this.maxVelocity,
-        360 - this.startAngle,
+        (360 - this.startAngle) % 360.0,
         flippedSegments);
   }
 }

@@ -44,8 +44,8 @@ public abstract class PathSegment {
 
     @Override
     public PathSegment getFlipped() {
-      PathSegment flipped = new RadialArc(length, -direction, 360.0 - endAngle);
-      flipped.startAngle = 360.0 - startAngle;
+      PathSegment flipped = new RadialArc(length, -direction, (360 - endAngle) % 360.0);
+      flipped.startAngle = (360 - startAngle) % 360.0;
       return flipped;
     }
   }
@@ -81,8 +81,8 @@ public abstract class PathSegment {
 
     @Override
     public PathSegment getFlipped() {
-      PathSegment flipped = new RadialArc(length, -direction, 360.0 - endAngle);
-      flipped.startAngle = 360.0 - startAngle;
+      PathSegment flipped = new RadialArc(length, -direction, (360 - endAngle) % 360.0);
+      flipped.startAngle = (360 - startAngle) % 360.0;
       return flipped;
     }
   }
@@ -113,8 +113,8 @@ public abstract class PathSegment {
 
     @Override
     public PathSegment getFlipped() {
-      PathSegment flipped = new Line(length, 360.0 - endAngle);
-      flipped.startAngle = 360.0 - startAngle;
+      PathSegment flipped = new Line(length, (360 - endAngle) % 360.0);
+      flipped.startAngle = (360 - startAngle) % 360.0;
       return flipped;
     }
   }

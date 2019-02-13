@@ -64,7 +64,7 @@ public class SimpleUtil {
     return n < 0 ? euclideanModulo(a, -n) : mod(a, n);
   }
 
-  public static double flooredMod(double a, double n) {
-    return n < 0 ? -flooredMod(-a, -n) : mod(a, n);
+  public static double flooredModulo(double a, double n) {
+    return n < 0 ? -flooredModulo(-a, -n) : mod(a, n);
   }
 }

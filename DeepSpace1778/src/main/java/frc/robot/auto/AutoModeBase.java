@@ -32,7 +32,7 @@ public abstract class AutoModeBase {
   }
 
   public void done() {
-    System.out.println("Auto mode done");
+    System.out.println("AutoMode done");
   }
 
   public void stop() {
