@@ -62,11 +62,11 @@ public class AlignWithTargetAction implements Action {
     widthOfTarget =
         hasTarget ? Robot.limelightTable.getEntry("thor").getDouble(0.0) : widthOfTarget;
 
-    isCloseToTarget = !isCloseToTarget ? widthOfTarget >= 250 : isCloseToTarget;
+    isCloseToTarget = !isCloseToTarget ? widthOfTarget >= 200 : isCloseToTarget;
 
     swerve.setSignals(
         swerve.calculateModuleSignals(
-            (320.0 - widthOfTarget) / 640.0, -translationX * 0.035, angleCorrection));
+            ((320.0 - widthOfTarget) / 320) * 0.5, -translationX * 0.01, angleCorrection));
   }
 
   @Override

@@ -4,6 +4,7 @@ import frc.robot.AutoModeSelector.StartingPosition;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeEndedException;
 import frc.robot.auto.AutoPaths;
+import frc.robot.auto.actions.AlignWithTargetAction;
 import frc.robot.auto.actions.FollowPathAction;
 import frc.robot.auto.actions.RunOnceAction;
 import frc.robot.components.SwerveDrive;
@@ -33,14 +34,20 @@ public class DualNearSideRocketMode extends AutoModeBase {
     switch (startingPosition) {
       case LEFT:
         runAction(new FollowPathAction(AutoPaths.START_LEFT_TO_LEFT_ROCKET_NEAR_SIDE));
+        runAction(new AlignWithTargetAction(30));
         runAction(new FollowPathAction(AutoPaths.LEFT_ROCKET_NEAR_SIDE_TO_LEFT_FEEDER_STATION));
+        runAction(new AlignWithTargetAction(180));
         runAction(new FollowPathAction(AutoPaths.LEFT_FEEDER_STATION_TO_LEFT_ROCKET_NEAR_SIDE));
+        runAction(new AlignWithTargetAction(30));
         break;
       default:
       case RIGHT:
         runAction(new FollowPathAction(AutoPaths.START_RIGHT_TO_RIGHT_ROCKET_NEAR_SIDE));
+        runAction(new AlignWithTargetAction(330));
         runAction(new FollowPathAction(AutoPaths.RIGHT_ROCKET_NEAR_SIDE_TO_RIGHT_FEEDER_STATION));
+        runAction(new AlignWithTargetAction(180));
         runAction(new FollowPathAction(AutoPaths.RIGHT_FEEDER_STATION_TO_RIGHT_ROCKET_NEAR_SIDE));
+        runAction(new AlignWithTargetAction(330));
         break;
     }
   }

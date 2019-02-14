@@ -5,7 +5,6 @@ import frc.lib.pathing.PathSegment;
 import frc.robot.Constants;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeEndedException;
-import frc.robot.auto.actions.AlignWithTargetAction;
 import frc.robot.auto.actions.FollowPathAction;
 import frc.robot.auto.actions.RunOnceAction;
 import frc.robot.components.SwerveDrive;
@@ -26,7 +25,6 @@ public class MotionTestMode extends AutoModeBase {
             SwerveDrive.getInstance().zeroSensors();
           }
         });
-    runAction(new AlignWithTargetAction(0.0));
     runAction(
         new FollowPathAction(
             new Path(
@@ -34,6 +32,6 @@ public class MotionTestMode extends AutoModeBase {
                 Constants.SWERVE_MAX_ACCELERATION,
                 Constants.SWERVE_MAX_VELOCITY,
                 0.0,
-                new PathSegment.Line(12.0, 0.0))));
+                new PathSegment.Line(132.0, 0.0))));
   }
 }

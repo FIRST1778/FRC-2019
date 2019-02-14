@@ -43,8 +43,6 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     try {
       DebugLog.logRobotInit();
-      limelightTable.getEntry("camMode").setDouble(1.0);
-      limelightTable.getEntry("ledMode").setDouble(1.0);
 
       autoModeSelector.updateModeCreator();
     } catch (Throwable t) {
@@ -57,6 +55,8 @@ public class Robot extends TimedRobot {
     try {
       DebugLog.logDisabledInit();
       Shuffleboard.selectTab("Autonomous");
+      // limelightTable.getEntry("camMode").setDouble(1.0);
+      // limelightTable.getEntry("ledMode").setDouble(1.0);
       // elevator.setControlType(ControlState.OPEN_LOOP);
 
       if (autoModeExecutor != null) {
