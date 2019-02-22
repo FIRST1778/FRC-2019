@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
+import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 /**
@@ -82,7 +83,7 @@ public class TalonSrxFactory {
     return createTalon(id, DEFAULT_CONFIGURATION);
   }
 
-  public static TalonSRX createSlaveTalon(int id, TalonSRX master) {
+  public static TalonSRX createSlaveTalon(int id, BaseMotorController master) {
     TalonSRX talon = createDefaultTalon(id);
     talon.follow(master);
     return talon;

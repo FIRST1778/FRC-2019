@@ -1,6 +1,7 @@
 package frc.robot.auto.modes;
 
 import frc.robot.AutoModeSelector.StartingPosition;
+import frc.robot.Robot;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeEndedException;
 import frc.robot.auto.AutoPaths;
@@ -29,17 +30,19 @@ public class NearSideRocketMode extends AutoModeBase {
           @Override
           public void runOnce() {
             SwerveDrive.getInstance().zeroSensors();
+            Robot.limelightTable.getEntry("camMode").setDouble(1.0);
+            Robot.limelightTable.getEntry("ledMode").setDouble(1.0);
           }
         });
     switch (startingPosition) {
       case LEFT:
         runAction(new FollowPathAction(AutoPaths.START_LEFT_TO_LEFT_ROCKET_NEAR_SIDE));
-        runAction(new AlignWithTargetAction(30.0));
+        runAction(new AlignWithTargetAction(28.77));
         break;
       default:
       case RIGHT:
         runAction(new FollowPathAction(AutoPaths.START_RIGHT_TO_RIGHT_ROCKET_NEAR_SIDE));
-        runAction(new AlignWithTargetAction(330.0));
+        runAction(new AlignWithTargetAction(331.23));
         break;
     }
   }

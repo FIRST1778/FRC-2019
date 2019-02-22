@@ -5,7 +5,10 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import frc.lib.driver.TalonSrxFactory;
+import frc.lib.driver.VictorSpxFactory;
+import frc.robot.Constants;
 import frc.robot.Ports;
 
 /**
@@ -21,13 +24,20 @@ public class Climber extends Subsystem {
 
   private static boolean initialized;
 
+  public enum ControlState {
+    OPEN_LOOP,
+    MOTION_MAGIC,
+    CLOSED_LOOP_POSITION
+  }
+
+  private ControlState controlState = ControlState.OPEN_LOOP;
+
   private static final double INCHES_PER_ENCODER_PULSE = 1.0 / 1024.0; // TODO: Measure for robot
 
-  private TalonSRX linearPiston;
-  private TalonSRX poweredRoller;
+  private TalonSRX linearPistonMaster;
+  private VictorSPX linearPistonSlave;
 
-  private static TalonSrxFactory.Configuration pistonConfiguration;
-  private static TalonSrxFactory.Configuration rollerConfiguration;
+  private static TalonSrxFactory.Configuration masterConfiguration;
 
   private boolean shuffleboardInitialized;
 
@@ -46,30 +56,26 @@ public class Climber extends Subsystem {
 
   private Climber(boolean hardware) {
     if (hardware) {
-      pistonConfiguration = new TalonSrxFactory.Configuration();
-      pistonConfiguration.feedbackDevice = FeedbackDevice.QuadEncoder;
-      pistonConfiguration.invertSensorPhase = false;
-      pistonConfiguration.forwardLimitSwitch = LimitSwitchSource.FeedbackConnector;
-      pistonConfiguration.forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
-      pistonConfiguration.reverseLimitSwitch = LimitSwitchSource.FeedbackConnector;
-      pistonConfiguration.reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
-      pistonConfiguration.pidKp = 0.0;
-      pistonConfiguration.pidKi = 0.0;
-      pistonConfiguration.pidKd = 0.0;
-      pistonConfiguration.pidKf = 0.0;
-      pistonConfiguration.continuousCurrentLimit = 20;
-      pistonConfiguration.peakCurrentLimit = 15;
-      pistonConfiguration.peakCurrentLimitDuration = 100;
-      pistonConfiguration.enableCurrentLimit = true;
+      masterConfiguration = new TalonSrxFactory.Configuration();
+      masterConfiguration.feedbackDevice = FeedbackDevice.CTRE_MagEncoder_Relative;
+      masterConfiguration.invertSensorPhase = false;
+      masterConfiguration.forwardLimitSwitch = LimitSwitchSource.FeedbackConnector;
+      masterConfiguration.forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
+      masterConfiguration.reverseLimitSwitch = LimitSwitchSource.FeedbackConnector;
+      masterConfiguration.reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
+      masterConfiguration.pidKp = 0.0;
+      masterConfiguration.pidKi = 0.0;
+      masterConfiguration.pidKd = 0.0;
+      masterConfiguration.pidKf = 0.0;
+      masterConfiguration.continuousCurrentLimit = 20;
+      masterConfiguration.peakCurrentLimit = 15;
+      masterConfiguration.peakCurrentLimitDuration = 10;
+      masterConfiguration.enableCurrentLimit = true;
 
-      rollerConfiguration = new TalonSrxFactory.Configuration();
-      rollerConfiguration.continuousCurrentLimit = 20;
-      rollerConfiguration.peakCurrentLimit = 25;
-      rollerConfiguration.peakCurrentLimitDuration = 100;
-      rollerConfiguration.enableCurrentLimit = true;
-
-      linearPiston = TalonSrxFactory.createTalon(Ports.CLIMBER_PISTON_ID, pistonConfiguration);
-      poweredRoller = TalonSrxFactory.createTalon(Ports.CLIMBER_ROLLER_ID, rollerConfiguration);
+      linearPistonMaster =
+          TalonSrxFactory.createTalon(Ports.CLIMBER_MASTER_ID, masterConfiguration);
+      linearPistonSlave =
+          VictorSpxFactory.createSlaveVictor(Ports.CLIMBER_SLAVE_ID, linearPistonMaster);
     }
   }
 
@@ -91,21 +97,45 @@ public class Climber extends Subsystem {
 
   @Override
   public void resetEncoders() {
-    linearPiston.setSelectedSensorPosition(0, 0, 0);
+    linearPistonMaster.setSelectedSensorPosition(0, 0, 0);
   }
 
   @Override
   public void zeroSensors() {}
 
-  public void setExtendedHeight(double heightInches) {
-    linearPiston.set(ControlMode.Position, heightInches);
+  public void setControlType(ControlState controlType) {
+    controlState = controlType;
   }
 
-  public void setRollerPower(double percentage) {
-    poweredRoller.set(ControlMode.PercentOutput, percentage);
+  public void setTarget(double target) {
+    linearPistonMaster.set(ControlMode.PercentOutput, 0);
+    switch (controlState) {
+      case CLOSED_LOOP_POSITION:
+        linearPistonMaster.set(ControlMode.Position, target);
+        break;
+      case MOTION_MAGIC:
+        linearPistonMaster.set(ControlMode.MotionMagic, target);
+        break;
+      case OPEN_LOOP:
+      default:
+        linearPistonMaster.set(ControlMode.PercentOutput, target);
+        break;
+    }
   }
 
-  public double getHeightFromEncoderPosition(int encoderPosition) {
+  public void setTargetHeight(double heightInches) {
+    if (controlState != ControlState.OPEN_LOOP) {
+      setTarget(getEncoderPositionFromHeight(heightInches));
+    }
+  }
+
+  public void setTargetHeight(boolean extended) {
+    if (controlState != ControlState.OPEN_LOOP) {
+      setTarget(extended ? getEncoderPositionFromHeight(Constants.EXTENDED_LIMIT) : 0.0);
+    }
+  }
+
+  public double getHeightFromEncoderPosition(double encoderPosition) {
     return encoderPosition * INCHES_PER_ENCODER_PULSE;
   }
 

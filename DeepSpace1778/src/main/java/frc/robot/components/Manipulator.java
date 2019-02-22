@@ -21,14 +21,15 @@ public class Manipulator extends Subsystem {
 
   private static boolean initialized;
 
-  private static final double ZERO_ANGLE_OFFSET = 0.0; // TODO: Measure for robot
+  private static final double ZERO_ANGLE_OFFSET = 6.67; // TODO: Measure for robot
 
   private TalonSRX manipulatorPivot;
   private TalonSRX cargoCollector;
-  private TalonSRX vacuum;
+  private TalonSRX hatchPanelCollector;
 
   private static TalonSrxFactory.Configuration pivotConfiguration;
-  private static TalonSrxFactory.Configuration intakeConfiguration;
+  private static TalonSrxFactory.Configuration cargoConfiguration;
+  private static TalonSrxFactory.Configuration hatchPanelConfiguration;
 
   private boolean shuffleboardInitialized;
 
@@ -49,30 +50,42 @@ public class Manipulator extends Subsystem {
     if (hardware) {
       pivotConfiguration = new TalonSrxFactory.Configuration();
       pivotConfiguration.feedbackDevice = FeedbackDevice.Analog;
-      pivotConfiguration.invertSensorPhase = false;
-      pivotConfiguration.forwardLimitSwitch = LimitSwitchSource.FeedbackConnector;
-      pivotConfiguration.forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
-      pivotConfiguration.reverseLimitSwitch = LimitSwitchSource.FeedbackConnector;
-      pivotConfiguration.reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
-      pivotConfiguration.pidKp = 0.0;
+      pivotConfiguration.invert = false;
+      pivotConfiguration.invertSensorPhase = true;
+      pivotConfiguration.pidKp = 3.0;
       pivotConfiguration.pidKi = 0.0;
       pivotConfiguration.pidKd = 0.0;
-      pivotConfiguration.pidKf = 0.0;
+      pivotConfiguration.motionCruiseVelocity = (int) (3.0 / 10.0);
+      pivotConfiguration.motionAcceleration = (int) (5.0 / 10.0);
       pivotConfiguration.continuousCurrentLimit = 20;
       pivotConfiguration.peakCurrentLimit = 15;
-      pivotConfiguration.peakCurrentLimitDuration = 100;
+      pivotConfiguration.peakCurrentLimitDuration = 10;
       pivotConfiguration.enableCurrentLimit = true;
 
-      intakeConfiguration = new TalonSrxFactory.Configuration();
-      intakeConfiguration.continuousCurrentLimit = 20;
-      intakeConfiguration.peakCurrentLimit = 25;
-      intakeConfiguration.peakCurrentLimitDuration = 100;
-      intakeConfiguration.enableCurrentLimit = true;
+      cargoConfiguration = new TalonSrxFactory.Configuration();
+      cargoConfiguration.forwardLimitSwitch = LimitSwitchSource.FeedbackConnector;
+      cargoConfiguration.forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
+      cargoConfiguration.reverseLimitSwitch = LimitSwitchSource.Deactivated;
+      cargoConfiguration.invert = true;
+      cargoConfiguration.continuousCurrentLimit = 20;
+      cargoConfiguration.peakCurrentLimit = 25;
+      cargoConfiguration.peakCurrentLimitDuration = 10;
+      cargoConfiguration.enableCurrentLimit = true;
 
-      manipulatorPivot =
-          TalonSrxFactory.createTalon(Ports.MANIPULATOR_PIVOT_ID, pivotConfiguration);
-      cargoCollector = TalonSrxFactory.createTalon(Ports.MANIPULATOR_PIVOT_ID, intakeConfiguration);
-      vacuum = TalonSrxFactory.createTalon(Ports.MANIPULATOR_PIVOT_ID, intakeConfiguration);
+      hatchPanelConfiguration = new TalonSrxFactory.Configuration();
+      hatchPanelConfiguration.forwardLimitSwitch = LimitSwitchSource.FeedbackConnector;
+      hatchPanelConfiguration.forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
+      hatchPanelConfiguration.reverseLimitSwitch = LimitSwitchSource.Deactivated;
+      hatchPanelConfiguration.invert = true;
+      hatchPanelConfiguration.continuousCurrentLimit = 6;
+      hatchPanelConfiguration.peakCurrentLimit = 0;
+      hatchPanelConfiguration.peakCurrentLimitDuration = 10;
+      hatchPanelConfiguration.enableCurrentLimit = true;
+
+      manipulatorPivot = TalonSrxFactory.createTalon(Ports.ARTICULATOR_ID, pivotConfiguration);
+      cargoCollector = TalonSrxFactory.createTalon(Ports.CARGO_COLLECTOR_ID, cargoConfiguration);
+      hatchPanelCollector =
+          TalonSrxFactory.createTalon(Ports.HATCH_PANEL_PICKUP_ID, hatchPanelConfiguration);
     }
   }
 
@@ -99,23 +112,31 @@ public class Manipulator extends Subsystem {
   public void zeroSensors() {}
 
   public void setCargoIntake(double percentage) {
-    cargoCollector.set(ControlMode.PercentOutput, percentage);
+    cargoCollector.set(
+        ControlMode.PercentOutput,
+        percentage <= 0.0
+            ? percentage
+            : (!cargoCollector.getSensorCollection().isRevLimitSwitchClosed() ? percentage : 0.0));
   }
 
-  public void setVacuumPower(double percentage) {
-    vacuum.set(ControlMode.PercentOutput, percentage);
+  public void openHatchCollector(boolean open) {
+    hatchPanelCollector.set(
+        ControlMode.PercentOutput,
+        open
+            ? 1.0
+            : (!hatchPanelCollector.getSensorCollection().isRevLimitSwitchClosed() ? -1.0 : 0.0));
   }
 
   public void setManipulatorPosition(double angle) {
-    double target = angle % 360.0;
-    target += ZERO_ANGLE_OFFSET;
-    target *= 1024.0 / 360.0;
+    angle %= 360;
+    angle += ZERO_ANGLE_OFFSET;
+    angle *= 1024.0 / 360.0;
 
-    manipulatorPivot.set(ControlMode.Position, target);
+    manipulatorPivot.set(ControlMode.MotionMagic, angle);
   }
 
   public double getPivotAngle() {
-    return (double) manipulatorPivot.getSelectedSensorPosition(0) * (360.0 / 1024.0)
+    return ((double) manipulatorPivot.getSelectedSensorPosition(0) * (360.0 / 1024.0))
         - ZERO_ANGLE_OFFSET;
   }
 }

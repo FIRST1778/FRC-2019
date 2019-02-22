@@ -3,6 +3,7 @@ package frc.robot.auto.modes;
 import frc.lib.pathing.Path;
 import frc.lib.pathing.PathSegment;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeEndedException;
 import frc.robot.auto.actions.FollowPathAction;
@@ -23,6 +24,8 @@ public class MotionTestMode extends AutoModeBase {
           @Override
           public void runOnce() {
             SwerveDrive.getInstance().zeroSensors();
+            Robot.limelightTable.getEntry("camMode").setDouble(1.0);
+            Robot.limelightTable.getEntry("ledMode").setDouble(1.0);
           }
         });
     runAction(
@@ -32,6 +35,6 @@ public class MotionTestMode extends AutoModeBase {
                 Constants.SWERVE_MAX_ACCELERATION,
                 Constants.SWERVE_MAX_VELOCITY,
                 0.0,
-                new PathSegment.Line(132.0, 0.0))));
+                new PathSegment.ArcedTranslation(-12, 24, 0).getFlipped())));
   }
 }

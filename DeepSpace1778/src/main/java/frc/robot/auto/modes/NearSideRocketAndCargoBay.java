@@ -1,9 +1,11 @@
 package frc.robot.auto.modes;
 
 import frc.robot.AutoModeSelector.StartingPosition;
+import frc.robot.Robot;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeEndedException;
 import frc.robot.auto.AutoPaths;
+import frc.robot.auto.actions.AlignWithTargetAction;
 import frc.robot.auto.actions.FollowPathAction;
 import frc.robot.auto.actions.RunOnceAction;
 import frc.robot.components.SwerveDrive;
@@ -30,12 +32,16 @@ public class NearSideRocketAndCargoBay extends AutoModeBase {
           @Override
           public void runOnce() {
             SwerveDrive.getInstance().zeroSensors();
+            Robot.limelightTable.getEntry("camMode").setDouble(1.0);
+            Robot.limelightTable.getEntry("ledMode").setDouble(1.0);
           }
         });
     switch (startingPosition) {
       case LEFT:
         runAction(new FollowPathAction(AutoPaths.START_LEFT_TO_LEFT_ROCKET_NEAR_SIDE));
+        runAction(new AlignWithTargetAction(28.77));
         runAction(new FollowPathAction(AutoPaths.LEFT_ROCKET_NEAR_SIDE_TO_LEFT_FEEDER_STATION));
+        runAction(new AlignWithTargetAction(180));
         switch (cargoBay) {
           default:
           case 1:
@@ -52,7 +58,9 @@ public class NearSideRocketAndCargoBay extends AutoModeBase {
       default:
       case RIGHT:
         runAction(new FollowPathAction(AutoPaths.START_RIGHT_TO_RIGHT_ROCKET_NEAR_SIDE));
+        runAction(new AlignWithTargetAction(331.23));
         runAction(new FollowPathAction(AutoPaths.RIGHT_ROCKET_NEAR_SIDE_TO_RIGHT_FEEDER_STATION));
+        runAction(new AlignWithTargetAction(180));
         switch (cargoBay) {
           default:
           case 1:
