@@ -69,9 +69,9 @@ public class AutoModeSelector {
     if (shuffleboardEnabled) {
       startPositionChooser = new SendableChooser<>();
       startPositionChooser.setDefaultOption(
-          StartingPosition.RIGHT.toString(), StartingPosition.RIGHT);
+          StartingPosition.LEFT.toString(), StartingPosition.LEFT);
       for (StartingPosition startingPosition : StartingPosition.values()) {
-        if (startingPosition == StartingPosition.RIGHT) {
+        if (startingPosition == StartingPosition.LEFT) {
           continue;
         }
         startPositionChooser.addOption(startingPosition.toString(), startingPosition);
