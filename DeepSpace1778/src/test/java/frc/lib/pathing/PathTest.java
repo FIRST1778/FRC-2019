@@ -3,7 +3,6 @@ package frc.lib.pathing;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import frc.robot.Constants;
-import frc.robot.auto.AutoPaths;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -28,9 +27,18 @@ public class PathTest {
   @Test
   @DisplayName("getAngle should scale evenly along each segment of the path")
   public void getAngleShouldScaleEvenly() {
-    Path path = AutoPaths.START_RIGHT_TO_RIGHT_ROCKET_NEAR_SIDE;
+    Path path =
+        new Path(
+            -90,
+            0.0,
+            0.0,
+            0.0,
+            new PathSegment.Line(24, 0),
+            new PathSegment.ArcedTranslation(24, 24, 0),
+            new PathSegment.Line(60, 330),
+            new PathSegment.Line(12, 330));
 
-    Path flippedPath = AutoPaths.START_LEFT_TO_LEFT_ROCKET_NEAR_SIDE;
+    Path flippedPath = path.getFlipped();
 
     double curveLength = 37.69911184307752;
 

@@ -15,13 +15,13 @@ public class ElevatorTest {
     assertThat(
             (int)
                 elevator.getEncoderPositionFromHeight(
-                    Elevator.HeightSetPoints.ROCKET_CARGO_HIGH.getHeightInches()))
-        .isEqualTo(2388);
+                    Elevator.HeightSetPoints.HATCH_HIGH.heightInches))
+        .isEqualTo(278178);
     assertThat(
             (int)
                 elevator.getEncoderPositionFromHeight(
-                    Elevator.HeightSetPoints.FEEDER_STATION.getHeightInches()))
-        .isEqualTo(895);
+                    Elevator.HeightSetPoints.HATCH_LOW.heightInches))
+        .isEqualTo(70471);
   }
 
   @Test
@@ -29,11 +29,11 @@ public class ElevatorTest {
     assertThat(elevator.getHeightFromEncoderPosition(0)).isEqualTo(0.0, Offset.offset(0.001));
     assertThat(
             elevator.getHeightFromEncoderPosition(
-                Elevator.HeightSetPoints.ROCKET_CARGO_HIGH.getHeightEncoderTicks()))
-        .isEqualTo(80.0, Offset.offset(0.001));
+                Elevator.HeightSetPoints.HATCH_HIGH.heightEncoderTicks))
+        .isEqualTo(75.0, Offset.offset(0.001));
     assertThat(
             elevator.getHeightFromEncoderPosition(
-                Elevator.HeightSetPoints.FEEDER_STATION.getHeightEncoderTicks()))
-        .isEqualTo(30.0, Offset.offset(0.001));
+                Elevator.HeightSetPoints.HATCH_LOW.heightEncoderTicks))
+        .isEqualTo(19.0, Offset.offset(0.001));
   }
 }
