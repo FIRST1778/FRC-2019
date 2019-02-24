@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.lib.util.DebugLog;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeExecutor;
-import frc.robot.components.Manipulator;
+import frc.robot.components.SwerveDrive;
 import java.util.Optional;
 
 /**
@@ -25,10 +25,10 @@ public class Robot extends TimedRobot {
   private AutoModeSelector autoModeSelector = new AutoModeSelector();
   private AutoModeExecutor autoModeExecutor;
 
-  // private SwerveDrive swerve = SwerveDrive.getInstance();
+  private SwerveDrive swerve = SwerveDrive.getInstance();
   private Controls controls = Controls.getInstance();
   // private Elevator elevator = Elevator.getInstance();
-  private Manipulator manipulator = Manipulator.getInstance();
+  // private Manipulator manipulator = Manipulator.getInstance();
 
   public static NetworkTable limelightTable =
       NetworkTableInstance.getDefault().getTable("/limelight");
@@ -117,7 +117,7 @@ public class Robot extends TimedRobot {
     try {
       sendTelemetry();
 
-      System.out.println("Manipulator Angle: " + manipulator.getPivotAngle());
+      // System.out.println("Manipulator Angle: " + manipulator.getPivotAngle());
 
       autoModeSelector.updateModeCreator();
 
@@ -146,11 +146,7 @@ public class Robot extends TimedRobot {
     try {
       sendTelemetry();
 
-      System.out.println("Manipulator Angle: " + manipulator.getPivotAngle());
-
-      // manipulator.setManipulatorPosition(-60.0);
-
-      /*if (controls.getResetFieldCentric()) {
+      if (controls.getResetFieldCentric()) {
         swerve.getNavX().zeroYaw();
         swerve.resetEncoders();
       }
@@ -177,7 +173,7 @@ public class Robot extends TimedRobot {
         }
       } else {
         swerve.stop();
-      }*/
+      }
 
       /*if (controls.getLiftToHome()) {
         elevator.setTargetHeight(HeightSetPoints.HATCH_PANEL_FLOOR_PICKUP.heightInches);
@@ -191,9 +187,8 @@ public class Robot extends TimedRobot {
         elevator.setTargetHeight(HeightSetPoints.CARGO_SHIP_CARGO.heightInches);
       }*/
 
-      manipulator.setCargoIntake(controls.getCargoIntake());
-
-      manipulator.openHatchCollector(controls.getLiftToHome());
+      // manipulator.setCargoIntake(controls.getCargoIntake());
+      // manipulator.openHatchCollector(controls.getLiftToHome());
 
       // elevator.resetEncoderIfLimitSwitchReached();
     } catch (Throwable t) {
@@ -220,7 +215,7 @@ public class Robot extends TimedRobot {
   boolean shuffleboardInitialized;
 
   private void sendTelemetry() {
-    // swerve.sendTelemetry();
+    swerve.sendTelemetry();
     // elevator.sendTelemetry();
     if (shuffleboardInitialized) {
       totalPdpVoltage.setDouble(RobotController.getBatteryVoltage());
