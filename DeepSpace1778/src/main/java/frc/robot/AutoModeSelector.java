@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.auto.AutoModeBase;
+import frc.robot.auto.modes.CargoBayMode;
 import frc.robot.auto.modes.DoNothingMode;
 import frc.robot.auto.modes.DualNearSideRocketMode;
 import frc.robot.auto.modes.MotionTestMode;
@@ -213,8 +214,7 @@ public class AutoModeSelector {
                     invalidMessage = "DualCargoBay is not implemented yet";
                     break;
                   case NOTHING:
-                    mode = Optional.empty();
-                    invalidMessage = "SingleCargoBayMode is not implemented yet";
+                    mode = Optional.of(new CargoBayMode(position));
                     break;
                   default:
                     mode = Optional.empty();
@@ -245,6 +245,9 @@ public class AutoModeSelector {
                   case CARGO_BAY:
                     mode = Optional.empty();
                     invalidMessage = "DualCargoBay is not implemented yet";
+                    break;
+                  case NOTHING:
+                    mode = Optional.of(new CargoBayMode(position));
                     break;
                   default:
                     mode = Optional.empty();
