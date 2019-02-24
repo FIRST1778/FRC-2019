@@ -35,6 +35,7 @@ public class MotionTestMode extends AutoModeBase {
                 Constants.SWERVE_MAX_ACCELERATION,
                 Constants.SWERVE_MAX_VELOCITY,
                 0.0,
-                new PathSegment.ArcedTranslation(-12, 24, 0).getFlipped())));
+                new PathSegment.ArcedTranslation(48, 48, 0),
+                new PathSegment.ArcedTranslation(48, 48, 0).getFlipped())));
   }
 }

@@ -9,6 +9,7 @@ import frc.robot.auto.modes.DoNothingMode;
 import frc.robot.auto.modes.DualNearSideRocketMode;
 import frc.robot.auto.modes.MotionTestMode;
 import frc.robot.auto.modes.NearSideRocketAndCargoBay;
+import frc.robot.auto.modes.NearSideRocketAndFarSideRocket;
 import frc.robot.auto.modes.NearSideRocketMode;
 import java.util.Optional;
 
@@ -182,8 +183,7 @@ public class AutoModeSelector {
                     mode = Optional.of(new DualNearSideRocketMode(position));
                     break;
                   case FAR_SIDE_ROCKET:
-                    mode = Optional.empty();
-                    invalidMessage = "NearSideRocketAndFarSideRocket is not implemented yet";
+                    mode = Optional.of(new NearSideRocketAndFarSideRocket(position));
                     break;
                   case CARGO_BAY:
                     mode =

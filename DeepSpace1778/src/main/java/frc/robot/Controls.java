@@ -157,7 +157,7 @@ public class Controls {
       case FREEZY_CONTROLLER:
         return driverController.getRawButton(FreezyController.RIGHT_SHOULDER_SWITCH);
       case INTERLINK_ELITE_CONTROLLER:
-        return driverController.getRawButton(InterLinkElite.RIGHT_SHOULDER_SWITCH);
+        return !driverController.getRawButton(InterLinkElite.RIGHT_SHOULDER_SWITCH);
       case LOGITECH_DUAL_ACTION:
         return driverController.getRawButton(LogitechDualAction.RIGHT_BUMPER);
       case LOGITECH_F310:
@@ -176,7 +176,7 @@ public class Controls {
       case FREEZY_CONTROLLER:
         return driverController.getRawButton(FreezyController.LEFT_SHOULDER_SWITCH);
       case INTERLINK_ELITE_CONTROLLER:
-        return driverController.getRawButton(InterLinkElite.LEFT_SHOULDER_DOWN_SWITCH);
+        return driverController.getRawButton(InterLinkElite.LEFT_SWITCH);
       case LOGITECH_DUAL_ACTION:
         return driverController.getRawButton(LogitechDualAction.LEFT_TRIGGER);
       case LOGITECH_F310:

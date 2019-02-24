@@ -221,6 +221,10 @@ public class Elevator extends Subsystem {
     }
   }
 
+  public int getCurrentHeightEncoder() {
+    return masterElevator.getSelectedSensorPosition();
+  }
+
   public double getHeightFromEncoderPosition(double encoderPosition) {
     return encoderPosition * INCHES_PER_ENCODER_PULSE;
   }

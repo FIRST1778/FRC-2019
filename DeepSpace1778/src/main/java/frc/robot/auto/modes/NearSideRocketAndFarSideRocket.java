@@ -14,11 +14,11 @@ import frc.robot.components.SwerveDrive;
  *
  * @author FRC 1778 Chill Out
  */
-public class DualNearSideRocketMode extends AutoModeBase {
+public class NearSideRocketAndFarSideRocket extends AutoModeBase {
 
   StartingPosition startingPosition;
 
-  public DualNearSideRocketMode(StartingPosition position) {
+  public NearSideRocketAndFarSideRocket(StartingPosition position) {
     startingPosition = position;
   }
 
@@ -41,7 +41,7 @@ public class DualNearSideRocketMode extends AutoModeBase {
         runAction(new FollowPathAction(AutoPaths.LEFT_ROCKET_NEAR_SIDE_TO_LEFT_FEEDER_STATION));
         // runAction(new AlignWithTargetAction(180));
         // runAction(new HatchAction(true));
-        runAction(new FollowPathAction(AutoPaths.LEFT_FEEDER_STATION_TO_LEFT_ROCKET_NEAR_SIDE));
+        runAction(new FollowPathAction(AutoPaths.LEFT_FEEDER_STATION_TO_LEFT_ROCKET_FAR_SIDE));
         // runAction(new AlignWithTargetAction(28.77));
         // runAction(new HatchAction(false));
         break;
@@ -53,7 +53,7 @@ public class DualNearSideRocketMode extends AutoModeBase {
         runAction(new FollowPathAction(AutoPaths.RIGHT_ROCKET_NEAR_SIDE_TO_RIGHT_FEEDER_STATION));
         // runAction(new AlignWithTargetAction(180));
         // runAction(new HatchAction(true));
-        runAction(new FollowPathAction(AutoPaths.RIGHT_FEEDER_STATION_TO_RIGHT_ROCKET_NEAR_SIDE));
+        runAction(new FollowPathAction(AutoPaths.RIGHT_FEEDER_STATION_TO_RIGHT_ROCKET_FAR_SIDE));
         // runAction(new AlignWithTargetAction(331.23));
         // runAction(new HatchAction(false));
         break;

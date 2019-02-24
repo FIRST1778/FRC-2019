@@ -2,11 +2,6 @@ package frc.robot.auto.actions;
 
 import frc.robot.components.Manipulator;
 
-/**
- * An interface for any action. Actions are called by using {@link AutoModeBase#runAction}.
- *
- * @author FRC 254 The Cheesy Poofs
- */
 public class HatchAction implements Action {
 
   private Manipulator manny = Manipulator.getInstance();
@@ -18,13 +13,11 @@ public class HatchAction implements Action {
 
   @Override
   public boolean isFinished() {
-    return true;
+    return manny.openHatchCollector(openHatch);
   }
 
   @Override
-  public void update() {
-    // no recurring operations on hatch
-  }
+  public void update() {}
 
   @Override
   public void done() {}

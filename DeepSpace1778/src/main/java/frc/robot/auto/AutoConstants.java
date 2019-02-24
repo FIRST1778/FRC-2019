@@ -10,7 +10,7 @@ import frc.robot.Constants;
  */
 public class AutoConstants {
 
-  public static final double GYRO_AID_KP = 0.01;
-  public static final double GYRO_AID_KI = 0.00001;
+  public static final double GYRO_AID_KP = 0.03;
+  public static final double GYRO_AID_KI = 0.0;
   public static final double GYRO_AID_KD = 0.005;
 }

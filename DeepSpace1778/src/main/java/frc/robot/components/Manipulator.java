@@ -119,12 +119,15 @@ public class Manipulator extends Subsystem {
             : (!cargoCollector.getSensorCollection().isRevLimitSwitchClosed() ? percentage : 0.0));
   }
 
-  public void openHatchCollector(boolean open) {
+  public boolean openHatchCollector(boolean open) {
+    boolean isOpened = hatchPanelCollector.getSensorCollection().isFwdLimitSwitchClosed();
     hatchPanelCollector.set(
         ControlMode.PercentOutput,
         open
-            ? 1.0
+            ? (!isOpened ? 1.0 : 0.0)
             : (!hatchPanelCollector.getSensorCollection().isRevLimitSwitchClosed() ? -1.0 : 0.0));
+
+    return isOpened;
   }
 
   public void setManipulatorPosition(double angle) {
