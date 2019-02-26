@@ -5,7 +5,6 @@ import frc.robot.Robot;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeEndedException;
 import frc.robot.auto.AutoPaths;
-import frc.robot.auto.actions.AlignWithTargetAction;
 import frc.robot.auto.actions.FollowPathAction;
 import frc.robot.auto.actions.RunOnceAction;
 import frc.robot.components.SwerveDrive;
@@ -37,12 +36,12 @@ public class NearSideRocketMode extends AutoModeBase {
     switch (startingPosition) {
       case LEFT:
         runAction(new FollowPathAction(AutoPaths.START_LEFT_TO_LEFT_ROCKET_NEAR_SIDE));
-        runAction(new AlignWithTargetAction(28.77));
+        // runAction(new AlignWithTargetAction(28.77));
         break;
       default:
       case RIGHT:
         runAction(new FollowPathAction(AutoPaths.START_RIGHT_TO_RIGHT_ROCKET_NEAR_SIDE));
-        runAction(new AlignWithTargetAction(331.23));
+        // runAction(new AlignWithTargetAction(331.23));
         break;
     }
   }

@@ -10,15 +10,15 @@ import frc.robot.auto.actions.RunOnceAction;
 import frc.robot.components.SwerveDrive;
 
 /**
- * An auto mode to score a single hatch panel on the cargo bay.
+ * An auto mode to score two hatch panel on the cargo bay.
  *
  * @author FRC 1778 Chill Out
  */
-public class CargoBayMode extends AutoModeBase {
+public class DualCargoBayMode extends AutoModeBase {
 
   StartingPosition startingPosition;
 
-  public CargoBayMode(StartingPosition position) {
+  public DualCargoBayMode(StartingPosition position) {
     startingPosition = position;
   }
 
@@ -36,13 +36,19 @@ public class CargoBayMode extends AutoModeBase {
     switch (startingPosition) {
       case LEFT:
         runAction(new FollowPathAction(AutoPaths.START_LEFT_TO_LEFT_CARGO_BAY_NEAR));
+        runAction(new FollowPathAction(AutoPaths.LEFT_CARGO_BAY_NEAR_TO_LEFT_FEEDER_STATION));
+        runAction(new FollowPathAction(AutoPaths.LEFT_FEEDER_STATION_TO_LEFT_CARGO_BAY_CENTER));
         break;
       case CENTER:
         runAction(new FollowPathAction(AutoPaths.START_CENTER_TO_LEFT_FRONT_CARGO_BAY));
+        runAction(new FollowPathAction(AutoPaths.LEFT_FRONT_CARGO_BAY_TO_LEFT_DEPOT));
+        runAction(new FollowPathAction(AutoPaths.LEFT_DEPOT_TO_ROCKET_CARGO));
         break;
       default:
       case RIGHT:
         runAction(new FollowPathAction(AutoPaths.START_RIGHT_TO_RIGHT_CARGO_BAY_NEAR));
+        runAction(new FollowPathAction(AutoPaths.RIGHT_CARGO_BAY_NEAR_TO_RIGHT_FEEDER_STATION));
+        runAction(new FollowPathAction(AutoPaths.RIGHT_FEEDER_STATION_TO_RIGHT_CARGO_BAY_CENTER));
         break;
     }
   }
