@@ -10,15 +10,15 @@ import frc.robot.auto.actions.RunOnceAction;
 import frc.robot.components.SwerveDrive;
 
 /**
- * An auto mode to score two hatch panels on the near side of the rocket.
+ * An auto mode to score a single hatch panel on the cargo bay.
  *
  * @author FRC 1778 Chill Out
  */
-public class NearSideRocketMode extends AutoModeBase {
+public class CargoBayMode extends AutoModeBase {
 
   StartingPosition startingPosition;
 
-  public NearSideRocketMode(StartingPosition position) {
+  public CargoBayMode(StartingPosition position) {
     startingPosition = position;
   }
 
@@ -35,13 +35,14 @@ public class NearSideRocketMode extends AutoModeBase {
         });
     switch (startingPosition) {
       case LEFT:
-        runAction(new FollowPathAction(AutoPaths.START_LEFT_TO_LEFT_ROCKET_NEAR_SIDE));
-        // runAction(new AlignWithTargetAction(28.77));
+        runAction(new FollowPathAction(AutoPaths.START_LEFT_TO_LEFT_CARGO_BAY_NEAR));
+        break;
+      case CENTER:
+        runAction(new FollowPathAction(AutoPaths.START_CENTER_TO_LEFT_FRONT_CARGO_BAY));
         break;
       default:
       case RIGHT:
-        runAction(new FollowPathAction(AutoPaths.START_RIGHT_TO_RIGHT_ROCKET_NEAR_SIDE));
-        // runAction(new AlignWithTargetAction(331.23));
+        runAction(new FollowPathAction(AutoPaths.START_RIGHT_TO_RIGHT_CARGO_BAY_NEAR));
         break;
     }
   }

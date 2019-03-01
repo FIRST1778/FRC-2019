@@ -1,11 +1,12 @@
 package frc.robot;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.auto.AutoModeBase;
+import frc.robot.auto.modes.CargoBayMode;
 import frc.robot.auto.modes.DoNothingMode;
+import frc.robot.auto.modes.DualCargoBayMode;
 import frc.robot.auto.modes.DualNearSideRocketMode;
 import frc.robot.auto.modes.MotionTestMode;
 import frc.robot.auto.modes.NearSideRocketAndCargoBay;
@@ -49,7 +50,6 @@ public class AutoModeSelector {
   private StartingPosition cachedStartingPosition = null;
   private WantedFirstTarget cachedWantedFirstTarget = null;
   private WantedSecondTarget cachedWantedSecondTarget = null;
-  private int cargoBaySelectedPosition;
 
   boolean shuffleboardEnabled;
 
@@ -143,7 +143,6 @@ public class AutoModeSelector {
     WantedFirstTarget wantedFirstTarget = firstTargetChooser.getSelected();
     WantedSecondTarget wantedSecondTarget = secondTargetChooser.getSelected();
 
-    cargoBaySelectedPosition = DriverStation.getInstance().getLocation();
     if (cachedWantedMode != wantedMode
         || startPosition != cachedStartingPosition
         || cachedWantedFirstTarget != wantedFirstTarget
@@ -186,9 +185,7 @@ public class AutoModeSelector {
                     mode = Optional.of(new NearSideRocketAndFarSideRocket(position));
                     break;
                   case CARGO_BAY:
-                    mode =
-                        Optional.of(
-                            new NearSideRocketAndCargoBay(position, cargoBaySelectedPosition));
+                    mode = Optional.of(new NearSideRocketAndCargoBay(position));
                     break;
                   case NOTHING:
                     mode = Optional.of(new NearSideRocketMode(position));
@@ -209,12 +206,10 @@ public class AutoModeSelector {
                     invalidMessage = "CargoBayAndFarSideRocket is not implemented yet";
                     break;
                   case CARGO_BAY:
-                    mode = Optional.empty();
-                    invalidMessage = "DualCargoBay is not implemented yet";
+                    mode = Optional.of(new DualCargoBayMode(position));
                     break;
                   case NOTHING:
-                    mode = Optional.empty();
-                    invalidMessage = "SingleCargoBayMode is not implemented yet";
+                    mode = Optional.of(new CargoBayMode(position));
                     break;
                   default:
                     mode = Optional.empty();
@@ -243,8 +238,10 @@ public class AutoModeSelector {
                     invalidMessage = "Can not target rocket when starting from center";
                     break;
                   case CARGO_BAY:
-                    mode = Optional.empty();
-                    invalidMessage = "DualCargoBay is not implemented yet";
+                    mode = Optional.of(new DualCargoBayMode(position));
+                    break;
+                  case NOTHING:
+                    mode = Optional.of(new CargoBayMode(position));
                     break;
                   default:
                     mode = Optional.empty();

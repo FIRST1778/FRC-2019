@@ -37,25 +37,25 @@ public class DualNearSideRocketMode extends AutoModeBase {
       case LEFT:
         runAction(new FollowPathAction(AutoPaths.START_LEFT_TO_LEFT_ROCKET_NEAR_SIDE));
         // runAction(new AlignWithTargetAction(28.77));
-        // runAction(new HatchAction(false));
+        // runAction(new HatchManipulatorAction(false));
         runAction(new FollowPathAction(AutoPaths.LEFT_ROCKET_NEAR_SIDE_TO_LEFT_FEEDER_STATION));
         // runAction(new AlignWithTargetAction(180));
-        // runAction(new HatchAction(true));
+        // runAction(new HatchManipulatorAction(true));
         runAction(new FollowPathAction(AutoPaths.LEFT_FEEDER_STATION_TO_LEFT_ROCKET_NEAR_SIDE));
         // runAction(new AlignWithTargetAction(28.77));
-        // runAction(new HatchAction(false));
+        // runAction(new HatchManipulatorAction(false));
         break;
       default:
       case RIGHT:
         runAction(new FollowPathAction(AutoPaths.START_RIGHT_TO_RIGHT_ROCKET_NEAR_SIDE));
         // runAction(new AlignWithTargetAction(331.23));
-        // runAction(new HatchAction(false));
+        // runAction(new HatchManipulatorAction(false));
         runAction(new FollowPathAction(AutoPaths.RIGHT_ROCKET_NEAR_SIDE_TO_RIGHT_FEEDER_STATION));
         // runAction(new AlignWithTargetAction(180));
-        // runAction(new HatchAction(true));
+        // runAction(new HatchManipulatorAction(true));
         runAction(new FollowPathAction(AutoPaths.RIGHT_FEEDER_STATION_TO_RIGHT_ROCKET_NEAR_SIDE));
         // runAction(new AlignWithTargetAction(331.23));
-        // runAction(new HatchAction(false));
+        // runAction(new HatchManipulatorAction(false));
         break;
     }
   }
