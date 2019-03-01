@@ -1,10 +1,10 @@
 plugins {
   id "java"
   id "checkstyle"
-  id "edu.wpi.first.GradleRIO" version "2019.3.2"
+  id "edu.wpi.first.GradleRIO" version "2019.4.1"
   id "com.diffplug.gradle.spotless" version "3.18.0"
   id "net.ltgt.errorprone" version "0.7.1"
-  id "com.github.ben-manes.versions" version "0.20.0"
+  id "com.github.ben-manes.versions" version "0.21.0"
 }
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
@@ -48,12 +48,12 @@ dependencies {
   nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
   nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
 
-  errorprone("com.google.errorprone:error_prone_core:2.3.2")
+  errorprone("com.google.errorprone:error_prone_core:2.3.3")
 
   testCompile "org.junit.jupiter:junit-jupiter-api:5.4.0"
   testCompile "org.junit.jupiter:junit-jupiter-params:5.4.0"
   testRuntime "org.junit.jupiter:junit-jupiter-engine:5.4.0"
-  testCompile "org.assertj:assertj-core:3.12.0"
+  testCompile "org.assertj:assertj-core:3.12.1"
 }
 
 compileJava { dependsOn 'spotlessApply' }
