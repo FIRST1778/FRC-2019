@@ -21,7 +21,7 @@ public class Ports {
   public static final int RIGHT_BACK_TURN_ID = Constants.USING_COMPETITION_ROBOT ? 9 : 10;
 
   public static final int ELEVATOR_MASTER_ID = 10;
-  public static final int ELEVATOR_SLAVE_ID = 11;
+  public static final int ELEVATOR_SLAVE_ID = 30;
 
   public static final int ARTICULATOR_ID = 20;
   public static final int CARGO_COLLECTOR_ID = 21;

@@ -53,7 +53,7 @@ public class SwerveModule {
     turnConfiguration.invert = false;
     turnConfiguration.invertSensorPhase = true;
     turnConfiguration.neutralPowerMode = NeutralMode.Brake;
-    turnConfiguration.pidKp = 5.0; // 10.0;
+    turnConfiguration.pidKp = 10.0; // 10.0;
     turnConfiguration.pidKi = 0.01; // 0.0;
     turnConfiguration.pidKd = 0.0; // 50.0;
     turnConfiguration.pidKf = 0.0;

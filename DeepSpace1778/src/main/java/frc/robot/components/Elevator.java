@@ -7,11 +7,9 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import frc.lib.driver.TalonSrxFactory;
-import frc.lib.driver.VictorSpxFactory;
 import frc.robot.Constants;
 import frc.robot.Ports;
 
@@ -28,22 +26,22 @@ public class Elevator extends Subsystem {
   private static boolean initialized;
 
   public enum HeightSetPoints {
-    CARGO_HIGH(83.5),
-    CARGO_MED(55.5),
-    CARGO_SHIP_CARGO(39.625),
-    CARGO_LOW(27.5),
-    HATCH_HIGH(75.0),
-    HATCH_MED(47.0),
-    HATCH_LOW(19.0),
-    HATCH_PANEL_FLOOR_PICKUP(10.0),
-    CARGO_FLOOR_PICKUP(10.0);
+    CARGO_HIGH(70, -75.0),
+    CARGO_MED(55.5, -75.0),
+    CARGO_SHIP_CARGO(39.625, -75.0),
+    CARGO_LOW(27.5, -75.0),
+    HATCH_HIGH(65.0, 0.0),
+    HATCH_MED(47.0, 0.0),
+    HATCH_LOW(0.0, 0.0);
 
-    private HeightSetPoints(double heightInches) {
+    private HeightSetPoints(double heightInches, double manipulatorAngle) {
       this.heightInches = heightInches;
+      this.manipulatorAngle = manipulatorAngle;
       heightEncoderTicks = Elevator.getInstance().getEncoderPositionFromHeight(heightInches);
     }
 
     public final double heightInches;
+    public final double manipulatorAngle;
     public final double heightEncoderTicks;
   }
 
@@ -69,10 +67,12 @@ public class Elevator extends Subsystem {
 
   private GamePiece gamePieceTransported = GamePiece.NONE;
 
-  private static final double INCHES_PER_ENCODER_PULSE = (Math.PI * 1.25) / (4096.0 * 3.556);
+  private static final double INCHES_PER_ENCODER_PULSE = 0.00036292747;
+
+  private double wantedHeight;
 
   private TalonSRX masterElevator;
-  private VictorSPX slaveElevator;
+  private TalonSRX slaveElevator;
 
   private static TalonSrxFactory.Configuration masterConfiguration;
 
@@ -98,27 +98,24 @@ public class Elevator extends Subsystem {
     if (hardware) {
       masterConfiguration = new TalonSrxFactory.Configuration();
       masterConfiguration.feedbackDevice = FeedbackDevice.CTRE_MagEncoder_Relative;
-      masterConfiguration.invert = true;
+      masterConfiguration.invert = false;
       masterConfiguration.invertSensorPhase = true;
-      masterConfiguration.forwardLimitSwitch = LimitSwitchSource.FeedbackConnector;
-      masterConfiguration.forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
+      masterConfiguration.forwardLimitSwitch = LimitSwitchSource.Deactivated;
       masterConfiguration.reverseLimitSwitch = LimitSwitchSource.FeedbackConnector;
       masterConfiguration.reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
-      masterConfiguration.pidKp = 0.5;
+      masterConfiguration.pidKp = 1.0;
       masterConfiguration.pidKi = 0.0;
       masterConfiguration.pidKd = 0.0;
       masterConfiguration.pidKf = 0.0;
-      masterConfiguration.motionCruiseVelocity = (int) (5.0 / INCHES_PER_ENCODER_PULSE / 10.0);
-      masterConfiguration.motionAcceleration = (int) (5.0 / INCHES_PER_ENCODER_PULSE / 10.0);
-      masterConfiguration.continuousCurrentLimit = 15;
-      masterConfiguration.peakCurrentLimit = 20;
+      masterConfiguration.motionCruiseVelocity = (int) (20.0 / INCHES_PER_ENCODER_PULSE / 10.0);
+      masterConfiguration.motionAcceleration = (int) (30.0 / INCHES_PER_ENCODER_PULSE / 10.0);
+      masterConfiguration.continuousCurrentLimit = 20;
+      masterConfiguration.peakCurrentLimit = 0;
       masterConfiguration.peakCurrentLimitDuration = 10;
       masterConfiguration.enableCurrentLimit = true;
 
       masterElevator = TalonSrxFactory.createTalon(Ports.ELEVATOR_MASTER_ID, masterConfiguration);
-      slaveElevator = VictorSpxFactory.createSlaveVictor(Ports.ELEVATOR_SLAVE_ID, masterElevator);
-
-      slaveElevator.setInverted(true);
+      slaveElevator = TalonSrxFactory.createSlaveTalon(Ports.ELEVATOR_SLAVE_ID, masterElevator);
     }
   }
 
@@ -185,6 +182,7 @@ public class Elevator extends Subsystem {
     masterElevator.set(ControlMode.PercentOutput, 0);
     switch (controlState) {
       case CLOSED_LOOP_POSITION:
+        wantedHeight = target;
         masterElevator.set(
             ControlMode.Position,
             target,
@@ -192,6 +190,7 @@ public class Elevator extends Subsystem {
             gamePieceTransported.feedForward);
         break;
       case MOTION_MAGIC:
+        wantedHeight = target;
         masterElevator.set(
             ControlMode.MotionMagic,
             target,
@@ -202,7 +201,9 @@ public class Elevator extends Subsystem {
       default:
         masterElevator.set(
             ControlMode.PercentOutput,
-            target,
+            target > 0
+                ? (masterElevator.getSensorCollection().isFwdLimitSwitchClosed() ? 0.0 : target)
+                : target,
             DemandType.ArbitraryFeedForward,
             gamePieceTransported.feedForward);
         break;
@@ -223,6 +224,10 @@ public class Elevator extends Subsystem {
 
   public int getCurrentHeightEncoder() {
     return masterElevator.getSelectedSensorPosition();
+  }
+
+  public boolean isCloseToTarget(double allowableError) {
+    return Math.abs(wantedHeight - getCurrentHeightEncoder()) < allowableError;
   }
 
   public double getHeightFromEncoderPosition(double encoderPosition) {

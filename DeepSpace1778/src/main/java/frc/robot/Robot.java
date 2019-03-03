@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.lib.util.DebugLog;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeExecutor;
+import frc.robot.components.Elevator;
+import frc.robot.components.Elevator.ControlState;
+import frc.robot.components.Manipulator;
 import frc.robot.components.SwerveDrive;
 import java.util.Optional;
 
@@ -27,13 +30,19 @@ public class Robot extends TimedRobot {
 
   private SwerveDrive swerve = SwerveDrive.getInstance();
   private Controls controls = Controls.getInstance();
-  // private Elevator elevator = Elevator.getInstance();
-  // private Manipulator manipulator = Manipulator.getInstance();
+
+  private Elevator elevator = Elevator.getInstance();
+  private Manipulator manipulator = Manipulator.getInstance();
+
+  // private HeightSetPoints elevatorHeight = HeightSetPoints.HATCH_LOW;
 
   public static NetworkTable limelightTable =
       NetworkTableInstance.getDefault().getTable("/limelight");
 
   private NetworkTableEntry totalPdpVoltage;
+
+  private boolean previousOpenHatchPanel;
+  private boolean isHatchPanelOpen = true;
 
   public Robot() {
     DebugLog.logRobotConstruction();
@@ -43,6 +52,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     try {
       DebugLog.logRobotInit();
+
+      elevator.resetEncoders();
 
       autoModeSelector.updateModeCreator();
     } catch (Throwable t) {
@@ -75,9 +86,9 @@ public class Robot extends TimedRobot {
     try {
       DebugLog.logAutoInit();
       Shuffleboard.selectTab("Autonomous");
-      // elevator.setControlType(ControlState.MOTION_MAGIC);
 
-      autoModeExecutor.start();
+      // autoModeExecutor.start();
+      teleopInit();
       DebugLog.logNote(
           String.format(
               "Auto mode %s selected and running.",
@@ -92,7 +103,10 @@ public class Robot extends TimedRobot {
     try {
       DebugLog.logTeleopInit();
       Shuffleboard.selectTab("TeleOp");
-      // elevator.setControlType(ControlState.OPEN_LOOP);
+
+      // elevator.setControlType(ControlState.MOTION_MAGIC);
+      // elevator.setTarget(elevator.getCurrentHeightEncoder());
+      elevator.setControlType(ControlState.OPEN_LOOP);
 
       if (autoModeExecutor != null) {
         autoModeExecutor.stop();
@@ -117,8 +131,6 @@ public class Robot extends TimedRobot {
     try {
       sendTelemetry();
 
-      // System.out.println("Manipulator Angle: " + manipulator.getPivotAngle());
-
       autoModeSelector.updateModeCreator();
 
       Optional<AutoModeBase> autoMode = autoModeSelector.getAutoMode();
@@ -135,7 +147,9 @@ public class Robot extends TimedRobot {
     try {
       sendTelemetry();
 
-      // elevator.resetEncoderIfLimitSwitchReached();
+      teleopPeriodic();
+
+      elevator.resetEncoderIfLimitSwitchReached();
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }
@@ -175,22 +189,56 @@ public class Robot extends TimedRobot {
         swerve.stop();
       }
 
-      /*if (controls.getLiftToHome()) {
-        elevator.setTargetHeight(HeightSetPoints.HATCH_PANEL_FLOOR_PICKUP.heightInches);
-      } else if (controls.getLiftToRocketCargoHigh()) {
-        elevator.setTargetHeight(HeightSetPoints.CARGO_HIGH.heightInches);
-      } else if (controls.getLiftToRocketCargoMedium()) {
-        elevator.setTargetHeight(HeightSetPoints.CARGO_MED.heightInches);
-      } else if (controls.getLiftToFeederStation()) {
-        elevator.setTargetHeight(HeightSetPoints.HATCH_LOW.heightInches);
+      /*boolean runLift = false;
+      if (controls.getLiftToCargoHigh()) {
+        runLift = true;
+        elevatorHeight = HeightSetPoints.CARGO_HIGH;
+      } else if (controls.getLiftToCargoMedium()) {
+        runLift = true;
+        elevatorHeight = HeightSetPoints.CARGO_MED;
+      } else if (controls.getLiftToCargoLow()) {
+        runLift = true;
+        elevatorHeight = HeightSetPoints.CARGO_LOW;
       } else if (controls.getLiftToCargoShipCargo()) {
-        elevator.setTargetHeight(HeightSetPoints.CARGO_SHIP_CARGO.heightInches);
+        runLift = true;
+        elevatorHeight = HeightSetPoints.CARGO_SHIP_CARGO;
+      } else if (controls.getLiftToHatchHigh()) {
+        runLift = true;
+        elevatorHeight = HeightSetPoints.HATCH_HIGH;
+      } else if (controls.getLiftToHatchMedium()) {
+        runLift = true;
+        elevatorHeight = HeightSetPoints.HATCH_MED;
+      } else if (controls.getLiftToHatchLow()) {
+        runLift = true;
+        elevatorHeight = HeightSetPoints.HATCH_LOW;
+      }
+
+      if (runLift) {
+        elevator.setControlType(ControlState.OPEN_LOOP);
+        elevator.setTarget(0.0);
+      } else {
+        elevator.setControlType(ControlState.MOTION_MAGIC);
+        elevator.setTargetHeight(elevatorHeight.heightInches);
       }*/
 
-      // manipulator.setCargoIntake(controls.getCargoIntake());
-      // manipulator.openHatchCollector(controls.getLiftToHome());
+      elevator.setTarget(
+          controls.getLiftManualControl() > 0
+              ? controls.getLiftManualControl() * 0.25
+              : controls.getLiftManualControl());
 
-      // elevator.resetEncoderIfLimitSwitchReached();
+      // manipulator.setManipulatorPosition(controls.getExtendArticulator() ? -90.0 : 0.0);
+      manipulator.setManipulatorPower(controls.getManualArticulator());
+
+      manipulator.setCargoIntake(controls.getCargoIntake());
+
+      if (controls.getOpenHatchPanel() && !previousOpenHatchPanel) {
+        isHatchPanelOpen = !isHatchPanelOpen;
+        manipulator.openHatchCollector(isHatchPanelOpen);
+      }
+
+      previousOpenHatchPanel = controls.getOpenHatchPanel();
+
+      elevator.resetEncoderIfLimitSwitchReached();
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }
@@ -201,12 +249,7 @@ public class Robot extends TimedRobot {
     try {
       sendTelemetry();
 
-      // elevator.setControlType(ControlState.MOTION_MAGIC);
-      // elevator.setTargetHeight(10);
-
-      // swerve.setAllToAngle(0);
-
-      // elevator.resetEncoderIfLimitSwitchReached();
+      elevator.resetEncoderIfLimitSwitchReached();
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
     }
@@ -216,7 +259,8 @@ public class Robot extends TimedRobot {
 
   private void sendTelemetry() {
     swerve.sendTelemetry();
-    // elevator.sendTelemetry();
+    manipulator.sendTelemetry();
+    elevator.sendTelemetry();
     if (shuffleboardInitialized) {
       totalPdpVoltage.setDouble(RobotController.getBatteryVoltage());
     } else {
