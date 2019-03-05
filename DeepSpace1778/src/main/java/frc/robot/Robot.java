@@ -25,6 +25,9 @@ import java.util.Optional;
  */
 public class Robot extends TimedRobot {
 
+  private final long MIN_WAIT_TIME_MS = 300;
+  private long lastTimeMs;
+
   private AutoModeSelector autoModeSelector = new AutoModeSelector();
   private AutoModeExecutor autoModeExecutor;
 
@@ -50,6 +53,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+
+    // reset timer
+    lastTimeMs = java.lang.System.currentTimeMillis();
+
     try {
       DebugLog.logRobotInit();
 
@@ -83,6 +90,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+
+    // reset timer
+    lastTimeMs = java.lang.System.currentTimeMillis();
+
     try {
       DebugLog.logAutoInit();
       Shuffleboard.selectTab("Autonomous");
@@ -100,6 +111,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+
+    // reset timer
+    lastTimeMs = java.lang.System.currentTimeMillis();
+
     try {
       DebugLog.logTeleopInit();
       Shuffleboard.selectTab("TeleOp");
@@ -118,6 +133,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+
+    // reset timer
+    lastTimeMs = java.lang.System.currentTimeMillis();
+
     try {
       Shuffleboard.selectTab("Debug");
       DebugLog.logTestInit();
@@ -128,8 +147,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+
     try {
-      sendTelemetry();
+      timedTelemetryCheck();
 
       autoModeSelector.updateModeCreator();
 
@@ -145,7 +165,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     try {
-      sendTelemetry();
+      // timedTelemetryCheck();
 
       teleopPeriodic();
 
@@ -157,8 +177,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+
     try {
-      sendTelemetry();
+      timedTelemetryCheck();
 
       if (controls.getResetFieldCentric()) {
         swerve.getNavX().zeroYaw();
@@ -256,6 +277,19 @@ public class Robot extends TimedRobot {
   }
 
   boolean shuffleboardInitialized;
+
+  private void timedTelemetryCheck() {
+    // check current time
+    long currentTimeMs = java.lang.System.currentTimeMillis();
+
+    // if waited long enough, send telemetry
+    if ((currentTimeMs - lastTimeMs) > MIN_WAIT_TIME_MS) {
+      sendTelemetry();
+
+      // reset timer start
+      lastTimeMs = java.lang.System.currentTimeMillis();
+    }
+  }
 
   private void sendTelemetry() {
     swerve.sendTelemetry();
