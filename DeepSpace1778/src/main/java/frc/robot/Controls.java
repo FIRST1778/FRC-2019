@@ -310,7 +310,7 @@ public class Controls {
   public double getManualArticulator() {
     switch (OPERATOR_CONTROLLER_TYPE) {
       case LOGITECH_F310:
-        return operatorController.getRawAxis(LogitechF310.AXIS_RIGHT_Y);
+        return -operatorController.getRawAxis(LogitechF310.AXIS_RIGHT_Y);
       default:
         return 0.0;
     }

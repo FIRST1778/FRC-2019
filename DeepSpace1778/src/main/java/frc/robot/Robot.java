@@ -106,7 +106,6 @@ public class Robot extends TimedRobot {
 
       // elevator.setControlType(ControlState.MOTION_MAGIC);
       // elevator.setTarget(elevator.getCurrentHeightEncoder());
-      elevator.setControlType(ControlState.OPEN_LOOP);
 
       if (autoModeExecutor != null) {
         autoModeExecutor.stop();
@@ -221,15 +220,16 @@ public class Robot extends TimedRobot {
         elevator.setTargetHeight(elevatorHeight.heightInches);
       }*/
 
+      elevator.setControlType(ControlState.OPEN_LOOP);
       elevator.setTarget(
           controls.getLiftManualControl() > 0
               ? controls.getLiftManualControl() * 0.25
               : controls.getLiftManualControl());
 
       // manipulator.setManipulatorPosition(controls.getExtendArticulator() ? -90.0 : 0.0);
-      manipulator.setManipulatorPower(controls.getManualArticulator());
+      manipulator.setManipulatorPower(controls.getManualArticulator() * 0.25);
 
-      manipulator.setCargoIntake(controls.getCargoIntake());
+      manipulator.setCargoIntake(controls.getCargoIntake() + 0.2);
 
       if (controls.getOpenHatchPanel() && !previousOpenHatchPanel) {
         isHatchPanelOpen = !isHatchPanelOpen;

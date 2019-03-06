@@ -3,7 +3,6 @@ package frc.robot.components;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -101,8 +100,8 @@ public class Elevator extends Subsystem {
       masterConfiguration.invert = false;
       masterConfiguration.invertSensorPhase = true;
       masterConfiguration.forwardLimitSwitch = LimitSwitchSource.Deactivated;
-      masterConfiguration.reverseLimitSwitch = LimitSwitchSource.FeedbackConnector;
-      masterConfiguration.reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
+      masterConfiguration.reverseLimitSwitch = LimitSwitchSource.Deactivated;
+      // masterConfiguration.reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
       masterConfiguration.pidKp = 1.0;
       masterConfiguration.pidKi = 0.0;
       masterConfiguration.pidKd = 0.0;
@@ -201,11 +200,14 @@ public class Elevator extends Subsystem {
       default:
         masterElevator.set(
             ControlMode.PercentOutput,
-            target > 0
-                ? (masterElevator.getSensorCollection().isFwdLimitSwitchClosed() ? 0.0 : target)
-                : target,
+            target < 0
+                ? target
+                : (masterElevator.getSensorCollection().isRevLimitSwitchClosed() ? 0.0 : target),
             DemandType.ArbitraryFeedForward,
             gamePieceTransported.feedForward);
+        System.out.println(
+            "Elevator Lower Limit: "
+                + masterElevator.getSensorCollection().isRevLimitSwitchClosed());
         break;
     }
   }

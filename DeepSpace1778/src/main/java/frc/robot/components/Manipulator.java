@@ -122,7 +122,7 @@ public class Manipulator extends Subsystem {
         ControlMode.PercentOutput,
         percentage <= 0.0
             ? percentage
-            : (!cargoCollector.getSensorCollection().isRevLimitSwitchClosed() ? percentage : 0.0));
+            : (!cargoCollector.getSensorCollection().isRevLimitSwitchClosed() ? percentage : -0.1));
   }
 
   public boolean openHatchCollector(boolean open) {
