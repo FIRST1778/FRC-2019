@@ -9,7 +9,7 @@ package frc.robot.components;
  */
 public abstract class Subsystem {
 
-  public abstract void sendTelemetry();
+  public abstract void sendTelemetry(boolean debug);
 
   public abstract void resetEncoders();
 

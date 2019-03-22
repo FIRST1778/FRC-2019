@@ -78,26 +78,29 @@ public class SwerveDrive extends Subsystem {
   }
 
   @Override
-  public void sendTelemetry() {
+  public void sendTelemetry(boolean debug) {
     if (shuffleboardInitialized) {
       leftFrontTurnAngleEntry.setDouble(leftFront.getCurrentAngle());
-      leftFrontDrivePowerEntry.setDouble(leftFront.getDriveDistanceInches());
       rightFrontTurnAngleEntry.setDouble(rightFront.getCurrentAngle());
-      rightFrontDrivePowerEntry.setDouble(rightFront.getDriveDistanceInches());
       leftBackTurnAngleEntry.setDouble(leftBack.getCurrentAngle());
-      leftBackDrivePowerEntry.setDouble(leftBack.getDriveDistanceInches());
       rightBackTurnAngleEntry.setDouble(rightBack.getCurrentAngle());
-      rightBackDrivePowerEntry.setDouble(rightBack.getDriveDistanceInches());
-      bagMotorCurrentEntry.setDouble(
-          +leftFront.getTurnMotor().getOutputCurrent()
-              + rightFront.getTurnMotor().getOutputCurrent()
-              + leftBack.getTurnMotor().getOutputCurrent()
-              + rightBack.getTurnMotor().getOutputCurrent());
-      cimMotorCurrentEntry.setDouble(
-          leftFront.getDriveMotor().getOutputCurrent()
-              + rightFront.getDriveMotor().getOutputCurrent()
-              + leftBack.getDriveMotor().getOutputCurrent()
-              + rightBack.getDriveMotor().getOutputCurrent());
+
+      if (debug) {
+        leftFrontDrivePowerEntry.setDouble(leftFront.getDriveDistanceInches());
+        rightFrontDrivePowerEntry.setDouble(rightFront.getDriveDistanceInches());
+        leftBackDrivePowerEntry.setDouble(leftBack.getDriveDistanceInches());
+        rightBackDrivePowerEntry.setDouble(rightBack.getDriveDistanceInches());
+        bagMotorCurrentEntry.setDouble(
+            +leftFront.getTurnMotor().getOutputCurrent()
+                + rightFront.getTurnMotor().getOutputCurrent()
+                + leftBack.getTurnMotor().getOutputCurrent()
+                + rightBack.getTurnMotor().getOutputCurrent());
+        cimMotorCurrentEntry.setDouble(
+            leftFront.getDriveMotor().getOutputCurrent()
+                + rightFront.getDriveMotor().getOutputCurrent()
+                + leftBack.getDriveMotor().getOutputCurrent()
+                + rightBack.getDriveMotor().getOutputCurrent());
+      }
     } else {
       leftFrontTurnAngleEntry =
           Constants.debugTab
@@ -106,14 +109,6 @@ public class SwerveDrive extends Subsystem {
               .withPosition(0, 0)
               .withSize(1, 1)
               .getEntry();
-      leftFrontDrivePowerEntry =
-          Constants.debugTab
-              .add("Left Front", 0)
-              .withWidget(BuiltInWidgets.kTextView)
-              .withPosition(0, 1)
-              .withSize(1, 1)
-              .getEntry();
-
       rightFrontTurnAngleEntry =
           Constants.debugTab
               .add("Right Front Angle", 0)
@@ -121,14 +116,6 @@ public class SwerveDrive extends Subsystem {
               .withPosition(1, 0)
               .withSize(1, 1)
               .getEntry();
-      rightFrontDrivePowerEntry =
-          Constants.debugTab
-              .add("Right Front", 0)
-              .withWidget(BuiltInWidgets.kTextView)
-              .withPosition(1, 1)
-              .withSize(1, 1)
-              .getEntry();
-
       leftBackTurnAngleEntry =
           Constants.debugTab
               .add("Left Back Angle", 0)
@@ -136,14 +123,6 @@ public class SwerveDrive extends Subsystem {
               .withPosition(2, 0)
               .withSize(1, 1)
               .getEntry();
-      leftBackDrivePowerEntry =
-          Constants.debugTab
-              .add("Left Back", 0)
-              .withWidget(BuiltInWidgets.kTextView)
-              .withPosition(2, 1)
-              .withSize(1, 1)
-              .getEntry();
-
       rightBackTurnAngleEntry =
           Constants.debugTab
               .add("Right Back Angle", 0)
@@ -151,29 +130,52 @@ public class SwerveDrive extends Subsystem {
               .withPosition(3, 0)
               .withSize(1, 1)
               .getEntry();
-      rightBackDrivePowerEntry =
-          Constants.debugTab
-              .add("Right Back", 0)
-              .withWidget(BuiltInWidgets.kTextView)
-              .withPosition(3, 1)
-              .withSize(1, 1)
-              .getEntry();
 
-      bagMotorCurrentEntry =
-          Constants.debugTab
-              .add("BAG Current", 0)
-              .withWidget(BuiltInWidgets.kGraph)
-              .withPosition(4, 0)
-              .withSize(3, 3)
-              .getEntry();
+      if (debug) {
+        leftFrontDrivePowerEntry =
+            Constants.debugTab
+                .add("Left Front", 0)
+                .withWidget(BuiltInWidgets.kTextView)
+                .withPosition(0, 1)
+                .withSize(1, 1)
+                .getEntry();
+        rightFrontDrivePowerEntry =
+            Constants.debugTab
+                .add("Right Front", 0)
+                .withWidget(BuiltInWidgets.kTextView)
+                .withPosition(1, 1)
+                .withSize(1, 1)
+                .getEntry();
+        leftBackDrivePowerEntry =
+            Constants.debugTab
+                .add("Left Back", 0)
+                .withWidget(BuiltInWidgets.kTextView)
+                .withPosition(2, 1)
+                .withSize(1, 1)
+                .getEntry();
+        rightBackDrivePowerEntry =
+            Constants.debugTab
+                .add("Right Back", 0)
+                .withWidget(BuiltInWidgets.kTextView)
+                .withPosition(3, 1)
+                .withSize(1, 1)
+                .getEntry();
 
-      cimMotorCurrentEntry =
-          Constants.debugTab
-              .add("CIM Current", 0)
-              .withWidget(BuiltInWidgets.kGraph)
-              .withPosition(7, 0)
-              .withSize(3, 3)
-              .getEntry();
+        bagMotorCurrentEntry =
+            Constants.debugTab
+                .add("BAG Current", 0)
+                .withWidget(BuiltInWidgets.kGraph)
+                .withPosition(4, 0)
+                .withSize(3, 3)
+                .getEntry();
+        cimMotorCurrentEntry =
+            Constants.debugTab
+                .add("CIM Current", 0)
+                .withWidget(BuiltInWidgets.kGraph)
+                .withPosition(7, 0)
+                .withSize(3, 3)
+                .getEntry();
+      }
       shuffleboardInitialized = true;
     }
   }

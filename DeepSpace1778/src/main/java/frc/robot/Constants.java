@@ -15,6 +15,9 @@ public class Constants {
   public static ShuffleboardTab debugTab = Shuffleboard.getTab("Debug");
 
   public static final boolean USING_COMPETITION_ROBOT = true;
+  public static final boolean DEBUG = false;
+
+  public static final double TELEMETRY_RATE = 1.0 / 10.0;
 
   public static final double LEFT_FRONT_ANGLE_OFFSET = USING_COMPETITION_ROBOT ? 106.17 : -16.17;
   public static final double RIGHT_FRONT_ANGLE_OFFSET = USING_COMPETITION_ROBOT ? 194.77 : 30.59;

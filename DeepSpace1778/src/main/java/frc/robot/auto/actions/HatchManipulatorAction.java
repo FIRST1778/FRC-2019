@@ -13,7 +13,7 @@ public class HatchManipulatorAction implements Action {
 
   @Override
   public boolean isFinished() {
-    return manipulator.openHatchCollector(open);
+    return manipulator.hasHatchPanel();
   }
 
   @Override

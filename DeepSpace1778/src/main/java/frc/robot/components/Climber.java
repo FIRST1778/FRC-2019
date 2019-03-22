@@ -1,13 +1,10 @@
 package frc.robot.components;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import frc.lib.driver.TalonSrxFactory;
-import frc.lib.driver.VictorSpxFactory;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.ControlType;
 import frc.robot.Constants;
 import frc.robot.Ports;
 
@@ -32,12 +29,11 @@ public class Climber extends Subsystem {
 
   private ControlState controlState = ControlState.OPEN_LOOP;
 
-  private static final double INCHES_PER_ENCODER_PULSE = 1.0 / 1024.0; // TODO: Measure for robot
+  private static final double INCHES_PER_ENCODER_PULSE = 1 / 12.4285714286;
 
-  private TalonSRX linearPistonMaster;
-  private VictorSPX linearPistonSlave;
-
-  private static TalonSrxFactory.Configuration masterConfiguration;
+  private CANSparkMax linearPistonMaster;
+  private CANPIDController pidController;
+  private CANEncoder encoder;
 
   private boolean shuffleboardInitialized;
 
@@ -56,33 +52,29 @@ public class Climber extends Subsystem {
 
   private Climber(boolean hardware) {
     if (hardware) {
-      masterConfiguration = new TalonSrxFactory.Configuration();
-      masterConfiguration.feedbackDevice = FeedbackDevice.CTRE_MagEncoder_Relative;
-      masterConfiguration.invertSensorPhase = false;
-      masterConfiguration.forwardLimitSwitch = LimitSwitchSource.FeedbackConnector;
-      masterConfiguration.forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
-      masterConfiguration.reverseLimitSwitch = LimitSwitchSource.FeedbackConnector;
-      masterConfiguration.reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
-      masterConfiguration.pidKp = 0.0;
-      masterConfiguration.pidKi = 0.0;
-      masterConfiguration.pidKd = 0.0;
-      masterConfiguration.pidKf = 0.0;
-      masterConfiguration.continuousCurrentLimit = 20;
-      masterConfiguration.peakCurrentLimit = 15;
-      masterConfiguration.peakCurrentLimitDuration = 10;
-      masterConfiguration.enableCurrentLimit = true;
+      linearPistonMaster = new CANSparkMax(Ports.CLIMBER_MASTER_ID, MotorType.kBrushless);
+      linearPistonMaster.restoreFactoryDefaults();
+      pidController = linearPistonMaster.getPIDController();
+      encoder = linearPistonMaster.getEncoder();
 
-      linearPistonMaster =
-          TalonSrxFactory.createTalon(Ports.CLIMBER_MASTER_ID, masterConfiguration);
-      linearPistonSlave =
-          VictorSpxFactory.createSlaveVictor(Ports.CLIMBER_SLAVE_ID, linearPistonMaster);
+      pidController.setP(0.00004);
+      pidController.setI(0.0);
+      pidController.setD(0.0);
+      pidController.setIZone(0.0);
+      pidController.setFF(0.0);
+      pidController.setOutputRange(-1, 1);
+
+      pidController.setSmartMotionMaxVelocity(24 / INCHES_PER_ENCODER_PULSE * 60, 0);
+      pidController.setSmartMotionMaxAccel(96 / INCHES_PER_ENCODER_PULSE * 60, 0);
+      pidController.setSmartMotionAllowedClosedLoopError(0, 0);
     }
   }
 
   @Override
-  public void sendTelemetry() {
+  public void sendTelemetry(boolean debug) {
     if (shuffleboardInitialized) {
       // entry.setType(data);
+      // if (debug) {}
     } else {
       // entry =
       // Constants.teleopTab
@@ -91,13 +83,14 @@ public class Climber extends Subsystem {
       // .withPosition(x, y)
       // .withSize(width, height)
       // .getEntry();
+      // if (debug) {}
       shuffleboardInitialized = true;
     }
   }
 
   @Override
   public void resetEncoders() {
-    linearPistonMaster.setSelectedSensorPosition(0, 0, 0);
+    encoder.setPosition(0);
   }
 
   @Override
@@ -108,17 +101,16 @@ public class Climber extends Subsystem {
   }
 
   public void setTarget(double target) {
-    linearPistonMaster.set(ControlMode.PercentOutput, 0);
     switch (controlState) {
       case CLOSED_LOOP_POSITION:
-        linearPistonMaster.set(ControlMode.Position, target);
+        pidController.setReference(target, ControlType.kPosition);
         break;
       case MOTION_MAGIC:
-        linearPistonMaster.set(ControlMode.MotionMagic, target);
+        pidController.setReference(target, ControlType.kSmartMotion);
         break;
       case OPEN_LOOP:
       default:
-        linearPistonMaster.set(ControlMode.PercentOutput, target);
+        pidController.setReference(target, ControlType.kDutyCycle);
         break;
     }
   }
@@ -133,6 +125,11 @@ public class Climber extends Subsystem {
     if (controlState != ControlState.OPEN_LOOP) {
       setTarget(extended ? getEncoderPositionFromHeight(Constants.EXTENDED_LIMIT) : 0.0);
     }
+  }
+
+  public double getCurrentHeightEncoder() {
+    // return encoder.getPosition();
+    return encoder.getVelocity();
   }
 
   public double getHeightFromEncoderPosition(double encoderPosition) {

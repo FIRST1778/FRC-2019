@@ -65,13 +65,13 @@ public class Controls {
   }
 
   private static final ControllerType DRIVER_CONTROLLER_TYPE = ControllerType.FREEZY_CONTROLLER;
-  private static final ControllerType OPERATOR_CONTROLLER_TYPE = ControllerType.LOGITECH_F310;
+  private static final ControllerType OPERATOR_CONTROLLER_TYPE = ControllerType.FREEZY_BOARD;
   private static final ControllerType SECOND_OPERATOR_CONTROLLER_TYPE =
       ControllerType.LOGITECH_F310;
 
   private static final int PORT_DRIVE_CONTROLLER = 0;
-  private static final int PORT_OPERATOR_CONTROLLER = 2;
-  private static final int PORT_SECOND_OPERATOR_CONTROLLER = 3;
+  private static final int PORT_OPERATOR_CONTROLLER = 1;
+  private static final int PORT_SECOND_OPERATOR_CONTROLLER = 2;
 
   private Joystick driverController;
   private Joystick operatorController;
@@ -245,7 +245,8 @@ public class Controls {
       case LOGITECH_F310:
         return operatorController.getRawButton(LogitechF310.A);
       case FREEZY_BOARD:
-        return operatorController.getRawButton(FreezyBoard.RIGHT_ONE_BUTTON);
+        return operatorController.getRawButton(FreezyBoard.RIGHT_ONE_BUTTON)
+            && operatorController.getRawButton(FreezyBoard.LEFT_TOGGLE_SWITCH);
       default:
         return false;
     }
@@ -290,7 +291,8 @@ public class Controls {
   public boolean getLiftToCargoPickup() {
     switch (OPERATOR_CONTROLLER_TYPE) {
       case FREEZY_BOARD:
-        return operatorController.getRawButton(FreezyBoard.RIGHT_ONE_BUTTON);
+        return operatorController.getRawButton(FreezyBoard.RIGHT_ONE_BUTTON)
+            && !operatorController.getRawButton(FreezyBoard.LEFT_TOGGLE_SWITCH);
       default:
         return false;
     }
@@ -319,7 +321,7 @@ public class Controls {
   public boolean getOpenHatchPanel() {
     switch (OPERATOR_CONTROLLER_TYPE) {
       case LOGITECH_F310:
-        return operatorController.getRawButton(LogitechF310.LEFT_BUMPER);
+        return secondOperatorController.getRawButton(LogitechF310.LEFT_BUMPER);
       case FREEZY_BOARD:
         return operatorController.getRawButton(FreezyBoard.LEFT_UPPER_BUTTON);
       default:
@@ -330,10 +332,11 @@ public class Controls {
   public double getCargoIntake() {
     switch (OPERATOR_CONTROLLER_TYPE) {
       case LOGITECH_F310:
-        return operatorController.getRawAxis(LogitechF310.AXIS_LEFT_TRIGGER)
-            - operatorController.getRawAxis(LogitechF310.AXIS_RIGHT_TRIGGER);
+        return operatorController.getRawAxis(LogitechF310.AXIS_RIGHT_TRIGGER)
+            - operatorController.getRawAxis(LogitechF310.AXIS_LEFT_TRIGGER);
       case FREEZY_BOARD:
-        return operatorController.getRawAxis(FreezyBoard.AXIS_RIGHT_Y);
+        return SimpleUtil.handleDeadband(
+            operatorController.getRawAxis(FreezyBoard.AXIS_RIGHT_Y), 0.1);
       default:
         return 0;
     }

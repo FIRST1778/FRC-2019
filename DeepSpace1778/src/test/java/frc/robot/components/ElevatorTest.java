@@ -16,12 +16,12 @@ public class ElevatorTest {
             (int)
                 elevator.getEncoderPositionFromHeight(
                     Elevator.HeightSetPoints.HATCH_HIGH.heightInches))
-        .isEqualTo(278178);
+        .isEqualTo(179099);
     assertThat(
             (int)
                 elevator.getEncoderPositionFromHeight(
                     Elevator.HeightSetPoints.HATCH_LOW.heightInches))
-        .isEqualTo(70471);
+        .isEqualTo(13776);
   }
 
   @Test
@@ -30,10 +30,10 @@ public class ElevatorTest {
     assertThat(
             elevator.getHeightFromEncoderPosition(
                 Elevator.HeightSetPoints.HATCH_HIGH.heightEncoderTicks))
-        .isEqualTo(75.0, Offset.offset(0.001));
+        .isEqualTo(65.0, Offset.offset(0.001));
     assertThat(
             elevator.getHeightFromEncoderPosition(
                 Elevator.HeightSetPoints.HATCH_LOW.heightEncoderTicks))
-        .isEqualTo(19.0, Offset.offset(0.001));
+        .isEqualTo(5.0, Offset.offset(0.001));
   }
 }

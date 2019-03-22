@@ -39,12 +39,15 @@ public class TalonSrxFactory {
     public int voltageMeasurementWindowFilter = 32;
     public FeedbackDevice feedbackDevice = FeedbackDevice.QuadEncoder;
     public double feedbackCoefficient = 1.0;
+    public boolean feedbackNotContinuous = false;
     public VelocityMeasPeriod velocityMeasurementPeriod = VelocityMeasPeriod.Period_100Ms;
     public int velocityMeasurementWindow = 64;
     public LimitSwitchSource forwardLimitSwitch = LimitSwitchSource.Deactivated;
     public LimitSwitchNormal forwardLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
     public LimitSwitchSource reverseLimitSwitch = LimitSwitchSource.Deactivated;
     public LimitSwitchNormal reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
+    public boolean clearPositionOnLimitF = false;
+    public boolean clearPositionOnLimitR = false;
     public int forwardSoftLimitThreshold = 0;
     public int reverseSoftLimitThreshold = 0;
     public boolean enableForwardSoftLimit = false;
@@ -104,6 +107,7 @@ public class TalonSrxFactory {
     talon.configVoltageMeasurementFilter(config.voltageMeasurementWindowFilter, config.timeoutInMs);
     talon.configSelectedFeedbackSensor(config.feedbackDevice, 0, config.timeoutInMs);
     talon.configSelectedFeedbackCoefficient(config.feedbackCoefficient, 0, config.timeoutInMs);
+    talon.configFeedbackNotContinuous(config.feedbackNotContinuous, config.timeoutInMs);
     talon.configVelocityMeasurementPeriod(config.velocityMeasurementPeriod, config.timeoutInMs);
     talon.configVelocityMeasurementWindow(config.velocityMeasurementWindow, config.timeoutInMs);
     talon.configForwardLimitSwitchSource(
@@ -114,6 +118,8 @@ public class TalonSrxFactory {
     talon.configReverseSoftLimitThreshold(config.reverseSoftLimitThreshold, config.timeoutInMs);
     talon.configForwardSoftLimitEnable(config.enableForwardSoftLimit, config.timeoutInMs);
     talon.configReverseSoftLimitEnable(config.enableReverseSoftLimit, config.timeoutInMs);
+    talon.configClearPositionOnLimitF(config.clearPositionOnLimitF, config.timeoutInMs);
+    talon.configClearPositionOnLimitR(config.clearPositionOnLimitR, config.timeoutInMs);
     talon.config_kP(config.profileSlotId, config.pidKp, config.timeoutInMs);
     talon.config_kI(config.profileSlotId, config.pidKi, config.timeoutInMs);
     talon.config_kD(config.profileSlotId, config.pidKd, config.timeoutInMs);

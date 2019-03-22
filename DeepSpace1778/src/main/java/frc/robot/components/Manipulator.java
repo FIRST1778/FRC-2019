@@ -24,7 +24,7 @@ public class Manipulator extends Subsystem {
 
   private static boolean initialized;
 
-  private static final double ZERO_ANGLE_OFFSET = 33.06; // TODO: Measure for robot
+  private static final double ZERO_ANGLE_OFFSET = 0.0; // TODO: Measure for robot
 
   private TalonSRX manipulatorPivot;
   private TalonSRX cargoCollector;
@@ -37,6 +37,8 @@ public class Manipulator extends Subsystem {
   private boolean shuffleboardInitialized;
 
   private NetworkTableEntry manipulatorAngleEntry;
+  private NetworkTableEntry hasHatchPanelEntry;
+  private NetworkTableEntry hasCargoEntry;
 
   public static Manipulator getInstance() {
     return getInstance(true);
@@ -68,10 +70,9 @@ public class Manipulator extends Subsystem {
       pivotConfiguration.enableCurrentLimit = true;
 
       cargoConfiguration = new TalonSrxFactory.Configuration();
-      cargoConfiguration.forwardLimitSwitch = LimitSwitchSource.FeedbackConnector;
-      cargoConfiguration.forwardLimitSwitchNormal = LimitSwitchNormal.NormallyClosed;
+      cargoConfiguration.forwardLimitSwitch = LimitSwitchSource.Deactivated;
       cargoConfiguration.reverseLimitSwitch = LimitSwitchSource.Deactivated;
-      cargoConfiguration.invert = true;
+      cargoConfiguration.invert = false;
       cargoConfiguration.continuousCurrentLimit = 20;
       cargoConfiguration.peakCurrentLimit = 25;
       cargoConfiguration.peakCurrentLimitDuration = 10;
@@ -96,17 +97,39 @@ public class Manipulator extends Subsystem {
   }
 
   @Override
-  public void sendTelemetry() {
+  public void sendTelemetry(boolean debug) {
     if (shuffleboardInitialized) {
-      manipulatorAngleEntry.setDouble(getPivotAngle());
+      hasCargoEntry.setBoolean(hasCargo());
+      hasHatchPanelEntry.setBoolean(hasHatchPanel());
+
+      if (debug) {
+        manipulatorAngleEntry.setDouble(getPivotAngle());
+      }
     } else {
-      manipulatorAngleEntry =
+      hasCargoEntry =
           Constants.teleopTab
-              .add("Manipulator Angle", 0)
-              .withWidget(BuiltInWidgets.kTextView)
+              .add("Cargo", false)
+              .withWidget(BuiltInWidgets.kBooleanBox)
+              .withPosition(0, 0)
+              .withSize(1, 1)
+              .getEntry();
+      hasHatchPanelEntry =
+          Constants.teleopTab
+              .add("Hatch Panel", false)
+              .withWidget(BuiltInWidgets.kBooleanBox)
               .withPosition(0, 1)
               .withSize(1, 1)
               .getEntry();
+
+      if (debug) {
+        manipulatorAngleEntry =
+            Constants.debugTab
+                .add("Manipulator Angle", 0)
+                .withWidget(BuiltInWidgets.kTextView)
+                .withPosition(0, 2)
+                .withSize(1, 1)
+                .getEntry();
+      }
       shuffleboardInitialized = true;
     }
   }
@@ -120,20 +143,25 @@ public class Manipulator extends Subsystem {
   public void setCargoIntake(double percentage) {
     cargoCollector.set(
         ControlMode.PercentOutput,
-        percentage <= 0.0
+        percentage > 0.0
             ? percentage
-            : (!cargoCollector.getSensorCollection().isRevLimitSwitchClosed() ? percentage : -0.1));
+            : (hasCargo() ? -0.1 : (percentage < 0.0 ? percentage : -0.2)));
   }
 
-  public boolean openHatchCollector(boolean open) {
-    boolean isOpened = hatchPanelCollector.getSensorCollection().isFwdLimitSwitchClosed();
-    hatchPanelCollector.set(
-        ControlMode.PercentOutput,
-        open
-            ? (!isOpened ? 1.0 : 0.0)
-            : (!hatchPanelCollector.getSensorCollection().isRevLimitSwitchClosed() ? -1.0 : 0.0));
+  public void openHatchCollector(boolean open) {
+    hatchPanelCollector.set(ControlMode.PercentOutput, open ? 1.0 : -1.0);
+  }
 
-    return isOpened;
+  public boolean hasHatchPanel() {
+    return hatchPanelCollector.getSensorCollection().isFwdLimitSwitchClosed();
+  }
+
+  public boolean hasReleasedHatchPanel() {
+    return hatchPanelCollector.getSensorCollection().isRevLimitSwitchClosed();
+  }
+
+  public boolean hasCargo() {
+    return !cargoCollector.getSensorCollection().isRevLimitSwitchClosed();
   }
 
   public void setManipulatorPosition(double angle) {
