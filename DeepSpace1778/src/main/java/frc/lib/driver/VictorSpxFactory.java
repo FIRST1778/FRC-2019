@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -62,15 +61,8 @@ public class VictorSpxFactory {
     public int motionCruiseVelocity = 0;
     public int motionAcceleration = 0;
     public int motionProfileTrajectoryPeriod = 0;
-    public int peakCurrentLimit = 0;
-    public int peakCurrentLimitDuration = 0;
-    public int continuousCurrentLimit = 0;
-
-    public StatusFrameEnhanced statusFrame = StatusFrameEnhanced.Status_1_General;
-    public int statusFramePeriod = 10;
 
     public boolean enableVoltageCompensation = false;
-    public boolean enableCurrentLimit = false;
 
     public boolean invertSensorPhase = false;
     public boolean invert = false;

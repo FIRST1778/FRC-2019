@@ -25,7 +25,7 @@ public class Elevator extends Subsystem {
   private static boolean initialized;
 
   public enum HeightSetPoints {
-    CARGO_HIGH(70, -75.0),
+    CARGO_HIGH(68, -75.0),
     CARGO_MED(55.5, -75.0),
     CARGO_SHIP_CARGO(39.625, -75.0),
     CARGO_LOW(27.5, -75.0),
@@ -67,7 +67,7 @@ public class Elevator extends Subsystem {
 
   private GamePiece gamePieceTransported = GamePiece.NONE;
 
-  private static final double INCHES_PER_ENCODER_PULSE = 0.00036292747;
+  private static final double INCHES_PER_ENCODER_PULSE = 60.0 / 200000;
 
   private double wantedHeight;
 
@@ -98,17 +98,17 @@ public class Elevator extends Subsystem {
     if (hardware) {
       masterConfiguration = new TalonSrxFactory.Configuration();
       masterConfiguration.feedbackDevice = FeedbackDevice.CTRE_MagEncoder_Relative;
+      masterConfiguration.invert = true;
       masterConfiguration.invertSensorPhase = false;
       masterConfiguration.forwardLimitSwitch = LimitSwitchSource.Deactivated;
-      masterConfiguration.reverseLimitSwitch = LimitSwitchSource.Deactivated;
+      masterConfiguration.reverseLimitSwitch = LimitSwitchSource.FeedbackConnector;
       masterConfiguration.pidKp = 0.2;
       masterConfiguration.pidKi = 0.0;
       masterConfiguration.pidKd = 0.3;
-      masterConfiguration.pidKf = 0.0;
       masterConfiguration.motionCruiseVelocity = (int) (40.0 / INCHES_PER_ENCODER_PULSE / 10.0);
       masterConfiguration.motionAcceleration = (int) (90.0 / INCHES_PER_ENCODER_PULSE / 10.0);
-      masterConfiguration.continuousCurrentLimit = 35;
-      masterConfiguration.peakCurrentLimit = 0;
+      masterConfiguration.continuousCurrentLimit = 30;
+      masterConfiguration.peakCurrentLimit = 35;
       masterConfiguration.peakCurrentLimitDuration = 10;
       masterConfiguration.enableCurrentLimit = true;
 
@@ -195,9 +195,6 @@ public class Elevator extends Subsystem {
             target,
             DemandType.ArbitraryFeedForward,
             gamePieceTransported.feedForward);
-        System.out.println(
-            "Elevator Lower Limit: "
-                + masterElevator.getSensorCollection().isRevLimitSwitchClosed());
         break;
     }
   }

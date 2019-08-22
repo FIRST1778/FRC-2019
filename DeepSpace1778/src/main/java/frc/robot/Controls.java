@@ -310,16 +310,16 @@ public class Controls {
   }
 
   public double getManualArticulator() {
-    switch (OPERATOR_CONTROLLER_TYPE) {
+    switch (SECOND_OPERATOR_CONTROLLER_TYPE) {
       case LOGITECH_F310:
-        return -operatorController.getRawAxis(LogitechF310.AXIS_RIGHT_Y);
+        return -secondOperatorController.getRawAxis(LogitechF310.AXIS_RIGHT_Y);
       default:
         return 0.0;
     }
   }
 
   public boolean getOpenHatchPanel() {
-    switch (OPERATOR_CONTROLLER_TYPE) {
+    switch (SECOND_OPERATOR_CONTROLLER_TYPE) {
       case LOGITECH_F310:
         return secondOperatorController.getRawButton(LogitechF310.LEFT_BUMPER);
       case FREEZY_BOARD:
@@ -332,8 +332,8 @@ public class Controls {
   public double getCargoIntake() {
     switch (OPERATOR_CONTROLLER_TYPE) {
       case LOGITECH_F310:
-        return operatorController.getRawAxis(LogitechF310.AXIS_RIGHT_TRIGGER)
-            - operatorController.getRawAxis(LogitechF310.AXIS_LEFT_TRIGGER);
+        return secondOperatorController.getRawAxis(LogitechF310.AXIS_RIGHT_TRIGGER)
+            - secondOperatorController.getRawAxis(LogitechF310.AXIS_LEFT_TRIGGER);
       case FREEZY_BOARD:
         return SimpleUtil.handleDeadband(
             operatorController.getRawAxis(FreezyBoard.AXIS_RIGHT_Y), 0.1);
@@ -345,7 +345,7 @@ public class Controls {
   public double getLiftManualControl() {
     switch (SECOND_OPERATOR_CONTROLLER_TYPE) {
       case LOGITECH_F310:
-        return operatorController.getRawAxis(LogitechF310.AXIS_LEFT_Y);
+        return -secondOperatorController.getRawAxis(LogitechF310.AXIS_LEFT_Y);
       default:
         return 0;
     }

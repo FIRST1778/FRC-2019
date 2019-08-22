@@ -16,12 +16,12 @@ public class ElevatorTest {
             (int)
                 elevator.getEncoderPositionFromHeight(
                     Elevator.HeightSetPoints.HATCH_HIGH.heightInches))
-        .isEqualTo(179099);
+        .isEqualTo(216666);
     assertThat(
             (int)
                 elevator.getEncoderPositionFromHeight(
                     Elevator.HeightSetPoints.HATCH_LOW.heightInches))
-        .isEqualTo(13776);
+        .isEqualTo(16666);
   }
 
   @Test

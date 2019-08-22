@@ -30,6 +30,8 @@ public class Ports {
   public static final int CLIMBER_MASTER_ID = 30;
   public static final int CLIMBER_SLAVE_ID = 31;
 
+  // 6,9,10,20,21
+
   // NOTE: Sensors
   public static final SPI.Port NAVX_SPI = SPI.Port.kMXP;
 }

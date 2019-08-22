@@ -1,13 +1,11 @@
 package frc.robot.auto.modes;
 
-import frc.lib.pathing.Path;
-import frc.lib.pathing.PathSegment;
-import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeEndedException;
-import frc.robot.auto.actions.FollowPathAction;
+import frc.robot.auto.actions.LiftToHeightAction;
 import frc.robot.auto.actions.RunOnceAction;
+import frc.robot.components.Elevator.HeightSetPoints;
 import frc.robot.components.SwerveDrive;
 
 /**
@@ -28,14 +26,7 @@ public class MotionTestMode extends AutoModeBase {
             Robot.limelightTable.getEntry("ledMode").setDouble(1.0);
           }
         });
-    runAction(
-        new FollowPathAction(
-            new Path(
-                0.0,
-                Constants.SWERVE_MAX_ACCELERATION,
-                Constants.SWERVE_MAX_VELOCITY,
-                0.0,
-                new PathSegment.ArcedTranslation(48, 48, 0),
-                new PathSegment.ArcedTranslation(48, 48, 0).getFlipped())));
+    runAction(new LiftToHeightAction(HeightSetPoints.CARGO_MED));
+    runAction(new LiftToHeightAction(HeightSetPoints.CARGO_PICKUP));
   }
 }

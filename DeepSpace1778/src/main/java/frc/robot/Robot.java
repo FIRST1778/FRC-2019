@@ -11,7 +11,6 @@ import frc.lib.util.DebugLog;
 import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeExecutor;
 import frc.robot.components.Elevator;
-import frc.robot.components.Elevator.HeightSetPoints;
 import frc.robot.components.Manipulator;
 import frc.robot.components.SwerveDrive;
 import java.util.Optional;
@@ -65,8 +64,8 @@ public class Robot extends TimedRobot {
     try {
       DebugLog.logDisabledInit();
       Shuffleboard.selectTab("Autonomous");
-      limelightTable.getEntry("camMode").setDouble(1.0);
-      limelightTable.getEntry("ledMode").setDouble(1.0);
+
+      limelightTable.getEntry("pipeline").setDouble(0.0);
 
       if (autoModeExecutor != null) {
         autoModeExecutor.stop();
@@ -86,6 +85,8 @@ public class Robot extends TimedRobot {
       DebugLog.logAutoInit();
       Shuffleboard.selectTab("Autonomous");
 
+      limelightTable.getEntry("pipeline").setDouble(1.0);
+
       autoModeExecutor.start();
       DebugLog.logNote(
           String.format(
@@ -102,8 +103,10 @@ public class Robot extends TimedRobot {
       DebugLog.logTeleopInit();
       Shuffleboard.selectTab("TeleOp");
 
-      elevator.setControlType(Elevator.ControlState.MOTION_MAGIC);
-      elevator.setTarget(elevator.getCurrentHeightEncoder());
+      limelightTable.getEntry("pipeline").setDouble(0.0);
+
+      // elevator.setControlType(Elevator.ControlState.MOTION_MAGIC);
+      // elevator.setTarget(elevator.getCurrentHeightEncoder());
 
       if (autoModeExecutor != null) {
         autoModeExecutor.stop();
@@ -142,7 +145,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     try {
-      sendTelemetry();
+      // teleopPeriodic();
 
     } catch (Throwable t) {
       DebugLog.logThrowableCrash(t);
@@ -183,7 +186,7 @@ public class Robot extends TimedRobot {
         swerve.stop();
       }
 
-      elevator.setControlType(Elevator.ControlState.MOTION_MAGIC);
+      /*elevator.setControlType(Elevator.ControlState.MOTION_MAGIC);
       if (controls.getLiftToCargoHigh()) {
         elevator.setTargetHeight(HeightSetPoints.CARGO_HIGH);
       } else if (controls.getLiftToCargoMedium()) {
@@ -200,17 +203,17 @@ public class Robot extends TimedRobot {
         elevator.setTargetHeight(HeightSetPoints.HATCH_LOW);
       } else if (controls.getLiftToCargoPickup()) {
         elevator.setTargetHeight(HeightSetPoints.CARGO_PICKUP);
-      }
+      }*/
 
-      /*elevator.setControlType(Elevator.ControlState.OPEN_LOOP);
+      elevator.setControlType(Elevator.ControlState.OPEN_LOOP);
       elevator.setTarget(
-          controls.getLiftManualControl() > 0
+          controls.getLiftManualControl() < 0
               ? controls.getLiftManualControl() * 0.25
               : controls.getLiftManualControl());
-              */
 
       // manipulator.setManipulatorPosition(controls.getExtendArticulator() ? -90.0 : 0.0);
-      System.out.println(manipulator.getPivotAngle());
+      manipulator.setManipulatorPower(controls.getManualArticulator() * 0.3);
+      // System.out.println(manipulator.getPivotAngle());
 
       manipulator.setCargoIntake(controls.getCargoIntake());
 

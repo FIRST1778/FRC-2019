@@ -6,8 +6,14 @@ import frc.robot.auto.AutoModeBase;
 import frc.robot.auto.AutoModeEndedException;
 import frc.robot.auto.AutoPaths;
 import frc.robot.auto.actions.FollowPathAction;
+import frc.robot.auto.actions.LiftToHeightAction;
+import frc.robot.auto.actions.ParallelAction;
 import frc.robot.auto.actions.RunOnceAction;
+import frc.robot.auto.actions.SeriesAction;
+import frc.robot.auto.actions.WaitAction;
+import frc.robot.components.Elevator.HeightSetPoints;
 import frc.robot.components.SwerveDrive;
+import java.util.List;
 
 /**
  * An auto mode to score two hatch panels on the near side of the rocket.
@@ -35,12 +41,31 @@ public class NearSideRocketMode extends AutoModeBase {
         });
     switch (startingPosition) {
       case LEFT:
-        runAction(new FollowPathAction(AutoPaths.START_LEFT_TO_LEFT_ROCKET_NEAR_SIDE));
+        runAction(
+            new ParallelAction(
+                List.of(
+                    new FollowPathAction(AutoPaths.START_LEFT_TO_LEFT_ROCKET_NEAR_SIDE),
+                    new SeriesAction(
+                        List.of(
+                            new LiftToHeightAction(HeightSetPoints.CARGO_PICKUP),
+                            new WaitAction(
+                                AutoPaths.START_LEFT_TO_LEFT_ROCKET_NEAR_SIDE.getDuration() - 1.0),
+                            new LiftToHeightAction(HeightSetPoints.CARGO_LOW))))));
         // runAction(new AlignWithTargetAction(28.77));
         break;
       default:
       case RIGHT:
-        runAction(new FollowPathAction(AutoPaths.START_RIGHT_TO_RIGHT_ROCKET_NEAR_SIDE));
+        runAction(
+            new ParallelAction(
+                List.of(
+                    new FollowPathAction(AutoPaths.START_RIGHT_TO_RIGHT_ROCKET_NEAR_SIDE),
+                    new SeriesAction(
+                        List.of(
+                            new LiftToHeightAction(HeightSetPoints.CARGO_PICKUP),
+                            new WaitAction(
+                                AutoPaths.START_RIGHT_TO_RIGHT_ROCKET_NEAR_SIDE.getDuration()
+                                    - 1.0),
+                            new LiftToHeightAction(HeightSetPoints.CARGO_LOW))))));
         // runAction(new AlignWithTargetAction(331.23));
         break;
     }

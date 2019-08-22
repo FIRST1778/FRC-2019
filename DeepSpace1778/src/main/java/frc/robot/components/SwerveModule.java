@@ -32,14 +32,14 @@ public class SwerveModule {
   public SwerveModule(int driveTalonID, int turnTalonID, double angleOffset) {
     driveConfiguration = new TalonSrxFactory.Configuration();
     driveConfiguration.feedbackDevice = FeedbackDevice.QuadEncoder;
-    driveConfiguration.invertSensorPhase = false;
+    driveConfiguration.invertSensorPhase = true;
     driveConfiguration.pidKp = 1.0;
     driveConfiguration.pidKi = 0.001;
     driveConfiguration.pidKd = 0.0;
     driveConfiguration.pidKf = 0.0;
     driveConfiguration.pidIntegralZone = 18;
-    driveConfiguration.continuousCurrentLimit = 10;
-    driveConfiguration.peakCurrentLimit = 0;
+    driveConfiguration.continuousCurrentLimit = 25;
+    driveConfiguration.peakCurrentLimit = 35;
     driveConfiguration.peakCurrentLimitDuration = 10;
     driveConfiguration.enableCurrentLimit = true;
     driveConfiguration.openLoopRampTimeSeconds = 0.25;
@@ -58,8 +58,8 @@ public class SwerveModule {
     turnConfiguration.pidKd = 0.0; // 50.0;
     turnConfiguration.pidKf = 0.0;
     turnConfiguration.pidIntegralZone = 200;
-    turnConfiguration.continuousCurrentLimit = 10;
-    turnConfiguration.peakCurrentLimit = 0;
+    turnConfiguration.continuousCurrentLimit = 15;
+    turnConfiguration.peakCurrentLimit = 20;
     turnConfiguration.peakCurrentLimitDuration = 10;
     turnConfiguration.enableCurrentLimit = true;
     turnConfiguration.openLoopRampTimeSeconds = 0.25;

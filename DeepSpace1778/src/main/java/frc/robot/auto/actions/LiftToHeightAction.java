@@ -15,7 +15,6 @@ public class LiftToHeightAction implements Action {
 
   public LiftToHeightAction(HeightSetPoints height) {
     encoderLiftTarget = height.heightEncoderTicks;
-    manipulatorTarget = height.manipulatorAngle;
   }
 
   public LiftToHeightAction(double heightInches) {
@@ -28,12 +27,7 @@ public class LiftToHeightAction implements Action {
   }
 
   @Override
-  public void update() {
-    manipulator.setManipulatorPosition(
-        elevator.isCloseToTarget(elevator.getEncoderPositionFromHeight(10.0))
-            ? manipulatorTarget
-            : 0.0);
-  }
+  public void update() {}
 
   @Override
   public void done() {}

@@ -24,7 +24,7 @@ public class Manipulator extends Subsystem {
 
   private static boolean initialized;
 
-  private static final double ZERO_ANGLE_OFFSET = 0.0; // TODO: Measure for robot
+  private static final double ZERO_ANGLE_OFFSET = 334.6875; // TODO: Measure for robot
 
   private TalonSRX manipulatorPivot;
   private TalonSRX cargoCollector;
@@ -59,13 +59,14 @@ public class Manipulator extends Subsystem {
       pivotConfiguration.feedbackDevice = FeedbackDevice.Analog;
       pivotConfiguration.invert = false;
       pivotConfiguration.invertSensorPhase = true;
+      pivotConfiguration.feedbackNotContinuous = true;
       pivotConfiguration.pidKp = 5.0;
       pivotConfiguration.pidKi = 0.0001;
       pivotConfiguration.pidKd = 0.0;
       pivotConfiguration.motionCruiseVelocity = (int) (180.0 / 10.0);
       pivotConfiguration.motionAcceleration = (int) (720.0 / 10.0);
       pivotConfiguration.continuousCurrentLimit = 20;
-      pivotConfiguration.peakCurrentLimit = 15;
+      pivotConfiguration.peakCurrentLimit = 25;
       pivotConfiguration.peakCurrentLimitDuration = 10;
       pivotConfiguration.enableCurrentLimit = true;
 
@@ -84,8 +85,8 @@ public class Manipulator extends Subsystem {
       hatchPanelConfiguration.reverseLimitSwitch = LimitSwitchSource.FeedbackConnector;
       hatchPanelConfiguration.reverseLimitSwitchNormal = LimitSwitchNormal.NormallyOpen;
       hatchPanelConfiguration.invert = true;
-      hatchPanelConfiguration.continuousCurrentLimit = 6;
-      hatchPanelConfiguration.peakCurrentLimit = 0;
+      hatchPanelConfiguration.continuousCurrentLimit = 10;
+      hatchPanelConfiguration.peakCurrentLimit = 15;
       hatchPanelConfiguration.peakCurrentLimitDuration = 10;
       hatchPanelConfiguration.enableCurrentLimit = true;
 

@@ -40,8 +40,6 @@ deploy {
 
 repositories { mavenCentral()}
 
-//Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
-//Also defines JUnit 4.
 dependencies {
   compile wpi.deps.wpilib()
   compile wpi.deps.vendor.java()
@@ -60,7 +58,8 @@ compileJava { dependsOn 'spotlessApply' }
 
 test {
   useJUnitPlatform { excludeTags 'slow', 'robot-dependent'}
-  testLogging.showStandardStreams = true}
+  testLogging.showStandardStreams = true
+}
 
 spotless {
   java { googleJavaFormat("1.7") }
