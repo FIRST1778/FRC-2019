@@ -212,7 +212,7 @@ public class Elevator extends Subsystem {
   }
 
   public int getCurrentHeightEncoder() {
-    return masterElevator.getSelectedSensorPosition();
+    return (int) masterElevator.getSelectedSensorPosition();
   }
 
   public boolean isCloseToTarget(double allowableError) {
